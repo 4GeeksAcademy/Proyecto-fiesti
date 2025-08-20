@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
 
@@ -34,7 +35,7 @@ export const Home = () => {
 
 	return (
 		<div className="text-center mt-5">
-			<h1 className="display-4">Hello Rigo!!</h1>
+			<h1 className="display-4">Fiesti</h1>
 			<p className="lead">
 				<img src={rigoImageUrl} className="img-fluid rounded-circle mb-3" alt="Rigo Baby" />
 			</p>
@@ -47,6 +48,16 @@ export const Home = () => {
 					</span>
 				)}
 			</div>
+
+			{/* Login y Signup */}
+			<div className="d-grid gap-3 col-6 col-md-4 mx-auto mt-4">
+				<button className="btn btn-primary btn-lg" onClick={() => navigate("/login")}>
+					Iniciar sesión
+				</button>
+				<button className="btn btn-outline-secondary btn-lg" onClick={() => navigate("/signup")}>
+					Crear cuenta
+				</button>
+			</div>
 		</div>
 	);
-}; 
+};

@@ -20,3 +20,28 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+@api.route('/login', methods=['POST'])
+def login():
+    data = request.get_json() or {}
+
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"msg": "Email y contraseña son requeridos"}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    
+    if not check_password_hash(user.password, password):
+        return jsonify({"msg": "Contraseña incorrecta"}), 401
+
+    
+    return jsonify({
+        "msg": "Login correcto",
+        "user": user.serialize()
+    }), 200
