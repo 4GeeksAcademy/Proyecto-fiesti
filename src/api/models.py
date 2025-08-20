@@ -18,7 +18,7 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     role: Mapped[RolEnum] = mapped_column(Enum(RolEnum), nullable=False)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    phone: Mapped[int] = mapped_column(primary_key=True)
+    phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
 
@@ -27,7 +27,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "role": self.role,
+            "role": self.role.value,
             "name": self.name,
             "phone": self.phone,
             "photo": self.photo,   
