@@ -3,11 +3,12 @@ import React, { useState } from "react";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
-        nombre: "",
+        name: "",
         email: "",
         password: "",
-        telefono: "",
-        rol: "user" // valor por defecto: personal
+        phone: "",
+        role: "personal", // valor por defecto: personal
+        photo: ""
     });
 
     const [message, setMessage] = useState("");
@@ -42,7 +43,7 @@ const Signup = () => {
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    name="nombre"
+                    name="name"
                     placeholder="Nombre"
                     className="form-control mb-3"
                     onChange={handleChange}
@@ -63,7 +64,7 @@ const Signup = () => {
                 />
                 <input
                     type="text"
-                    name="telefono"
+                    name="phone"
                     placeholder="Teléfono"
                     className="form-control mb-3"
                     onChange={handleChange}
@@ -71,13 +72,13 @@ const Signup = () => {
 
                 {/* Selector de rol */}
                 <select
-                    name="rol"
+                    name="role"
                     className="form-select mb-3"
-                    value={formData.rol}
+                    value={formData.role}
                     onChange={handleChange}
                 >
-                    <option value="user">Personal</option>
-                    <option value="admin">Organizador</option>
+                    <option value="personal">Personal</option>
+                    <option value="organizador">Organizador</option>
                 </select>
 
                 <button type="submit" className="btn btn-primary">
