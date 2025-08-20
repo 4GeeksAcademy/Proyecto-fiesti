@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import backendUrl from "../components/BackendURL.jsx";
+
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const resp = await fetch(backendUrl + "/api/login", {
+            const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
