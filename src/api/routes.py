@@ -6,6 +6,7 @@ from api.models import db, User, RolEnum
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 api = Blueprint('api', __name__)
 
@@ -13,11 +14,9 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-
 @api.route('/login', methods=['POST'])
 def login():
     data = request.get_json() or {}
-
     email = (data.get("email") or "").strip().lower()
     password = data.get("password")
 
@@ -31,10 +30,23 @@ def login():
     if not check_password_hash(user.password, password):
         return jsonify({"msg": "Contraseña incorrecta"}), 401
 
+    #token con la identidad mínima (id del user)
+    access_token = create_access_token(identity=str(user.id))
+
     return jsonify({
         "msg": "Login correcto",
+        "access_token": access_token,
         "user": user.serialize()
     }), 200
+
+@api.route('/me', methods=['GET'])
+@jwt_required()
+def get_me():
+    user_id = int(get_jwt_identity())   # extrae el id del token
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    return jsonify(user.serialize()), 200
 
 
 @api.route('/signup', methods=['POST'])
