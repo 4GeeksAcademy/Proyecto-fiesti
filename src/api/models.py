@@ -1,19 +1,50 @@
+import enum
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, Column, Table, ForeignKey, Integer, Enum, Time
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from datetime import time
 
 db = SQLAlchemy()
+
+class RolEnum(enum.Enum):
+    ORGANIZADOR = "organizador"
+    PERSONAL = "personal"
+
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    role: Mapped[RolEnum] = mapped_column(Enum(RolEnum), nullable=False)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+    photo: Mapped[str] = mapped_column(String(255), nullable=True)
 
 
     def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            "role": self.role.value,
+            "name": self.name,
+            "phone": self.phone,
+            "photo": self.photo,   
+        }
+    
+class Actuacion(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    description: Mapped[str] = mapped_column(String(120), nullable=False)
+    photo: Mapped[str] = mapped_column(String(255), nullable=True)
+    hour: Mapped[time | None] = mapped_column(Time, nullable=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "photo": self.photo,
+            "hour": self.hour,    
         }
