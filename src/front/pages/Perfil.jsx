@@ -8,9 +8,11 @@ export const Perfil = () => {
   // tengo que hacer un fetch para traer la info de name, email, phone y método de pago
 
   return (
+    
+
     <div className="infoPerfil text-center">
       <h1>Perfil</h1> <span></span>
-      <img src="https://cdn-icons-png.flaticon.com/512/146/146035.png"></img>
+      <img src="https://cdn-icons-png.flaticon.com/512/146/146035.png" className="profilePic"></img>
       <h2 className="nombre">name
         <span> <i className="fa-solid fa-pen-to-square"></i> </span>
       </h2>
