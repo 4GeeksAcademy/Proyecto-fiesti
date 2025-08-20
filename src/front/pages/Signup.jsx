@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import backendUrl from "../components/BackendURL.jsx"; // <-- tu helper para el API URL
+
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const resp = await fetch(backendUrl + "/api/signup", {
+            const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
