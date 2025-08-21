@@ -8,7 +8,12 @@ const Signup = () => {
         password: "",
         phone: "",
         role: "personal", // valor por defecto: personal
-        photo: ""
+        photo: "",
+        puesto: "",
+        card_number: "",
+        card_cvc: "",
+        card_expiration: "",
+        card_holder: ""
     });
 
     const [message, setMessage] = useState("");
@@ -80,6 +85,26 @@ const Signup = () => {
                     <option value="personal">Personal</option>
                     <option value="organizador">Organizador</option>
                 </select>
+
+                {formData.role === "personal" && (
+                    <select name="puesto" className="form-select mb-3" onChange={handleChange}>
+                        <option value="">Selecciona puesto</option>
+                        <option value="barra">Barra</option>
+                    </select>
+                )}
+
+                {formData.role === "organizador" && (
+                    <div>
+                        <input type="text" name="card_number" placeholder="Número de tarjeta"
+                            className="form-control mb-3" onChange={handleChange} />
+                        <input type="text" name="card_cvc" placeholder="CVC"
+                            className="form-control mb-3" onChange={handleChange} />
+                        <input type="text" name="card_expiration" placeholder="MM/AAAA"
+                            className="form-control mb-3" onChange={handleChange} />
+                        <input type="text" name="card_holder" placeholder="Titular de la tarjeta"
+                            className="form-control mb-3" onChange={handleChange} />
+                    </div>
+                )}
 
                 <button type="submit" className="btn btn-primary">
                     Registrarse

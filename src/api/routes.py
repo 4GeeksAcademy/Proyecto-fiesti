@@ -53,7 +53,7 @@ def get_me():
 def signup():
     """
     Registro de usuarios (personal u organizador).
-    Recibe JSON: { email, password, name, phone, role, photo? }
+    Recibe JSON: { email, password, name, phone, role, photo?, ... }
     """
     data = request.get_json() or {}
 
@@ -63,6 +63,11 @@ def signup():
     phone = data.get("phone")
     role_str = (data.get("role") or "personal").lower()
     photo = data.get("photo")
+    puesto = data.get("puesto")
+    card_number = data.get("card_number")
+    card_cvc = data.get("card_cvc")
+    card_expiration = data.get("card_expiration")
+    card_holder = data.get("card_holder")
 
     # compruebo que esten todos los campos rellenos, no exista el email y el rol
     if not email or not password or not name or not phone:
@@ -84,7 +89,12 @@ def signup():
         name=name,
         phone=phone,
         role=role,
-        photo=photo
+        photo=photo,
+        puesto=puesto if role == RolEnum.PERSONAL else None,
+        card_number=card_number if role == RolEnum.ORGANIZADOR else None,
+        card_cvc=card_cvc if role == RolEnum.ORGANIZADOR else None,
+        card_expiration=card_expiration if role == RolEnum.ORGANIZADOR else None,
+        card_holder=card_holder if role == RolEnum.ORGANIZADOR else None
     )
     db.session.add(nuevo)
     db.session.commit()
