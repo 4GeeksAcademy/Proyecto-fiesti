@@ -9,8 +9,10 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
-import Login from "./pages/Login"
-import Signup from "./pages/Signup"
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
+import CrearActuacion from "./pages/CrearActuacion";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +32,9 @@ export const router = createBrowserRouter(
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
+        <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
+
       </Route>
     )
 );
