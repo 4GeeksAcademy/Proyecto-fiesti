@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { apiFetch } from "../components/apiClient";
 import { useNavigate } from "react-router-dom";
 
 const CrearActuacion = () => {
@@ -37,7 +36,6 @@ const CrearActuacion = () => {
             }
 
             setMsg("✅ Actuación creada");
-            // Más adelante: volver al listado
             // navigate("/actuaciones");
         } catch (err) {
             console.error(err);
@@ -86,10 +84,10 @@ const CrearActuacion = () => {
 
                 <div className="row g-3 mb-3">
                     <div className="col-6">
-                        <label className="form-label">Hora (opcional)</label>
+                        <label className="form-label">Hora (21:30)</label>
                         <input
                             className="form-control"
-                            type="time"
+                            type="text"
                             name="hour"
                             value={form.hour}
                             onChange={onChange}
