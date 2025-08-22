@@ -9,9 +9,13 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Perfil } from "./pages/Perfil";
-import Login from "./pages/Login"
-import Signup from "./pages/Signup"
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Personal  from "./pages/Personal";
+import CrearActuacion from "./pages/CrearActuacion";
+
+
+
 
 
 
@@ -31,9 +35,15 @@ export const router = createBrowserRouter(
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/perfil" element={<Perfil />} />
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/personal" element={<Personal />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/personal" element={<Personal />} />
+        <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
+
     </Route>
   )
+      
+     
+  
+  
 );
