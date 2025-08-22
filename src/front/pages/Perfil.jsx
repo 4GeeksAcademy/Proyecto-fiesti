@@ -26,7 +26,7 @@ export const Perfil = () => {
       body: raw,
     };
 
-    fetch("https://verbose-spoon-4j66qqx7qgqw2qxpq-3001.app.github.dev/api/login", requestOptions)
+    fetch("https://verbose-spoon-4j66qqx7qgqw2qxpq-3001.app.github.dev/api/users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setPerfil(result.user)
@@ -36,37 +36,32 @@ export const Perfil = () => {
       .catch((error) => console.error(error));
   }
 
-
   useEffect(() => {
     postUSer();
   }, []);
 
 
 
-
-  console.log("Estos son mis datos:", perfil)
-  // tengo que hacer un fetch para traer la info de name, email, phone y método de pago
-
   return (
 
 
     <div className="infoPerfil text-center">
       <h1>Perfil</h1> <span></span>
-      <img src={perfil.photo} className="profilePic"></img>
+      <img src={perfil.photo} className="profilePic"></img> <span> <i className="fa-solid fa-pen-to-square" type="button"></i> </span>
       <h2 className="nombre">{perfil.name}
-        <span> <i className="fa-solid fa-pen-to-square"></i> </span>
+        <span> <i className="fa-solid fa-pen-to-square" type="button"></i> </span>
       </h2>
       <p className="email text-primary">{perfil.email}</p>
 
       <div className="telefono">
         <h3>{perfil.phone}
-          <span> <i className="fa-solid fa-pen-to-square"></i> </span>
+          <span> <i className="fa-solid fa-pen-to-square" type="button"></i> </span>
         </h3>
       </div>
 
       <div className="payment">
         <h3>Método de pago seleccionado:
-          <span> <i className="fa-solid fa-pen-to-square"></i> </span>
+          <span> <i className="fa-solid fa-pen-to-square" type="button"></i> </span>
         </h3>
         {/* traer del fecth el método de pago */}
 
