@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from datetime import time
+from typing import Optional
 
 db = SQLAlchemy()
 
@@ -22,6 +23,12 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
 
+    puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)   
+    card_number: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)  
+    card_cvc: Mapped[Optional[str]] = mapped_column(String(4), nullable=True)
+    card_expiration: Mapped[Optional[str]] = mapped_column(String(7), nullable=True)  
+    card_holder: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+
 
     def serialize(self):
         return {
@@ -30,7 +37,11 @@ class User(db.Model):
             "role": self.role.value,
             "name": self.name,
             "phone": self.phone,
-            "photo": self.photo,   
+            "photo": self.photo,
+            "puesto": self.puesto,
+            "card_number": self.card_number,        
+            "card_expiration": self.card_expiration,
+            "card_holder": self.card_holder  
         }
     
 class Actuacion(db.Model):
