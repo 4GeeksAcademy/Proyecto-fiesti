@@ -114,28 +114,53 @@ export default function Personal() {
                                     <div className="desplegable">
                                         <label>
                                             Puesto:
-                                            <input
-                                                type="text"
-                                                defaultValue={emp.puesto}
-                                                id={`puesto-${emp.id}`}
-                                            />
+                                            <select id={`puesto-${emp.id}`} defaultValue={emp.puesto}>
+                                                <option value="">Selecciona un puesto</option>
+                                                <option value="Barra 1">Barra 1</option>
+                                                <option value="Barra 2">Barra 2</option>
+                                                <option value="Barra 3">Barra 3</option>
+                                                <option value="Barra 4">Barra 4</option>
+                                                <option value="Barra 5">Barra 5</option>
+                                                <option value="Barra 6">Barra 6</option>
+                                                <option value="Barra 7">Barra 7</option>
+                                                <option value="Barra 8">Barra 8</option>
+                                                <option value="Barra 9">Barra 9</option>
+                                                <option value="Barra 10">Barra 10</option>
+                                            </select>
                                         </label>
+
                                         <label>
-                                            Horario:
-                                            <input
-                                                type="text"
-                                                defaultValue={emp.horario}
-                                                id={`horario-${emp.id}`}
-                                            />
+                                            Horario inicio:
+                                            <select id={`horario-inicio-${emp.id}`} defaultValue="">
+                                                <option value="">--</option>
+                                                {Array.from({ length: 24 }, (_, i) => (
+                                                    <option key={i} value={`${String(i).padStart(2, "0")}:00`}>
+                                                        {String(i).padStart(2, "0")}:00
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </label>
+
+                                        <label>
+                                            Horario fin:
+                                            <select id={`horario-fin-${emp.id}`} defaultValue="">
+                                                <option value="">--</option>
+                                                {Array.from({ length: 24 }, (_, i) => (
+                                                    <option key={i} value={`${String(i).padStart(2, "0")}:00`}>
+                                                        {String(i).padStart(2, "0")}:00
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+
                                         <button
-                                            onClick={() =>
-                                                guardarAsignacion(
-                                                    emp.id,
-                                                    document.getElementById(`puesto-${emp.id}`).value,
-                                                    document.getElementById(`horario-${emp.id}`).value
-                                                )
-                                            }
+                                            onClick={() => {
+                                                const puesto = document.getElementById(`puesto-${emp.id}`).value;
+                                                const inicio = document.getElementById(`horario-inicio-${emp.id}`).value;
+                                                const fin = document.getElementById(`horario-fin-${emp.id}`).value;
+
+                                                guardarAsignacion(emp.id, puesto, `${inicio}-${fin}`);
+                                            }}
                                         >
                                             Guardar
                                         </button>
