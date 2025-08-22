@@ -1,6 +1,7 @@
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect } from "react";
 import "../styles/perfil.css";
+import Logo from "../assets/img/Logo.png";
 
 
 export const Perfil = () => {
@@ -69,7 +70,9 @@ export const Perfil = () => {
         </h3>
         {/* traer del fecth el método de pago */}
 
+
       </div>
+      
     </div>
   );
 };
