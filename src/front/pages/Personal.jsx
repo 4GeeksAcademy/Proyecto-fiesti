@@ -7,6 +7,16 @@ export default function Personal() {
     const [busqueda, setBusqueda] = useState("");
     const [nuevoEmpleado, setNuevoEmpleado] = useState("");
 
+    //  Cargar empleados desde backend
+    /* useEffect(() => {
+        fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
+            .then((res) => res.json())
+            .then((data) => {
+                setEmpleados(data);
+            })
+            .catch((err) => console.error("Error cargando empleados:", err));
+    }, []);
+ */
     // Cargar empleados desde localStorage al iniciar
     useEffect(() => {
         const guardados = localStorage.getItem("empleados");
@@ -20,7 +30,7 @@ export default function Personal() {
         localStorage.setItem("empleados", JSON.stringify(empleados));
     }, [empleados]);
 
-    // Alta de empleados
+    // Alta de empleados (solo por ahora, luego METHOD GET + fetch)
     const agregarEmpleado = (e) => {
         e.preventDefault();
         if (!nuevoEmpleado.trim()) return;
@@ -50,6 +60,17 @@ export default function Personal() {
             )
         );
         setActivo(null);
+    };
+
+    // Borrar asignación
+    const borrarAsignacion = (id) => {
+        setEmpleados(
+            empleados.map((e) =>
+                e.id === id
+                    ? { ...e, puesto: "", horario: "", asignado: false }
+                    : e
+            )
+        );
     };
 
     // Filtrado por búsqueda
@@ -103,13 +124,31 @@ export default function Personal() {
                                     className={`empleado ${emp.asignado ? "asignado" : ""}`}
                                     onClick={() => toggleEmpleado(emp.id)}
                                 >
-                                    {emp.nombre}
-                                    {emp.asignado && (
-                                        <span className="info-asignacion">
-                                            {" - " + emp.puesto + " (" + emp.horario + ")"}
-                                        </span>
-                                    )}
+                                    <div>
+                                        {emp.nombre}
+                                        {emp.asignado && (
+                                            <span className="info-asignacion">
+                                                {" - " + emp.puesto + " (" + emp.horario + ")"}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div>
+                                        {/* Botón X para borrar asignación */}
+                                        {emp.asignado && (
+                                            <button
+                                                className="btn-borrar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    borrarAsignacion(emp.id, "", "");
+                                                }}
+                                            >
+                                                ✖
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
+
+                                {/* Desplegable para asignar puesto y hora */}
                                 {activo === emp.id && (
                                     <div className="desplegable">
                                         <label>

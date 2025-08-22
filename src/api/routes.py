@@ -106,3 +106,12 @@ def signup():
 def list_users():
     users = User.query.all()
     return jsonify([u.serialize() for u in users]), 200
+
+@api.route('/users/personal', methods=['GET'])
+def get_personal_users():
+    
+    try:
+        users = User.query.filter_by(role="personal").all()  # Ajusta al modelo que uses
+        return jsonify([user.serialize() for user in users]), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
