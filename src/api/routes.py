@@ -115,3 +115,16 @@ def get_personal_users():
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/perfil", methods=["GET"])
+@jwt_required()
+def perfil():
+    current_user_id = get_jwt_identity()
+    query_user = db.session.execute(
+        select(User).where(User.id == int(current_user_id))
+    ).scalar_one_or_none()
+
+    if not query_user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify({"user": query_user.serialize()}), 200
