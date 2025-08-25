@@ -9,6 +9,7 @@ from typing import Optional
 
 db = SQLAlchemy()
 
+
 class RolEnum(enum.Enum):
     ORGANIZADOR = "organizador"
     PERSONAL = "personal"
@@ -16,19 +17,22 @@ class RolEnum(enum.Enum):
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(120), unique=True, nullable=False)
     role: Mapped[RolEnum] = mapped_column(Enum(RolEnum), nullable=False)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)   
-    card_number: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)  
+    puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    card_number: Mapped[Optional[str]] = mapped_column(
+        String(16), nullable=True)
     card_cvc: Mapped[Optional[str]] = mapped_column(String(4), nullable=True)
-    card_expiration: Mapped[Optional[str]] = mapped_column(String(7), nullable=True)  
-    card_holder: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
-
+    card_expiration: Mapped[Optional[str]] = mapped_column(
+        String(7), nullable=True)
+    card_holder: Mapped[Optional[str]] = mapped_column(
+        String(120), nullable=True)
 
     def serialize(self):
         return {
@@ -39,17 +43,21 @@ class User(db.Model):
             "phone": self.phone,
             "photo": self.photo,
             "puesto": self.puesto,
-            "card_number": self.card_number,        
+            "card_number": self.card_number,
             "card_expiration": self.card_expiration,
-            "card_holder": self.card_holder  
+            "card_holder": self.card_holder
         }
-    
+
+
 class Actuacion(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=False)
-    photo: Mapped[str] = mapped_column(String(255), nullable=True)
-    hour: Mapped[time | None] = mapped_column(Time, nullable=True)
+    photo: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    hour: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
+    escenario: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
+    hora_inicio: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
+    hora_fin: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
 
     def serialize(self):
         return {
@@ -57,8 +65,8 @@ class Actuacion(db.Model):
             "name": self.name,
             "description": self.description,
             "photo": self.photo,
-            "hour": self.hour,    
+            "hour": self.hour.strftime("%H:%M") if self.hour else None,
             "escenario": self.escenario,
-            "horaInicio": self.hora_incio,
-            "horaFin": self_hora_fin,
+            "horaInicio": self.hora_inicio.strftime("%H:%M") if self.hora_inicio else None,
+            "horaFin": self.hora_fin.strftime("%H:%M") if self.hora_fin else None,
         }

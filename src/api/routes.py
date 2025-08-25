@@ -2,12 +2,16 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, RolEnum
+from api.models import db, User, RolEnum, Actuacion
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+<<<<<<< HEAD
+from datetime import datetime
+=======
 from sqlalchemy import select
+>>>>>>> develop
 
 api = Blueprint('api', __name__)
 
@@ -31,7 +35,7 @@ def login():
     if not check_password_hash(user.password, password):
         return jsonify({"msg": "Contraseña incorrecta"}), 401
 
-    #token con la identidad mínima (id del user)
+    # token con la identidad mínima (id del user)
     access_token = create_access_token(identity=str(user.id))
 
     return jsonify({
@@ -39,6 +43,7 @@ def login():
         "access_token": access_token,
         "user": user.serialize()
     }), 200
+
 
 @api.route('/me', methods=['GET'])
 @jwt_required()
@@ -107,6 +112,67 @@ def signup():
 def list_users():
     users = User.query.all()
     return jsonify([u.serialize() for u in users]), 200
+
+
+@api.route("/actuaciones", methods=["GET"])
+def list_actuaciones():
+    acts = Actuacion.query.order_by(Actuacion.name.asc()).all()
+    return jsonify([a.serialize() for a in acts]), 200
+
+@api.route("/actuaciones/<int:act_id>", methods=["GET"])
+def get_actuacion(act_id):
+    act = Actuacion.query.get(act_id)
+    if not act:
+        return jsonify({"msg": "Actuación no encontrada"}), 404
+    return jsonify(act.serialize()), 200
+
+def parse_time_or_none(value: str | None):
+    if not value:
+        return None
+    value = value.strip()
+    try:
+        return datetime.strptime(value, "%H:%M").time()
+    except ValueError:
+        raise ValueError("Formato de hora inválido. Usa HH:MM")
+
+@api.route("/actuaciones", methods=["POST"])
+def create_actuacion():
+    data = request.get_json() or {}
+
+    name = (data.get("name") or "").strip()
+    description = (data.get("description") or "").strip()
+    photo = (data.get("photo") or None)
+    hour_str = (data.get("hour") or "").strip()
+
+    if not name or not description:
+        return jsonify({"msg": "Faltan campos obligatorios (name, description)"}), 400
+
+    try:
+        hour_val = parse_time_or_none(hour_str)
+    except ValueError:
+        return jsonify({"msg": "Formato de hora inválido. Usa HH:MM"}), 400
+
+    act = Actuacion(
+        name=name,
+        description=description,
+        photo=photo or None,
+        hour=hour_val
+    )
+    db.session.add(act)
+    db.session.commit()
+
+    return jsonify({"msg": "Actuación creada", "actuacion": act.serialize()}), 201
+
+
+@api.route("/actuaciones/<int:act_id>", methods=["DELETE"])
+def delete_actuacion(act_id):
+    act = Actuacion.query.get(act_id)
+    if not act:
+        return jsonify({"msg": "Actuación no encontrada"}), 404
+
+    db.session.delete(act)
+    db.session.commit()
+    return jsonify({"msg": "Actuación eliminada"}), 200
 
 @api.route('/users/personal', methods=['GET'])
 def get_personal_users():
