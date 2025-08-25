@@ -17,7 +17,7 @@ const Login = () => {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage("✅ Sesión iniciada");
-                sessionStorage.setItem("token", data.token); // si devuelves un JWT
+                sessionStorage.setItem("token", data.access_token); // si devuelves un JWT
             } else {
                 setMessage(data.msg || "❌ Error al iniciar sesión");
             }
