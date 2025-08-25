@@ -58,4 +58,7 @@ class Actuacion(db.Model):
             "description": self.description,
             "photo": self.photo,
             "hour": self.hour,    
+            "escenario": self.escenario,
+            "horaInicio": self.hora_incio,
+            "horaFin": self_hora_fin,
         }

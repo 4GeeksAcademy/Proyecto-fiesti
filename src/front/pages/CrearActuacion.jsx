@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CrearActuacion = () => {
+const CrearActuacion = ({onSave}) => {
     const navigate = useNavigate();
     const [form, setForm] = useState({
         name: "",
@@ -17,26 +17,32 @@ const CrearActuacion = () => {
         e.preventDefault();
         setMsg("");
 
+        // ✅ Modo local (sin backend todavía)
+        if (typeof onSave === "function") {
+            onSave({
+                name: form.name.trim(),
+                description: form.description.trim(),
+                photo: form.photo.trim() || null,
+                hour: form.hour || null,
+            });
+            setForm({ name: "", description: "", photo: "", hour: "" });
+            setMsg("✅ Actuación añadida (local)");
+            return; 
+        }
+
+        // (Dejo esto para  el backend)
         try {
             const resp = await apiFetch("/api/actuaciones", {
                 method: "POST",
-                body: JSON.stringify({
-                    name: form.name.trim(),
-                    description: form.description.trim(),
-                    photo: form.photo.trim() || null,
-                    hour: form.hour || null,
-                }),
+                body: JSON.stringify(form),
             });
-
             const data = await resp.json().catch(() => ({}));
-
             if (!resp.ok) {
                 setMsg(data.msg || `Error (HTTP ${resp.status})`);
                 return;
             }
-
-            setMsg("✅ Actuación creada");
-            // navigate("/actuaciones");
+            setMsg("✅ Actuación creada en servidor");
+            setForm({ name: "", description: "", photo: "", hour: "" });
         } catch (err) {
             console.error(err);
             setMsg("❌ Error de conexión");
@@ -47,7 +53,6 @@ const CrearActuacion = () => {
         <div className="container mt-4" style={{ maxWidth: 640 }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h3>Nueva actuación</h3>
-                {/* Este botón lo pondré luego en la lista */}
             </div>
 
             {msg && <div className="alert alert-info">{msg}</div>}
