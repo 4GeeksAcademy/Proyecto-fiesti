@@ -7,7 +7,11 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+<<<<<<< HEAD
 from datetime import datetime
+=======
+from sqlalchemy import select
+>>>>>>> develop
 
 api = Blueprint('api', __name__)
 
@@ -169,3 +173,25 @@ def delete_actuacion(act_id):
     db.session.delete(act)
     db.session.commit()
     return jsonify({"msg": "Actuación eliminada"}), 200
+
+@api.route('/users/personal', methods=['GET'])
+def get_personal_users():
+    
+    try:
+        users = User.query.filter_by(role="personal").all()  # Ajusta al modelo que uses
+        return jsonify([user.serialize() for user in users]), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@api.route("/perfil", methods=["GET"])
+@jwt_required()
+def perfil():
+    current_user_id = get_jwt_identity()
+    query_user = db.session.execute(
+        select(User).where(User.id == int(current_user_id))
+    ).scalar_one_or_none()
+
+    if not query_user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify({"user": query_user.serialize()}), 200
