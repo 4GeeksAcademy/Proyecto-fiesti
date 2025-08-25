@@ -12,9 +12,15 @@
   margin: auto;
 }
 .festi-img-section {
-  max-width: 400px;
+  align-items: center;
+  max-width: 600px;
+  max-height: 400px;
 }
 .festi-img {
-  width: 400px;
+  align-items: center;
+  width: 600px;
   height: 400px;
+}
+.festi-input {
+  margin-top: 5px;
 }

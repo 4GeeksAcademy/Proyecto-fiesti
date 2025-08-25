@@ -19,12 +19,6 @@ const FestiActual = () => {
       {/* Imagen del festival */}
       <div className="festi-img-section">
         <label className="festi-label">Cartel del Festival:</label>
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={handleImagenChange} 
-          className="festi-input"
-        />
         {imagenFestival && (
           <img 
             src={imagenFestival} 
@@ -32,6 +26,13 @@ const FestiActual = () => {
             className="festi-img"
           />
         )}
+        <input 
+          type="file" 
+          accept="image/*" 
+          onChange={handleImagenChange} 
+          className="festi-input"
+        />
+        
       </div>
     </div>
   );
