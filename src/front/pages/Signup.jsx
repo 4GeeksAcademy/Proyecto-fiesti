@@ -33,6 +33,7 @@ const Signup = () => {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage("✅ Registro exitoso");
+                
             } else {
                 setMessage(data.msg || "❌ Error en el registro");
             }

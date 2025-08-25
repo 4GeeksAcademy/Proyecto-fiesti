@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CrearActuacion = ({onSave}) => {
+const CrearActuacion = () => {
     const navigate = useNavigate();
     const [form, setForm] = useState({
         name: "",
