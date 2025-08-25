@@ -4,3 +4,11 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+.infoPerfil {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fffbe5;
+   
+}
