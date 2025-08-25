@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import "./PersonalList.css";
+import "../styles/personallist.css";
 
 export default function Personal() {
     const [empleados, setEmpleados] = useState([]);
     const [activo, setActivo] = useState(null);
     const [busqueda, setBusqueda] = useState("");
-    const [nuevoEmpleado, setNuevoEmpleado] = useState("");
+
 
     //  Cargar empleados desde backend
-    /* useEffect(() => {
+    useEffect(() => {
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
             .then((res) => res.json())
             .then((data) => {
@@ -16,34 +16,6 @@ export default function Personal() {
             })
             .catch((err) => console.error("Error cargando empleados:", err));
     }, []);
- */
-    // Cargar empleados desde localStorage al iniciar
-    useEffect(() => {
-        const guardados = localStorage.getItem("empleados");
-        if (guardados) {
-            setEmpleados(JSON.parse(guardados));
-        }
-    }, []);
-
-    // Guardar empleados en localStorage cada vez que cambien
-    useEffect(() => {
-        localStorage.setItem("empleados", JSON.stringify(empleados));
-    }, [empleados]);
-
-    // Alta de empleados (solo por ahora, luego METHOD GET + fetch)
-    const agregarEmpleado = (e) => {
-        e.preventDefault();
-        if (!nuevoEmpleado.trim()) return;
-        const nuevo = {
-            id: Date.now(),
-            nombre: nuevoEmpleado,
-            asignado: false,
-            puesto: "",
-            horario: "",
-        };
-        setEmpleados([...empleados, nuevo]);
-        setNuevoEmpleado("");
-    };
 
     // Toggle desplegable
     const toggleEmpleado = (id) => {
@@ -75,33 +47,21 @@ export default function Personal() {
 
     // Filtrado por búsqueda
     const empleadosFiltrados = empleados.filter((emp) =>
-        emp.nombre.toLowerCase().includes(busqueda.toLowerCase())
-    );
+    emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
+);
 
     // Agrupación por inicial
     const grupos = empleadosFiltrados.reduce((acc, emp) => {
-        const letra = emp.nombre[0].toUpperCase();
-        if (!acc[letra]) acc[letra] = [];
-        acc[letra].push(emp);
-        return acc;
-    }, {});
-
-    console.log("Renderizando componente");
+    if (!emp?.name) return acc; 
+    const letra = emp.name[0].toUpperCase();
+    if (!acc[letra]) acc[letra] = [];
+    acc[letra].push(emp);
+    return acc;
+}, {});
 
     return (
         <div className="personal-container">
             <h2 className="title">Personal</h2>
-
-            {/* Alta de empleados */}
-            <form onSubmit={agregarEmpleado} className="alta-form">
-                <input
-                    type="text"
-                    placeholder="Nombre del empleado"
-                    value={nuevoEmpleado}
-                    onChange={(e) => setNuevoEmpleado(e.target.value)}
-                />
-                <button type="submit">Agregar</button>
-            </form>
 
             {/* Buscador */}
             <input
@@ -125,7 +85,7 @@ export default function Personal() {
                                     onClick={() => toggleEmpleado(emp.id)}
                                 >
                                     <div>
-                                        {emp.nombre}
+                                        {emp.name}
                                         {emp.asignado && (
                                             <span className="info-asignacion">
                                                 {" - " + emp.puesto + " (" + emp.horario + ")"}

@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from sqlalchemy import select
 
 api = Blueprint('api', __name__)
 
@@ -111,12 +112,12 @@ def list_users():
 def get_personal_users():
     
     try:
-        users = User.query.filter_by(role="personal").all()  # Ajusta al modelo que uses
+        users = User.query.filter_by(role=RolEnum.PERSONAL).all()  
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route("/perfil", methods=["GET"])
+@api.route("/perfil", methods=["GET"])
 @jwt_required()
 def perfil():
     current_user_id = get_jwt_identity()
