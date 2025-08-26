@@ -129,3 +129,26 @@ def perfil():
         return jsonify({"error": "Usuario no encontrado"}), 404
 
     return jsonify({"user": query_user.serialize()}), 200
+
+
+@api.route("/perfil", methods=["PUT"])
+@jwt_required()
+def put_perfil():
+    current_user_id = get_jwt_identity()
+    data = request.get_json() or {}
+
+    query_user = db.session.execute(
+        select(User).where(User.id == int(current_user_id))
+    ).scalar_one_or_none()
+
+    if not query_user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    # Actualiza solo los campos que vienen en el JSON
+    for field in ["email", "name", "phone", "photo", "puesto", "card_number", "card_cvc", "card_expiration", "card_holder"]:
+        if field in data:
+            setattr(query_user, field, data[field])
+
+    db.session.commit()
+
+    return jsonify({"msg": "Perfil actualizado", "user": query_user.serialize()}), 200
