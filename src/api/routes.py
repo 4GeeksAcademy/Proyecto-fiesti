@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
 from sqlalchemy import select
+import os
+from werkzeug.utils import secure_filename
 
 api = Blueprint('api', __name__)
 
@@ -182,7 +184,10 @@ def get_personal_users():
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+
+# -------------------------------ENDPOINTS DE PERFIL----------------------------------
+
 @api.route("/perfil", methods=["GET"])
 @jwt_required()
 def perfil():
@@ -218,3 +223,33 @@ def put_perfil():
     db.session.commit()
 
     return jsonify({"msg": "Perfil actualizado", "user": query_user.serialize()}), 200
+
+
+@api.route("/perfil/photo", methods=["PUT"])
+@jwt_required()
+def upload_profile_photo():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(int(current_user_id))
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    if "photo" not in request.files:
+        return jsonify({"error": "No se encontró el archivo"}), 400
+
+    file = request.files["photo"]
+    if file.filename == "":
+        return jsonify({"error": "Nombre de archivo vacío"}), 400
+
+    # Carpeta donde se guardan las fotos
+    upload_folder = os.path.join(os.getcwd(), "static", "profile_photos")
+    os.makedirs(upload_folder, exist_ok=True)
+
+    filename = secure_filename(f"user_{user.id}_{file.filename}")
+    filepath = os.path.join(upload_folder, filename)
+    file.save(filepath)
+
+    # Guarda la ruta relativa en el usuario
+    user.photo = f"/static/profile_photos/{filename}"
+    db.session.commit()
+
+    return jsonify({"msg": "Imagen subida correctamente", "photo": user.photo}), 200
