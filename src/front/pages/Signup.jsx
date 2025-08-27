@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -17,7 +17,8 @@ const Signup = () => {
     });
 
     const [message, setMessage] = useState("");
-
+    const navigate=useNavigate();
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -33,7 +34,7 @@ const Signup = () => {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage("✅ Registro exitoso");
-                
+                navigate("/login");
             } else {
                 setMessage(data.msg || "❌ Error en el registro");
             }

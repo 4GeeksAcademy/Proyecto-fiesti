@@ -7,17 +7,17 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-<<<<<<< HEAD
 from datetime import datetime
-=======
 from sqlalchemy import select
->>>>>>> develop
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
 
+@api.route('/hello', methods=['GET'])
+def hello():
+    return jsonify({"message": "Hola desde el backend"}), 200
 
 @api.route('/login', methods=['POST'])
 def login():

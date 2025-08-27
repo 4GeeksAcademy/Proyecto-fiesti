@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const navigate=useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -17,7 +18,8 @@ const Login = () => {
             const data = await resp.json();
             if (resp.ok) {
                 setMessage("✅ Sesión iniciada");
-                sessionStorage.setItem("token", data.access_token); // si devuelves un JWT
+                sessionStorage.setItem("token", data.access_token);
+                navigate("/festi");
             } else {
                 setMessage(data.msg || "❌ Error al iniciar sesión");
             }
