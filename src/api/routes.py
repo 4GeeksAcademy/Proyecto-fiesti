@@ -178,7 +178,7 @@ def delete_actuacion(act_id):
 def get_personal_users():
     
     try:
-        users = User.query.filter_by(role="personal").all()  # Ajusta al modelo que uses
+        users = User.query.filter_by(role=RolEnum.PERSONAL).all()  
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
