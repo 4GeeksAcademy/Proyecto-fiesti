@@ -48,11 +48,16 @@ def login():
 @api.route('/me', methods=['GET'])
 @jwt_required()
 def get_me():
-    user_id = int(get_jwt_identity())   # extrae el id del token
+    user_id = int(get_jwt_identity()) 
     user = User.query.get(user_id)
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    return jsonify(user.serialize()), 200
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role.value 
+    })
 
 
 @api.route('/signup', methods=['POST'])
