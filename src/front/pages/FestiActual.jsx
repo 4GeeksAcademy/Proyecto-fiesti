@@ -15,27 +15,44 @@ const FestiActual = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      let token = sessionStorage.getItem("token")
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`)
+      console.log(token);
+
+      const requestOptions = {
+        method: "GET",
+        headers: myHeaders
+      };
+
       try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/me", {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          }
-        });
+        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
+        const result = await response.json();
+        console.log(result)
+      } catch (error) {
+        console.error(error);
+      };
+      // try {
+      //   const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", {
+      //     headers: {
+      //       "Authorization": `Bearer ${localStorage.getItem("token")}`
+      //     }
+      //   });
 
-        if (!response.ok) {
-          console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
-          setUser(null);
-          return;
-        }
+      //   if (!response.ok) {
+      //     console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
+      //     setUser(null);
+      //     return;
+      //   }
 
-        const data = await response.json();
-        setUser(data);                
-        console.log("Usuario cargado:", data); 
+      //   const data = await response.json();
+      //   setUser(data);
+      //   console.log("Usuario cargado:", data);
 
-      } catch (err) {
-        console.error("Error fetch user:", err);
-        setUser(null);
-      }
+      // } catch (err) {
+      //   console.error("Error fetch user:", err);
+      //   setUser(null);
+      // }
     };
 
     fetchUser();
