@@ -4,6 +4,10 @@ import "../styles/festiactual.css";
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
   const [user, setUser] = useState(null);
+  const [empleados, setEmpleados] = useState([]);
+  const [activo, setActivo] = useState(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [actuaciones, setActuaciones] = useState([]);
 
   // Función para manejar la carga de imagen
   const handleImagenChange = (e) => {
@@ -13,12 +17,36 @@ const FestiActual = () => {
     }
   };
 
+  //  Cargar artistas/actuaciones desde backend
+  useEffect(() => {
+          const load = async () => {
+              try {
+                  const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/actuaciones");
+                  const data = await resp.json();
+                  if (resp.ok) setActuaciones(data);
+              } catch (e) {
+                  console.error("No se pudo cargar actuaciones del backend", e);
+              }
+          };
+          load();
+      }, []);
+
+  //  Cargar empleados desde backend
+  useEffect(() => {
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
+      .then((res) => res.json())
+      .then((data) => {
+        setEmpleados(data);
+      })
+      .catch((err) => console.error("Error cargando empleados:", err));
+  }, []);
+
+  //  Obtener usuario para luego poder manejar el rol
   useEffect(() => {
     const fetchUser = async () => {
       let token = sessionStorage.getItem("token")
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${token}`)
-      console.log(token);
 
       const requestOptions = {
         method: "GET",
@@ -29,34 +57,39 @@ const FestiActual = () => {
         const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
         const result = await response.json();
         console.log(result)
+        if (!response.ok) {
+          console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
+          setUser(null);
+          return;
+        }
+
+        setUser(result);
+        console.log("Usuario cargado:", result);
+
       } catch (error) {
-        console.error(error);
-      };
-      // try {
-      //   const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", {
-      //     headers: {
-      //       "Authorization": `Bearer ${localStorage.getItem("token")}`
-      //     }
-      //   });
-
-      //   if (!response.ok) {
-      //     console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
-      //     setUser(null);
-      //     return;
-      //   }
-
-      //   const data = await response.json();
-      //   setUser(data);
-      //   console.log("Usuario cargado:", data);
-
-      // } catch (err) {
-      //   console.error("Error fetch user:", err);
-      //   setUser(null);
-      // }
+        console.error("Error fetch user:", error);
+        setUser(null);
+      }
     };
+
+
 
     fetchUser();
   }, []);
+
+  // Filtrado por búsqueda
+  const empleadosFiltrados = empleados.filter((emp) =>
+    emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  // Agrupación por inicial
+  const grupos = empleadosFiltrados.reduce((acc, emp) => {
+    if (!emp?.name) return acc;
+    const letra = emp.name[0].toUpperCase();
+    if (!acc[letra]) acc[letra] = [];
+    acc[letra].push(emp);
+    return acc;
+  }, {});
 
   return (
     <div className="festi-container">
@@ -81,6 +114,41 @@ const FestiActual = () => {
           />
         )}
       </div>
+
+      {/* Buscador */}
+      <input
+        className="buscador"
+        type="text"
+        placeholder="Buscar empleado..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      {/* Lista de empleados */}
+      {Object.keys(grupos)
+        .sort()
+        .map((letra) => (
+          <div key={letra}>
+            <div className="grupo-header">{letra}</div>
+            {grupos[letra].map((emp) => (
+              <div key={emp.id} className="empleado-section">
+                <div
+                  className={`empleado ${emp.asignado ? "asignado" : ""}`}
+                  onClick={() => toggleEmpleado(emp.id)}
+                >
+                  <div>
+                    {emp.name}
+                    {emp.asignado && (
+                      <span className="info-asignacion">
+                        {" - " + emp.puesto + " (" + emp.horario + ")"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
     </div>
   );
 };
