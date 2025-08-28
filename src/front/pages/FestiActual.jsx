@@ -9,6 +9,11 @@ const FestiActual = () => {
   const [busqueda, setBusqueda] = useState("");
   const [actuaciones, setActuaciones] = useState([]);
 
+  const ESCENARIOS = ["Escenario 1", "Escenario 2", "Escenario 3", "Escenario 4", "Escenario 5"];
+  const HORAS = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
+
+  
+  
   // Función para manejar la carga de imagen
   const handleImagenChange = (e) => {
     const file = e.target.files[0];
@@ -71,13 +76,10 @@ const FestiActual = () => {
         setUser(null);
       }
     };
-
-
-
     fetchUser();
   }, []);
 
-  // Filtrado por búsqueda
+  // Filtrado por búsqueda empleado
   const empleadosFiltrados = empleados.filter((emp) =>
     emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
   );
@@ -90,6 +92,12 @@ const FestiActual = () => {
     acc[letra].push(emp);
     return acc;
   }, {});
+
+  //  filtrado por búsqueda artista/actuaciones
+  const filtradas = actuaciones.filter((a) =>
+        (a.name || "").toLowerCase().includes(busqueda.toLowerCase())
+    );
+  
 
   return (
     <div className="festi-container">
