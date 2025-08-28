@@ -55,18 +55,18 @@ export const Perfil = () => {
 
   // Guardar cambios
   const handleGuardar = async () => {
-  try {
-    await putPerfil();
-    setPerfil({ ...perfil, [editando]: valorTemp });
-    setEditando(null);
-  } catch (error) {
-    dispatch({ 
-      type: "SET_MESSAGE", 
-      payload: "Error al actualizar el perfil" 
-    });
-    dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
-  }
-};
+    try {
+      await putPerfil();
+      setPerfil({ ...perfil, [editando]: valorTemp });
+      setEditando(null);
+    } catch (error) {
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Error al actualizar el perfil"
+      });
+      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+    }
+  };
 
   // Guardar al pulsar Enter/Intro
   const handleKeyDown = (e) => {
@@ -109,12 +109,67 @@ export const Perfil = () => {
       console.error(error);
     };
   }
- 
+
+  // Estados para editar foto del perfil
+  const [imagenPerfil, setImagenPerfil] = useState(null);
+
+  // Buscar imagen en galería para cambiarla
+  const handleImagenChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagenPerfil(URL.createObjectURL(file)); // Para mostrar la imagen localmente
+
+      // Subir al backend
+      let token = sessionStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("photo", file);
+
+      try {
+        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/perfil/photo", {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
+          body: formData
+        });
+        if (response.status !== 200) {
+          throw new Error("Error al subir la imagen");
+        }
+        dispatch({ type: "SET_MESSAGE", payload: "Imagen actualizada correctamente" });
+        dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+        getPerfil(); // Recarga el perfil con la nueva imagen
+      } catch (error) {
+        dispatch({ type: "SET_MESSAGE", payload: "Error al subir la imagen" });
+        dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+      }
+    }
+  };
 
   return (
     <div className="infoPerfil">
       <h1>Perfil</h1>
-      <img src={perfil.photo} className="profilePic" alt="Foto perfil" />
+
+     {/* Imagen de perfil */}
+      <div className="perfil-img-section" style={{ position: "relative", display: "inline-block" }}>
+        <img src={imagenPerfil || perfil.photo} className="profilePic" alt="Foto perfil" />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImagenChange}
+          className="perfil-input"
+          style={{ display: 'none' }}
+          id="fileInput"
+        />
+        <button
+          type="button"
+          className="edit-profile-btn"
+          onClick={() => document.getElementById('fileInput').click()}
+        >
+          <i className="fa-solid fa-pen-to-square"></i>
+        </button>
+      </div>
+
+     {/* Nombre */}
       <h2 className="nombre">
         {editando === "name" ? (
           <>
@@ -124,21 +179,23 @@ export const Perfil = () => {
         ) : (
           <>
             {perfil.name}
-            <span> 
+            <span>
               <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("name", perfil.name)}></i>
             </span>
           </>
         )}
       </h2>
 
+     {/* Email */}
       <p className="email">{perfil.email}</p>
 
+     {/* Teléfono */}
       <div className="telefono">
         <h3>
           Teléfono:
           {editando === "phone" ? (
             <>
-              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus/>
+              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
             </>
           ) : (
             <>
