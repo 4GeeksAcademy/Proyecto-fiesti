@@ -9,15 +9,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
 from sqlalchemy import select
+import os
+from werkzeug.utils import secure_filename
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
 
+
 @api.route('/hello', methods=['GET'])
 def hello():
     return jsonify({"message": "Hola desde el backend"}), 200
+
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -48,11 +52,17 @@ def login():
 @api.route('/me', methods=['GET'])
 @jwt_required()
 def get_me():
-    user_id = int(get_jwt_identity())   # extrae el id del token
+    user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
+    print(get_jwt_identity())
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    return jsonify(user.serialize()), 200
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "email": user.email,
+        "role": user.role.value
+    })
 
 
 @api.route('/signup', methods=['POST'])
@@ -119,12 +129,14 @@ def list_actuaciones():
     acts = Actuacion.query.order_by(Actuacion.name.asc()).all()
     return jsonify([a.serialize() for a in acts]), 200
 
+
 @api.route("/actuaciones/<int:act_id>", methods=["GET"])
 def get_actuacion(act_id):
     act = Actuacion.query.get(act_id)
     if not act:
         return jsonify({"msg": "Actuación no encontrada"}), 404
     return jsonify(act.serialize()), 200
+
 
 def parse_time_or_none(value: str | None):
     if not value:
@@ -134,6 +146,7 @@ def parse_time_or_none(value: str | None):
         return datetime.strptime(value, "%H:%M").time()
     except ValueError:
         raise ValueError("Formato de hora inválido. Usa HH:MM")
+
 
 @api.route("/actuaciones", methods=["POST"])
 def create_actuacion():
@@ -174,15 +187,19 @@ def delete_actuacion(act_id):
     db.session.commit()
     return jsonify({"msg": "Actuación eliminada"}), 200
 
+
 @api.route('/users/personal', methods=['GET'])
 def get_personal_users():
-    
+
     try:
-        users = User.query.filter_by(role=RolEnum.PERSONAL).all()  
+        users = User.query.filter_by(role=RolEnum.PERSONAL).all()
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
+
+# -------------------------------ENDPOINTS DE PERFIL----------------------------------
+
 @api.route("/perfil", methods=["GET"])
 @jwt_required()
 def perfil():
@@ -218,3 +235,33 @@ def put_perfil():
     db.session.commit()
 
     return jsonify({"msg": "Perfil actualizado", "user": query_user.serialize()}), 200
+
+
+@api.route("/perfil/photo", methods=["PUT"])
+@jwt_required()
+def upload_profile_photo():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(int(current_user_id))
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    if "photo" not in request.files:
+        return jsonify({"error": "No se encontró el archivo"}), 400
+
+    file = request.files["photo"]
+    if file.filename == "":
+        return jsonify({"error": "Nombre de archivo vacío"}), 400
+
+    # Carpeta donde se guardan las fotos
+    upload_folder = os.path.join(os.getcwd(), "static", "profile_photos")
+    os.makedirs(upload_folder, exist_ok=True)
+
+    filename = secure_filename(f"user_{user.id}_{file.filename}")
+    filepath = os.path.join(upload_folder, filename)
+    file.save(filepath)
+
+    # Guarda la ruta relativa en el usuario
+    user.photo = f"/static/profile_photos/{filename}"
+    db.session.commit()
+
+    return jsonify({"msg": "Imagen subida correctamente", "photo": user.photo}), 200

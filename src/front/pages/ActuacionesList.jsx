@@ -92,6 +92,20 @@ export default function ActuacionesList() {
                 </button>
             </div>
 
+            {mostrarForm && (
+                <div className="card card-body mb-4">
+                    <CrearActuacion
+                        onCreated={(nueva) => {
+                            // nueva viene del backend: { id, name, description, hour, ... } ya serializada
+                            setActuaciones((prev) => [...prev, nueva]);
+                            setMsg("✅ Actuación creada");
+                            setTimeout(() => setMsg(""), 1500);
+                        }}
+                        onCancel={() => setMostrarForm(false)}
+                    />
+                </div>
+            )}
+
             {msg && <div className="alert alert-info">{msg}</div>}
 
             <input
@@ -124,7 +138,7 @@ export default function ActuacionesList() {
                                 </div>
                             </div>
 
-                            
+
                             {abierta === a.id && (
                                 <div className="mt-3 border rounded p-3 bg-light">
                                     <div className="row g-3 align-items-end">
