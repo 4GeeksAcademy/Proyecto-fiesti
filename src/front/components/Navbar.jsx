@@ -2,10 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
-	const token = localStorage.getItem("token"); // cuando login, guardo aquí el JWT
+	const token = sessionStorage.getItem("token");
 
 	const handleLogout = () => {
-		localStorage.removeItem("token");
+		sessionStorage.removeItem("token");
+		sessionStorage.removeItem("user");
 		navigate("/login");
 	};
 
@@ -13,32 +14,22 @@ export const Navbar = () => {
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			<div className="container">
 				{!token ? (
-					// Navbar cuando NO hay sesión
 					<>
-						<Link className="navbar-brand fw-bold" to="/">
-							Fiesti
-						</Link>
+						<Link className="navbar-brand fw-bold" to="/">Fiesti</Link>
 						<div className="ms-auto d-flex gap-2">
-							<Link
-								className="btn"
-								style={{ backgroundColor: "#800020", color: "white" }}
-								to="/login"
-							>
+							<Link className="btn" style={{ backgroundColor: "#800020", color: "white" }}
+								to="/login">
 								Iniciar sesión
 							</Link>
-							<Link
-								className="btn"
-								style={{ backgroundColor: "#b26688", color: "white" }}
-								to="/signup"
-							>
+							<Link className="btn" style={{ backgroundColor: "#b26688", color: "white" }}
+								to="/signup">
 								Crear cuenta
 							</Link>
 						</div>
 					</>
 				) : (
-					// Navbar cuando HAY sesión
 					<>
-						<Link className="navbar-brand" to="/festi-actual">
+						<Link className="navbar-brand" to="/festi">
 							<i className="fa-solid fa-arrow-left"></i>
 						</Link>
 
@@ -47,6 +38,9 @@ export const Navbar = () => {
 							type="button"
 							data-bs-toggle="collapse"
 							data-bs-target="#navbarNav"
+							aria-controls="navbarNav"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
 						>
 							<span className="navbar-toggler-icon"></span>
 						</button>
@@ -77,7 +71,7 @@ export const Navbar = () => {
 										style={{
 											backgroundColor: "#dc3545",
 											color: "white",
-											fontWeight: "bold"
+											fontWeight: "bold",
 										}}
 										onClick={handleLogout}
 									>
