@@ -187,6 +187,38 @@ def delete_actuacion(act_id):
     db.session.commit()
     return jsonify({"msg": "Actuación eliminada"}), 200
 
+@api.route("/actuaciones/<int:act_id>/asignacion", methods=["PATCH"])
+def asignar_actuacion(act_id):
+    data = request.get_json() or {}
+
+    escenario = (data.get("escenario") or "").strip() or None
+    inicio_str = (data.get("horaInicio") or data.get("hora_inicio") or "").strip()
+    fin_str = (data.get("horaFin") or data.get("hora_fin") or "").strip()
+
+    try:
+        inicio = parse_time_or_none(inicio_str)
+        fin = parse_time_or_none(fin_str)
+    except ValueError as e:
+        return jsonify({"msg": str(e)}), 400
+
+    if inicio and fin and fin <= inicio:
+        return jsonify({"msg": "La hora de fin debe ser posterior a la de inicio"}), 400
+
+    act = Actuacion.query.get(act_id)
+    if not act:
+        return jsonify({"msg": "Actuación no encontrada"}), 404
+
+    # Guardar asignación
+    act.escenario = escenario
+    act.hora_inicio = inicio
+    act.hora_fin = fin
+
+    # para ocultar la preferencia inicial una vez asignado:
+    act.hour = None
+
+    db.session.commit()
+    return jsonify({"msg": "Asignación guardada", "actuacion": act.serialize()}), 200
+
 
 @api.route('/users/personal', methods=['GET'])
 def get_personal_users():
