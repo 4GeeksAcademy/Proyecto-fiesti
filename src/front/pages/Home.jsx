@@ -37,9 +37,7 @@ export const Home = () => {
 	return (
 		<div className="text-center mt-5">
 			<img src={Logo} className="img-fluid mb-3" alt="Logo Fiesti" style={{maxWidth: 150}}/>
-			<p className="fiesti">
-				Fiesti
-			</p>
+			<h1>Fiesti</h1>
 
 			<h2 className="lead fw-bold ">
 				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones🎉

@@ -54,9 +54,10 @@
     color:#232428;
 }
 
-.fiesti {
+h1 {
     font-size: 2rem;
     font-weight: bold;
     color: #78141e;
     margin-bottom: 1rem;
+    text-align: center !important;
 }
