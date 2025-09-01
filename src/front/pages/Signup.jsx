@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
 import Logo from "../assets/img/Logo.png";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -19,8 +20,8 @@ const Signup = () => {
     });
 
     const [message, setMessage] = useState("");
-    const navigate=useNavigate();
-    
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -118,6 +119,16 @@ const Signup = () => {
                 <button type="submit" className="crear">
                     Crear cuenta
                 </button>
+
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                    <p className="cuenta mb-0"><b>¿Ya tienes una cuenta?</b></p>
+                    <Link to="/login" className="login2 fw-bold">
+                        Inicia sesión
+                    </Link>
+                </div>
+
+
+
             </form>
         </div>
     );
