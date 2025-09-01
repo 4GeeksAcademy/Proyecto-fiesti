@@ -21,6 +21,7 @@ const Signup = () => {
 
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -69,13 +70,27 @@ const Signup = () => {
                     onChange={handleChange}
                 />
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Contraseña"
-                    className="form-control mb-3"
-                    onChange={handleChange}
-                />
+
+                <div className="password-wrapper mb-3">
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="Contraseña"
+                        className="form-control"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                    {formData.password && (<button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="password-toggle-btn"
+                        tabIndex={-1}
+                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    >
+                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                    </button>)}
+                </div>
+
 
                 <input
                     type="text"
