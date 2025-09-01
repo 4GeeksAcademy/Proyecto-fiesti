@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/signup.css";
+import Logo from "../assets/img/Logo.png";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -33,10 +35,10 @@ const Signup = () => {
             });
             const data = await resp.json();
             if (resp.ok) {
-                setMessage("✅ Registro exitoso");
+                setMessage("✅ Cuenta creada correctamente");
                 navigate("/login");
             } else {
-                setMessage(data.msg || "❌ Error en el registro");
+                setMessage(data.msg || "❌ Error al crear cuenta");
             }
         } catch (error) {
             setMessage("❌ Error de conexión con el servidor");
@@ -44,9 +46,11 @@ const Signup = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Registro</h2>
+        <div className="container mt-5" style={{ maxWidth: 420 }}>
+            <img src={Logo} alt="Logo Fiesti" className="logo mb-4" />
+            <h1>Crear cuenta</h1>
             {message && <p>{message}</p>}
+
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -55,6 +59,7 @@ const Signup = () => {
                     className="form-control mb-3"
                     onChange={handleChange}
                 />
+
                 <input
                     type="email"
                     name="email"
@@ -62,6 +67,7 @@ const Signup = () => {
                     className="form-control mb-3"
                     onChange={handleChange}
                 />
+
                 <input
                     type="password"
                     name="password"
@@ -69,6 +75,7 @@ const Signup = () => {
                     className="form-control mb-3"
                     onChange={handleChange}
                 />
+
                 <input
                     type="text"
                     name="phone"
@@ -108,8 +115,8 @@ const Signup = () => {
                     </div>
                 )}
 
-                <button type="submit" className="btn btn-primary">
-                    Registrarse
+                <button type="submit" className="crear">
+                    Crear cuenta
                 </button>
             </form>
         </div>
