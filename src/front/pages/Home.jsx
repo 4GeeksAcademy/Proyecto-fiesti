@@ -42,7 +42,7 @@ export const Home = () => {
 			</p>
 
 			<h2 className="lead fw-bold ">
-				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones 🎉
+				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones🎉
 			</h2>
 			<p className="mt-3">
 				Con <strong>Fiesti</strong>, conecta organizadores con personal especializado.
