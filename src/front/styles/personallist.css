@@ -125,3 +125,8 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+.enlace-perfil {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
