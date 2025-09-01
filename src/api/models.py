@@ -24,7 +24,7 @@ class User(db.Model):
     phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
-
+    horario: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     card_number: Mapped[Optional[str]] = mapped_column(
         String(16), nullable=True)
@@ -43,6 +43,8 @@ class User(db.Model):
             "phone": self.phone,
             "photo": self.photo,
             "puesto": self.puesto,
+            "horario": self.horario,
+            "asignado": bool(self.puesto and self.horario),
             "card_number": self.card_number,
             "card_expiration": self.card_expiration,
             "card_holder": self.card_holder
