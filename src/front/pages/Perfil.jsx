@@ -208,6 +208,47 @@ export const Perfil = () => {
           )}
         </h3>
       </div>
+
+      {/* Edad
+      <div className="edad">
+        <h3>
+          Edad:
+          {editando === "age" ? (
+            <>
+              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
+            </>
+          ) : (
+            <>
+              {" "}{perfil.age}
+              <span>
+                <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("age", perfil.age)}
+                ></i>
+              </span>
+            </>
+          )}
+        </h3>
+      </div>
+
+      {/* Ciudad */}
+      {/* <div className="ciudad">
+        <h3>
+          Ciudad:
+          {editando === "city" ? (
+            <>
+              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
+            </>
+          ) : (
+            <>
+              {" "}{perfil.city}
+              <span>
+                <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("city", perfil.city)}
+                ></i>
+              </span>
+            </>
+          )}
+        </h3>
+      </div> */}
+
     </div>
   );
 };
