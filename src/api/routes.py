@@ -245,23 +245,17 @@ def upload_profile_photo():
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
-    if "photo" not in request.files:
-        return jsonify({"error": "No se encontró el archivo"}), 400
+    data = request.get_json()
+    photo_url = data.get("photo")
 
-    file = request.files["photo"]
-    if file.filename == "":
-        return jsonify({"error": "Nombre de archivo vacío"}), 400
+    if not photo_url:
+        return jsonify({"error": "No se recibió la URL de la foto"}), 400
 
-    # Carpeta donde se guardan las fotos
-    upload_folder = os.path.join(os.getcwd(), "static", "profile_photos")
-    os.makedirs(upload_folder, exist_ok=True)
-
-    filename = secure_filename(f"user_{user.id}_{file.filename}")
-    filepath = os.path.join(upload_folder, filename)
-    file.save(filepath)
-
-    # Guarda la ruta relativa en el usuario
-    user.photo = f"/static/profile_photos/{filename}"
+    # Guardamos directamente la URL de Cloudinary en la DB
+    user.photo = photo_url
     db.session.commit()
 
-    return jsonify({"msg": "Imagen subida correctamente", "photo": user.photo}), 200
+    return jsonify({
+        "msg": "Foto de perfil actualizada correctamente",
+        "user": user.serialize() 
+    }), 200
