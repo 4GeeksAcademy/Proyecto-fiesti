@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import "../styles/login.css";
+import Logo from "../assets/img/Logo.png";
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -7,6 +10,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -45,8 +49,9 @@ const Login = () => {
 
     return (
         <div className="container mt-5" style={{ maxWidth: 420 }}>
-            <h1 className="mb-4 text-center">Fiesti</h1>
-            {msg && <div className="alert alert-info text-center">{msg}</div>}
+            <img src={Logo} alt="Logo Fiesti" className="logo mb-4" />
+            <h1 className="mb-4 text-center">Iniciar sesión</h1>
+            {msg && <div className="alert text-center">{msg}</div>}
 
             <form onSubmit={handleLogin}>
                 <div className="mb-3">
@@ -63,36 +68,49 @@ const Login = () => {
                     />
                 </div>
 
-                <div className="mb-3">
+                <div className="password mb-3">
                     <label htmlFor="inputPassword" className="form-label">Contraseña</label>
                     <input
                         id="inputPassword"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         className="form-control"
-                        placeholder="********"
+                        placeholder="••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         autoComplete="current-password"
                         required
+                        style={{ paddingRight: "2.5rem" }}
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="password-toggle-btn"
+                        tabIndex={-1}
+                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} >
+                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i> 
+                    </button>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100 mt-2" disabled={loading}>
-                    {loading ? "Entrando..." : "Iniciar sesión"}
+                {/* Inicio sesión */}
+                <button type="submit" className="btn-login w-100 mt-2" disabled={loading}>
+                    {loading ? "Entrando..." : <b>Iniciar sesión</b>}
                 </button>
 
-                <p className="mt-3 text-center mb-1">¿No tienes cuenta?</p>
-                <div className="d-grid">
-                    <Link
-                        to="/signup"
-                        className="btn"
-                        style={{ backgroundColor: "#b26688", color: "#fff" }}
-                    >
-                        Crear cuenta
-                    </Link>
+                {/* Google Login */}
+                <p className="mt-3 text-center">Inicia sesión de forma rápida con tu cuenta de Google</p>
+                <button type="button" className="btn-google w-100">
+                    <i className="fa-brands fa-google me-2"></i><b>Google</b>
+                </button>
+
+                {/* Links */}
+                <div className="links mt-3">
+                    <Link to="#" className="forget" ><b>¿Has olvidado tu contraseña?</b></Link>
+                    <span className="signup ms-2">
+                        <Link to="/signup" className="signup"><b>Crear cuenta</b></Link>
+                    </span>
                 </div>
-            </form>
-        </div>
+            </form >
+        </div >
     );
 };
 
