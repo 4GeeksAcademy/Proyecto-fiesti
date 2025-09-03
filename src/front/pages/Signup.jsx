@@ -37,8 +37,11 @@ const Signup = () => {
             });
             const data = await resp.json();
             if (resp.ok) {
-                setMessage("✅ Cuenta creada correctamente");
-                navigate("/login");
+                setMessage("✅ Registro exitoso. Serás redirigido al login.");
+                setTimeout(() => {
+                    navigate("/login");
+                }, 3000);
+               
             } else {
                 setMessage(data.msg || "❌ Error al crear cuenta");
             }
@@ -118,18 +121,6 @@ const Signup = () => {
                     </select>
                 )}
 
-                {formData.role === "organizador" && (
-                    <div>
-                        <input type="text" name="card_number" placeholder="Número de tarjeta"
-                            className="form-control mb-3" onChange={handleChange} />
-                        <input type="text" name="card_cvc" placeholder="CVC"
-                            className="form-control mb-3" onChange={handleChange} />
-                        <input type="text" name="card_expiration" placeholder="MM/AAAA"
-                            className="form-control mb-3" onChange={handleChange} />
-                        <input type="text" name="card_holder" placeholder="Titular de la tarjeta"
-                            className="form-control mb-3" onChange={handleChange} />
-                    </div>
-                )}
 
                 <button type="submit" className="crear">
                     Crear cuenta
