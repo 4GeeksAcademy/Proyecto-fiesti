@@ -260,7 +260,7 @@ def put_perfil():
         return jsonify({"error": "Usuario no encontrado"}), 404
 
     # Actualiza solo los campos que vienen en el JSON
-    for field in ["email", "name", "phone", "photo", "puesto", "card_number", "card_cvc", "card_expiration", "card_holder"]:
+    for field in ["email", "name", "phone", "age", "city", "photo", "puesto", "card_number", "card_cvc", "card_expiration", "card_holder"]:
         if field in data:
             setattr(query_user, field, data[field])
 
