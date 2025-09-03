@@ -1,0 +1,114 @@
+/* 
+#78141e rojo
+#fffbe5 amarillo claro
+#fac263 amarillo oscuro
+#232428 negro
+#9d9ea1 gris
+#2d435b azul oscuro
+*/
+
+.logo {
+    display: block;
+    margin: 0 auto 1rem auto;
+    max-width: 150px;
+}
+
+.alert {
+    color: #78141e;
+    background: #fffbe5;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #78141e;
+    font-weight: 500;
+}
+
+.form-control {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #9d9ea1;
+    color: #9d9ea1;
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+}
+
+.form-control:focus {
+    background: transparent;
+    color: #9d9ea1;
+    border-bottom: 2px solid #9d9ea1;
+    box-shadow: none;
+    outline: none;
+}
+
+.password{
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 2.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2rem;
+    color: #9d9ea1;
+}
+
+.btn-login {
+    background: #78141e;
+    color: white;
+    border: 1px solid #78141e;
+    border-radius: 0.375rem; 
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+    outline: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-login:hover, .btn-login:focus {
+    background: #fac263;
+    color: #78141e;
+    border: 1px solid #78141e;
+    
+    text-decoration: none;
+}
+
+.btn-google {
+    background: #fac263;
+    color: #232428;
+    border: 1px solid #fac263;
+    border-radius: 0.375rem; 
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.5;
+    outline: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-google:hover, .btn-google:focus {
+    background: #78141e;
+    color: #fffbe5;
+    border: 1px solid #78141e;
+    text-decoration: none;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forget {
+    color: #2d435b;
+}
+
+.signup {
+    color: #78141e
+}

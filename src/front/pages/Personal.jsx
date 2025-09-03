@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../styles/personallist.css";
 
 export default function Personal() {
@@ -47,17 +48,17 @@ export default function Personal() {
 
     // Filtrado por búsqueda
     const empleadosFiltrados = empleados.filter((emp) =>
-    emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
-);
+        emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
+    );
 
     // Agrupación por inicial
     const grupos = empleadosFiltrados.reduce((acc, emp) => {
-    if (!emp?.name) return acc; 
-    const letra = emp.name[0].toUpperCase();
-    if (!acc[letra]) acc[letra] = [];
-    acc[letra].push(emp);
-    return acc;
-}, {});
+        if (!emp?.name) return acc;
+        const letra = emp.name[0].toUpperCase();
+        if (!acc[letra]) acc[letra] = [];
+        acc[letra].push(emp);
+        return acc;
+    }, {});
 
     return (
         <div className="personal-container">
@@ -111,6 +112,14 @@ export default function Personal() {
                                 {/* Desplegable para asignar puesto y hora */}
                                 {activo === emp.id && (
                                     <div className="desplegable">
+                                        <p><strong>Edad:</strong> {emp.age}</p>
+                                        <p><strong>Ciudad:</strong> {emp.city}</p>
+                                        <Link
+                                            to="/perfil"
+                                            className="enlace-perfil"
+                                        >
+                                        Ver más información
+                                        </Link>
                                         <label>
                                             Puesto:
                                             <select id={`puesto-${emp.id}`} defaultValue={emp.puesto}>

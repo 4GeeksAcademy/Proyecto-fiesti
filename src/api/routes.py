@@ -277,23 +277,53 @@ def upload_profile_photo():
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
 
-    if "photo" not in request.files:
-        return jsonify({"error": "No se encontró el archivo"}), 400
+    data = request.get_json()
+    photo_url = data.get("photo")
 
-    file = request.files["photo"]
-    if file.filename == "":
-        return jsonify({"error": "Nombre de archivo vacío"}), 400
+    if not photo_url:
+        return jsonify({"error": "No se recibió la URL de la foto"}), 400
 
-    # Carpeta donde se guardan las fotos
-    upload_folder = os.path.join(os.getcwd(), "static", "profile_photos")
-    os.makedirs(upload_folder, exist_ok=True)
-
-    filename = secure_filename(f"user_{user.id}_{file.filename}")
-    filepath = os.path.join(upload_folder, filename)
-    file.save(filepath)
-
-    # Guarda la ruta relativa en el usuario
-    user.photo = f"/static/profile_photos/{filename}"
+    # Guardamos directamente la URL de Cloudinary en la DB
+    user.photo = photo_url
     db.session.commit()
 
-    return jsonify({"msg": "Imagen subida correctamente", "photo": user.photo}), 200
+    return jsonify({
+        "msg": "Foto de perfil actualizada correctamente",
+        "user": user.serialize() 
+    }), 200
+
+# -------------------------------ENDPOINT PARA PAGO ORGANIZADOR----------------------------------
+@api.route("/perfil/pago", methods=["POST"])
+@jwt_required()
+def perfil_pago():
+    uid=get_jwt_identity()
+    user=User.query.get(uid)
+    if not user:
+        return jsonify({"msg": "No autorizado"}), 401
+    if user.role != RolEnum.ORGANIZADOR:
+        return jsonify({"msg": "Solo organizadores pueden pagar"}), 403
+
+    data= request.get_json() or {}
+    card_number= (data.get("card_number") or "").replace(" ", "")
+    card_cvc= (data.get("card_cvc") or "").strip()
+    card_expiration= (data.get("card_expiration") or "").strip()
+    card_holder= (data.get("card_holder") or "").strip()
+
+    if not (card_number and card_cvc and card_expiration and card_holder):
+        return jsonify({"msg":"Faltan datos de pago"}), 400
+    if not card_number.isdigit() or len(card_number) < 12:
+        return jsonify({"msg":"Targeta inválida"}), 400
+    if "/" not in card_Expiration:
+        return jsonify({"msg":"Fecha inválida, usa MM/AAAA"}), 400
+    if not card_cvc.isdigit() or len(card_cvc) not in (3, 4):
+        return jsonify({"msg":"CVC inválido"}), 400
+
+    masked: f"{'*' * (len(card_number) - 4)}{card_number[-4:]}"
+    user.card_number = masked
+    user.card_expiration = card_expiration
+    user.card_holder = card_holder
+    user.card_cvc = None
+
+    db.session.commit()
+    return jsonify({"msg":"Pago registrado, ahora puedes acceder a la funcionalidades de organizador", "user":serialize()}), 200                    
+    
