@@ -201,73 +201,91 @@ export const Perfil = () => {
       {/* Email */}
       <p className="email">{perfil.email}</p>
 
-      {/* Teléfono */}
-      <div className="telefono">
-        <h3>
-          Teléfono:
-          {editando === "phone" ? (
-            <input
-              type="text"
-              value={valorTemp}
-              onChange={(e) => setValorTemp(e.target.value)}
-              onKeyDown={handleKeyDown}
-              autoFocus
-            />
-          ) : (
-            <>
-              {" "}
-              {perfil.phone}
-              <span>
-                <i
-                  className="fa-solid fa-pen-to-square"
-                  type="button"
-                  onClick={() => handleEditar("phone", perfil.phone)}
-                ></i>
-              </span>
-            </>
-          )}
-        </h3>
-      </div>
+      <div className="infoPerfil">
+        {/* Teléfono */}
+        <div className="telefono">
+          <h3>
+            Teléfono
+            {editando === "phone" ? (
+              <input
+                type="text"
+                value={valorTemp}
+                onChange={(e) => setValorTemp(e.target.value)}
+                onKeyDown={handleKeyDown}
+                autoFocus
+              />
+            ) : (
+              <>
+                {" "}
+                {perfil.phone}
+                <span>
+                  <i
+                    className="fa-solid fa-pen-to-square"
+                    type="button"
+                    onClick={() => handleEditar("phone", perfil.phone)}
+                  ></i>
+                </span>
+              </>
+            )}
+          </h3>
+        </div>
 
-      {/* Edad */}
-      <div className="edad">
-        <h3>
-          Edad:
-          {editando === "age" ? (
-            <>
-              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
-            </>
-          ) : (
-            <>
-              {" "}{perfil.age}
-              <span>
-                <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("age", perfil.age)}
-                ></i>
-              </span>
-            </>
-          )}
-        </h3>
-      </div>
+        {/* Edad */}
+        <div className="age">
+          <h3>
+            Edad
+            {editando === "age" ? (
+              <input
+                type="text"
+                value={valorTemp ?? ""}
+                onChange={(e) => setValorTemp(e.target.value)}
+                onKeyDown={handleKeyDown}
+                autoFocus
+              />
+            ) : (
+              <>
+                {" "}
+                {perfil.age}
+                <span>
+                  <i
+                    className="fa-solid fa-pen-to-square"
+                    type="button"
+                    onClick={() => handleEditar("age", perfil.age)}
+                  ></i>
+                </span>
+              </>
+            )}
+          </h3>
+        </div>
 
-      {/* Ciudad */}
-      <div className="ciudad">
-        <h3>
-          Ciudad:
-          {editando === "city" ? (
-            <>
-              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
-            </>
-          ) : (
-            <>
-              {" "}{perfil.city}
-              <span>
-                <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("city", perfil.city)}
-                ></i>
-              </span>
-            </>
-          )}
-        </h3>
-      </div>
+        {/* Ciudad */}
+        <div className="city">
+          <h3>
+            Ciudad
+            {editando === "city" ? (
+              <input
+                type="text"
+                value={valorTemp ?? ""}
+                onChange={(e) => setValorTemp(e.target.value)}
+                onKeyDown={handleKeyDown}
+                autoFocus
+              />
+            ) : (
+              <>
+                {" "}
+                {perfil.city}
+                <span>
+                  <i
+                    className="fa-solid fa-pen-to-square"
+                    type="button"
+                    onClick={() => handleEditar("city", perfil.city)}
+                  ></i>
+                </span>
+              </>
+            )}
+          </h3>
+        </div>
+      </div> {/* cierra infoPerfil */}
 
     </div>
   );
