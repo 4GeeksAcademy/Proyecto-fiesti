@@ -124,6 +124,9 @@ def list_users():
     return jsonify([u.serialize() for u in users]), 200
 
 
+# -------------------------------ENDPOINTS DE ACTUACIONES----------------------------------
+
+
 @api.route("/actuaciones", methods=["GET"])
 def list_actuaciones():
     acts = Actuacion.query.order_by(Actuacion.name.asc()).all()
@@ -222,6 +225,8 @@ def asignar_actuacion(act_id):
     return jsonify({"msg": "Asignación guardada", "actuacion": act.serialize()}), 200
 
 
+# -------------------------------ENDPOINTS DE PERSONAL----------------------------------
+
 @api.route('/users/personal', methods=['GET'])
 def get_personal_users():
 
@@ -230,6 +235,52 @@ def get_personal_users():
         return jsonify([user.serialize() for user in users]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@api.route('/users/personal/<int:user_id>', methods=['PUT'])
+def edit_personal_users(user_id):
+
+    try:
+        data = request.get_json()
+        user = User.query.get(user_id)
+
+        if not user:
+            return jsonify({"msg": "Usuario no encontrado"}), 404
+
+        User.query.filter_by(id=user_id).update(data)
+        print(data)
+
+        db.session.commit()
+        updated_user = user.query.get(user_id)
+        return jsonify({"msg": "Cambio aplicado",
+                        "user": updated_user.serialize()}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+# @api.route("/actuaciones/photo", methods=["PUT"])
+# @jwt_required()
+# def upload_actuaciones_photo():
+#     current_user_id = get_jwt_identity()
+#     user = User.query.get(int(current_user_id))
+#     if not user:
+#         return jsonify({"error": "Usuario no encontrado"}), 404
+
+#     data = request.get_json()
+#     photo_url = data.get("photo")
+
+#     if not photo_url:
+#         return jsonify({"error": "No se recibió la URL de la foto"}), 400
+
+#     # Guardamos directamente la URL de Cloudinary en la DB
+#     user.photo = photo_url
+#     db.session.commit()
+
+#     return jsonify({
+#         "msg": "Foto de perfil actualizada correctamente",
+#         "user": user.serialize()
+#     }), 200
 
 
 # -------------------------------ENDPOINTS DE PERFIL----------------------------------
@@ -294,7 +345,24 @@ def upload_profile_photo():
         "user": user.serialize()
     }), 200
 
+
+@api.route("/perfil/<int:user_id>", methods=["GET"])
+@jwt_required()
+def perfil_usuario_por_id(user_id):
+    query_user = db.session.execute(
+        select(User).where(User.id == user_id)
+    ).scalar_one_or_none()
+
+    if not query_user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    return jsonify({"user": query_user.serialize()}), 200
+
+
+
 # -------------------------------ENDPOINT PARA PAGO ORGANIZADOR----------------------------------
+
+
 @api.route("/perfil/pago", methods=["POST"])
 @jwt_required()
 def perfil_pago():
@@ -314,7 +382,7 @@ def perfil_pago():
     data = request.get_json() or {}
     card_number = (data.get("card_number") or "").replace(" ", "")
     card_cvc = (data.get("card_cvc") or "").strip()
-    card_expiration = (data.get("card_expiration") or "").strip() 
+    card_expiration = (data.get("card_expiration") or "").strip()
     card_holder = (data.get("card_holder") or "").strip()
 
     # Validaciones mínimas

@@ -2,49 +2,107 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/personallist.css";
 
+
 export default function Personal() {
     const [empleados, setEmpleados] = useState([]);
     const [activo, setActivo] = useState(null);
     const [busqueda, setBusqueda] = useState("");
 
 
-    //  Cargar empleados desde backend
+    //  Cargar empleados desde backend y actualizados
     useEffect(() => {
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
             .then((res) => res.json())
             .then((data) => {
-                setEmpleados(data);
+                const empleadosConAsignado = data.map(emp => ({
+                    ...emp,
+                    asignado: emp.puesto && emp.horario ? true : false,
+                }));
+                setEmpleados(empleadosConAsignado);
             })
             .catch((err) => console.error("Error cargando empleados:", err));
     }, []);
 
-    // Toggle desplegable
+
+    //   Toggle desplegable
     const toggleEmpleado = (id) => {
         setActivo(activo === id ? null : id);
     };
 
-    // Guardar asignación
-    const guardarAsignacion = (id, puesto, horario) => {
-        setEmpleados(
-            empleados.map((e) =>
-                e.id === id
-                    ? { ...e, puesto, horario, asignado: true }
-                    : e
-            )
-        );
-        setActivo(null);
+    //   Guardar asignación con FETCH
+    const guardarAsignacion = async (id, puesto, horario) => {
+        const userData = { puesto, horario };
+        const token = sessionStorage.getItem("token");
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        if (token) {
+            myHeaders.append("Authorization", `Bearer ${token}`);
+        }
+
+        try {
+            const response = await fetch(
+                import.meta.env.VITE_BACKEND_URL + `/api/users/personal/${id}`,
+                {
+                    method: "PUT",
+                    headers: myHeaders,
+                    body: JSON.stringify(userData),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Error al guardar la asignación.");
+            }
+
+            const data = await response.json();
+            console.log("Asignación guardada con éxito:", data);
+
+            setEmpleados(
+                empleados.map((e) =>
+                    e.id === id ? { ...e, puesto, horario, asignado: true } : e
+                )
+            );
+            setActivo(null);
+        } catch (error) {
+            console.error("Hubo un problema al guardar la asignación:", error);
+        }
     };
 
-    // Borrar asignación
-    const borrarAsignacion = (id) => {
-        setEmpleados(
-            empleados.map((e) =>
-                e.id === id
-                    ? { ...e, puesto: "", horario: "", asignado: false }
-                    : e
-            )
-        );
+    //   Borrar asignación con FETCH
+    const borrarAsignacion = async (id) => {
+        const userData = { puesto: "", horario: "" };
+        const token = sessionStorage.getItem("token");
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        if (token) {
+            myHeaders.append("Authorization", `Bearer ${token}`);
+        }
+
+        try {
+            const response = await fetch(
+                import.meta.env.VITE_BACKEND_URL + `/api/users/personal/${id}`,
+                {
+                    method: "PUT",
+                    headers: myHeaders,
+                    body: JSON.stringify(userData),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Error al borrar la asignación.");
+            }
+
+            setEmpleados(
+                empleados.map((e) =>
+                    e.id === id ? { ...e, puesto: "", horario: "", asignado: false } : e
+                )
+            );
+        } catch (error) {
+            console.error("Hubo un problema al borrar la asignación:", error);
+        }
     };
+
 
     // Filtrado por búsqueda
     const empleadosFiltrados = empleados.filter((emp) =>
@@ -115,11 +173,12 @@ export default function Personal() {
                                         <p><strong>Edad:</strong> {emp.age}</p>
                                         <p><strong>Ciudad:</strong> {emp.city}</p>
                                         <Link
-                                            to="/perfil"
+                                            to={`/perfil/${emp.id}`}
                                             className="enlace-perfil"
                                         >
-                                        Ver más información
+                                            Ver más información
                                         </Link>
+
                                         <label>
                                             Puesto:
                                             <select id={`puesto-${emp.id}`} defaultValue={emp.puesto}>

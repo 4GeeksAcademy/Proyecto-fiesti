@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/festiactual.css";
+import CloudinaryUploader from "../components/Cloudinary";
 
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
@@ -79,6 +80,50 @@ const FestiActual = () => {
     };
     fetchUser();
   }, []);
+
+
+// Actualizar foto con la URL de Cloudinary
+  /* const putFotoFesti = async (url) => {
+
+    let token = sessionStorage.getItem("token");
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const raw = JSON.stringify({ photo: url });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/festival/photo",
+        requestOptions
+      );
+      if (response.status !== 200) {
+        throw new Error("Error al actualizar la foto del festival");
+      }
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Foto del festival actualizada correctamente",
+      });
+      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+      getPerfil();
+    } catch (error) {
+      console.error(error);
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Error al actualizar la foto del festival",
+      });
+      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+    }
+  }; */
+
 
   // Filtrado por búsqueda empleado
   const empleadosFiltrados = empleados.filter((emp) =>

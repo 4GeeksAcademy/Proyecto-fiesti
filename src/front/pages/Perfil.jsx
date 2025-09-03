@@ -1,11 +1,14 @@
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect } from "react";
 import "../styles/perfil.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CloudinaryUploader from "../components/Cloudinary";
 
 export const Perfil = () => {
   let navigate = useNavigate();
+
+  const { userId } = useParams();
+  const isOwnProfile = !userId;
 
   const { store, dispatch } = useGlobalReducer();
 
@@ -25,19 +28,24 @@ export const Perfil = () => {
     };
 
     try {
-      const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/perfil",
-        requestOptions
-      );
+      const url = userId
+        ? import.meta.env.VITE_BACKEND_URL + `/api/perfil/${userId}`
+        : import.meta.env.VITE_BACKEND_URL + "/api/perfil";
+
+      const response = await fetch(url, { method: "GET", headers: myHeaders });
       const result = await response.json();
-      if (response.status !== 200) {
+
+      if (!response.ok) {
         navigate("/login");
         throw new Error("Error fetching profile data");
       }
+
       setPerfil(result.user || {});
-      const mustPay =
-        (result.user?.role === "organizador") && !result.user?.card_number;
-      setNeedsPayment(mustPay);
+      if (isOwnProfile) {
+        const mustPay =
+          result.user?.role === "organizador" && !result.user?.card_number;
+        setNeedsPayment(mustPay);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,7 +53,7 @@ export const Perfil = () => {
 
   useEffect(() => {
     getPerfil();
-  }, []);
+  }, [userId]);
 
   // Estado para saber qué campo se está editando
   const [editando, setEditando] = useState(null);
@@ -53,6 +61,7 @@ export const Perfil = () => {
 
   // Iniciar edición
   const handleEditar = (campo, valorInicial) => {
+    if (!isOwnProfile) return; 
     setEditando(campo);
     setValorTemp(valorInicial);
   };
@@ -81,6 +90,7 @@ export const Perfil = () => {
 
   // Actualizar perfil después de editar campos
   const putPerfil = async () => {
+    if (!isOwnProfile) return;
     let token = sessionStorage.getItem("token");
 
     const myHeaders = new Headers();
@@ -121,6 +131,7 @@ export const Perfil = () => {
 
   // Actualizar foto con la URL de Cloudinary
   const putFotoPerfil = async (url) => {
+    if (!isOwnProfile) return;
     let token = sessionStorage.getItem("token");
 
     const myHeaders = new Headers();
@@ -170,6 +181,7 @@ export const Perfil = () => {
 
   const doPay = async (e) => {
     e.preventDefault();
+    if (!isOwnProfile) return;
     setPayMsg("");
     const token = sessionStorage.getItem("token");
 
