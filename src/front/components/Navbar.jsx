@@ -1,4 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
+import "../styles/navbar.css";
+import { useState } from "react";
+import Logo from "../assets/img/Logo.png";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
@@ -10,6 +13,13 @@ export const Navbar = () => {
 		navigate("/login");
 	};
 
+	// ---------------Modo noche---------------------
+	const [darkMode, setDarkMode] = useState(false);
+
+	const toggleModo = () => {
+		setDarkMode(!darkMode);
+	};
+
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			<div className="container">
@@ -17,20 +27,18 @@ export const Navbar = () => {
 					<>
 						<Link className="navbar-brand fw-bold" to="/">Fiesti</Link>
 						<div className="ms-auto d-flex gap-2">
-							<Link className="btn" style={{ backgroundColor: "#800020", color: "white" }}
-								to="/login">
+							<Link className="btn-loginNav" to="/login">
 								Iniciar sesión
 							</Link>
-							<Link className="btn" style={{ backgroundColor: "#b26688", color: "white" }}
-								to="/signup">
+							<Link className="btn-singupNav" to="/signup">
 								Crear cuenta
 							</Link>
 						</div>
 					</>
 				) : (
 					<>
-						<Link className="navbar-brand" to="/festi">
-							<i className="fa-solid fa-arrow-left"></i>
+						<Link to="/festi">
+							<img src={Logo} alt="Logo Fiesti" className="logoNav mb-4" />
 						</Link>
 
 						<button
@@ -47,34 +55,34 @@ export const Navbar = () => {
 
 						<div className="collapse navbar-collapse" id="navbarNav">
 							<ul className="navbar-nav ms-auto gap-2">
+								<li className="modo" onClick={toggleModo} style={{ cursor: "pointer" }}>
+									{darkMode ? (
+										<i className="fa-solid fa-sun"></i>
+									) : (
+										<i className="fa-solid fa-moon"></i>
+									)}
+								</li>
 								<li className="nav-item">
 									<Link
-										className="btn"
-										style={{ backgroundColor: "#800020", color: "white" }}
-										to="/actuaciones"
-									>
+										className="btn-actuacionesNav" to="/actuaciones">
 										Actuaciones
 									</Link>
 								</li>
 								<li className="nav-item">
 									<Link
-										className="btn"
-										style={{ backgroundColor: "#b26688", color: "white" }}
-										to="/perfil"
-									>
+										className="btn-personalNav" to="/personal">
+										Personal
+									</Link>
+								</li>
+								<li className="nav-item">
+									<Link
+										className="btn-perfilNav" to="/perfil" >
 										Perfil
 									</Link>
 								</li>
 								<li className="nav-item ms-3">
 									<button
-										className="btn px-4"
-										style={{
-											backgroundColor: "#dc3545",
-											color: "white",
-											fontWeight: "bold",
-										}}
-										onClick={handleLogout}
-									>
+										className="btn-logoutNav px-4" onClick={handleLogout}>
 										Salir
 									</button>
 								</li>
