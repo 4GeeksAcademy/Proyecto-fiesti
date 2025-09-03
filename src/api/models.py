@@ -21,10 +21,12 @@ class User(db.Model):
         String(120), unique=True, nullable=False)
     role: Mapped[RolEnum] = mapped_column(Enum(RolEnum), nullable=False)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
+    age: Mapped[int] = mapped_column(nullable=True)
+    city: Mapped[str] = mapped_column(String(120), nullable=True)
     phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
-    horario: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    horario: Mapped[int] = mapped_column(nullable=True)
     puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     card_number: Mapped[Optional[str]] = mapped_column(
         String(16), nullable=True)
@@ -44,7 +46,8 @@ class User(db.Model):
             "photo": self.photo,
             "puesto": self.puesto,
             "horario": self.horario,
-            "asignado": bool(self.puesto and self.horario),
+            "age": self.age,
+            "city": self.city,
             "card_number": self.card_number,
             "card_expiration": self.card_expiration,
             "card_holder": self.card_holder

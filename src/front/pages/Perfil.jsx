@@ -2,45 +2,46 @@ import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect } from "react";
 import "../styles/perfil.css";
 import { useNavigate } from "react-router-dom";
-
+import CloudinaryUploader from "../components/Cloudinary";
 
 export const Perfil = () => {
   let navigate = useNavigate();
 
-  const { store, dispatch } = useGlobalReducer()
+  const { store, dispatch } = useGlobalReducer();
 
-  const [perfil, setPerfil] = useState({})
+  const [perfil, setPerfil] = useState({});
 
   async function getPerfil() {
     let token = sessionStorage.getItem("token");
 
     const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`); // Añade el token en la cabecera de autorización
+    myHeaders.append("Authorization", `Bearer ${token}`);
 
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
-      redirect: "follow"
+      redirect: "follow",
     };
 
     try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/perfil", requestOptions); // Coge la URL del .env y le añade el endpoint
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/perfil",
+        requestOptions
+      );
       const result = await response.json();
       if (response.status !== 200) {
         navigate("/login");
         throw new Error("Error fetching profile data");
       }
-      setPerfil(result.user)
-    }
-    catch (error) {
+      setPerfil(result.user);
+    } catch (error) {
       console.error(error);
-    };
+    }
   }
 
   useEffect(() => {
     getPerfil();
   }, []);
-
 
   // Estado para saber qué campo se está editando
   const [editando, setEditando] = useState(null);
@@ -52,7 +53,6 @@ export const Perfil = () => {
     setValorTemp(valorInicial);
   };
 
-
   // Guardar cambios
   const handleGuardar = async () => {
     try {
@@ -62,7 +62,7 @@ export const Perfil = () => {
     } catch (error) {
       dispatch({
         type: "SET_MESSAGE",
-        payload: "Error al actualizar el perfil"
+        payload: "Error al actualizar el perfil",
       });
       dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
     }
@@ -75,73 +75,84 @@ export const Perfil = () => {
     }
   };
 
-  // Actualizar perfil después de editar
+  // Actualizar perfil después de editar campos
   const putPerfil = async () => {
     let token = sessionStorage.getItem("token");
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`); // Añade el token en la cabecera de autorización
+    myHeaders.append("Authorization", `Bearer ${token}`);
 
     const raw = JSON.stringify({
-      [editando]: valorTemp
+      [editando]: valorTemp,
     });
 
     const requestOptions = {
       method: "PUT",
       headers: myHeaders,
       body: raw,
-      redirect: "follow"
+      redirect: "follow",
     };
 
     try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/perfil", requestOptions); // Coge la URL del .env y le añade el endpoint
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/perfil",
+        requestOptions
+      );
       const result = await response.json();
       if (response.status !== 200) {
         navigate("/login");
         throw new Error("Error updating profile data");
       }
-      dispatch({ type: "SET_MESSAGE", payload: "Perfil actualizado correctamente" });
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Perfil actualizado correctamente",
+      });
       dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
-      getPerfil() // Vuelve a cargar el perfil para que se actualice con los datos nuevos
-    }
-    catch (error) {
+      getPerfil();
+    } catch (error) {
       console.error(error);
+    }
+  };
+
+  // Actualizar foto con la URL de Cloudinary
+  const putFotoPerfil = async (url) => {
+    let token = sessionStorage.getItem("token");
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    const raw = JSON.stringify({ photo: url });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
     };
-  }
 
-  // Estados para editar foto del perfil
-  const [imagenPerfil, setImagenPerfil] = useState(null);
-
-  // Buscar imagen en galería para cambiarla
-  const handleImagenChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImagenPerfil(URL.createObjectURL(file)); // Para mostrar la imagen localmente
-
-      // Subir al backend
-      let token = sessionStorage.getItem("token");
-      const formData = new FormData();
-      formData.append("photo", file);
-
-      try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/perfil/photo", {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${token}`
-          },
-          body: formData
-        });
-        if (response.status !== 200) {
-          throw new Error("Error al subir la imagen");
-        }
-        dispatch({ type: "SET_MESSAGE", payload: "Imagen actualizada correctamente" });
-        dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
-        getPerfil(); // Recarga el perfil con la nueva imagen
-      } catch (error) {
-        dispatch({ type: "SET_MESSAGE", payload: "Error al subir la imagen" });
-        dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/api/perfil/photo",
+        requestOptions
+      );
+      if (response.status !== 200) {
+        throw new Error("Error al actualizar la foto de perfil");
       }
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Foto de perfil actualizada correctamente",
+      });
+      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
+      getPerfil();
+    } catch (error) {
+      console.error(error);
+      dispatch({
+        type: "SET_MESSAGE",
+        payload: "Error al actualizar la foto de perfil",
+      });
+      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
     }
   };
 
@@ -149,59 +160,68 @@ export const Perfil = () => {
     <div className="infoPerfil">
       <h1>Perfil</h1>
 
-     {/* Imagen de perfil */}
-      <div className="perfil-img-section" style={{ position: "relative", display: "inline-block" }}>
-        <img src={imagenPerfil || perfil.photo} className="profilePic" alt="Foto perfil" />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImagenChange}
-          className="perfil-input"
-          style={{ display: 'none' }}
-          id="fileInput"
-        />
-        <button
-          type="button"
+      {/* Imagen de perfil */}
+      <div
+        className="perfil-img-section"
+        style={{ position: "relative", display: "inline-block" }}
+      >
+        <img src={perfil.photo} className="profilePic" alt="Foto perfil" />
+        <CloudinaryUploader
+          onUpload={(url) => putFotoPerfil(url)}
           className="edit-profile-btn"
-          onClick={() => document.getElementById('fileInput').click()}
         >
           <i className="fa-solid fa-pen-to-square"></i>
-        </button>
+        </CloudinaryUploader>
       </div>
 
-     {/* Nombre */}
+      {/* Nombre */}
       <h2 className="nombre">
         {editando === "name" ? (
-          <>
-            <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus /> {/* el autofocus hace que se ponga el cursor al final de la palabra para editar desde ahí */}
-
-          </>
+          <input
+            type="text"
+            value={valorTemp}
+            onChange={(e) => setValorTemp(e.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
         ) : (
           <>
             {perfil.name}
             <span>
-              <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("name", perfil.name)}></i>
+              <i
+                className="fa-solid fa-pen-to-square"
+                type="button"
+                onClick={() => handleEditar("name", perfil.name)}
+              ></i>
             </span>
           </>
         )}
       </h2>
 
-     {/* Email */}
+      {/* Email */}
       <p className="email">{perfil.email}</p>
 
-     {/* Teléfono */}
+      {/* Teléfono */}
       <div className="telefono">
         <h3>
           Teléfono:
           {editando === "phone" ? (
-            <>
-              <input type="text" value={valorTemp} onChange={(e) => setValorTemp(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
-            </>
+            <input
+              type="text"
+              value={valorTemp}
+              onChange={(e) => setValorTemp(e.target.value)}
+              onKeyDown={handleKeyDown}
+              autoFocus
+            />
           ) : (
             <>
-              {" "}{perfil.phone}
+              {" "}
+              {perfil.phone}
               <span>
-                <i className="fa-solid fa-pen-to-square" type="button" onClick={() => handleEditar("phone", perfil.phone)}
+                <i
+                  className="fa-solid fa-pen-to-square"
+                  type="button"
+                  onClick={() => handleEditar("phone", perfil.phone)}
                 ></i>
               </span>
             </>
@@ -209,7 +229,7 @@ export const Perfil = () => {
         </h3>
       </div>
 
-      {/* Edad
+      {/* Edad */}
       <div className="edad">
         <h3>
           Edad:
@@ -230,7 +250,7 @@ export const Perfil = () => {
       </div>
 
       {/* Ciudad */}
-      {/* <div className="ciudad">
+      <div className="ciudad">
         <h3>
           Ciudad:
           {editando === "city" ? (
@@ -247,7 +267,7 @@ export const Perfil = () => {
             </>
           )}
         </h3>
-      </div> */}
+      </div>
 
     </div>
   );
