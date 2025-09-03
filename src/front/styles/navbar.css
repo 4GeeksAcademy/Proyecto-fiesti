@@ -1,0 +1,64 @@
+/* 
+#78141e rojo
+#fffbe5 amarillo claro
+#fac263 amarillo oscuro
+#232428 negro
+#9d9ea1 gris
+#2d435b azul oscuro
+*/
+
+.navbar {
+  background-color: #fffbe5 !important;
+  padding: 10px 20px;
+}
+
+.logoNav {
+  height: 35px;             
+  width: auto;
+  vertical-align: middle;
+  margin-top: 20px;
+}
+
+
+
+.btn-perfilNav {
+  background-color: #fac263;
+  color: #78141e;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 6px 15px;
+  text-decoration: none; /* Quitar subrayado del link */
+}
+
+.btn-actuacionesNav, .btn-personalNav {
+  background-color: #fffbe5;
+  color: #78141e;
+  font-weight: bold;
+  border: #78141e 1px solid;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 5px 15px;
+  text-decoration: none;
+}
+
+.btn-logoutNav {
+  background-color: #78141e;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 6px 15px;
+}
+
+.modo {
+  color: #78141e;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
