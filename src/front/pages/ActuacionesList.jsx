@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CrearActuacion from "./CrearActuacion";
+import "../styles/actuacioneslist.css"
 
 export default function ActuacionesList() {
     const [actuaciones, setActuaciones] = useState([]);
@@ -50,27 +51,35 @@ export default function ActuacionesList() {
         setAbierta((prev) => (prev === id ? null : id));
     };
 
+    // Helpers para horario "HH:MM-HH:MM"
+    const splitHorario = (horario) => {
+        if (!horario) return { inicio: "", fin: "" };
+        const [inicio, fin] = horario.split("-").map((s) => s?.trim() || "");
+        return { inicio: inicio || "", fin: fin || "" };
+    };
+    const getInicio = (horario) => splitHorario(horario).inicio;
+
     const guardarAsignacion = async (id, escenario, inicio, fin) => {
         setMsg("");
         if (inicio && fin && fin <= inicio) {
             setMsg("⚠️ La hora de fin debe ser posterior a la de inicio.");
             return;
         }
+        const payload = { escenario, horario: inicio && fin ? `${inicio}-${fin}` : "" };
+
         try {
-            const resp = await fetch(
-                import.meta.env.VITE_BACKEND_URL + `/api/actuaciones/${id}/asignacion`,
-                {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ escenario, horaInicio: inicio, horaFin: fin }),
-                }
-            );
+            const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/actuaciones/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
             const data = await resp.json();
             if (!resp.ok) {
                 setMsg(data.msg || "❌ Error al guardar la asignación");
                 return;
             }
-            setActuaciones((prev) => prev.map((a) => (a.id === id ? data.actuacion : a)));
+            const updated = data.actuacion ?? data;
+            setActuaciones(prev => prev.map(a => a.id === id ? updated : a));
             setAbierta(null);
             setMsg("✅ Asignación guardada");
             setTimeout(() => setMsg(""), 1500);
@@ -82,20 +91,18 @@ export default function ActuacionesList() {
 
     const limpiarAsignacion = async (id) => {
         try {
-            const resp = await fetch(
-                import.meta.env.VITE_BACKEND_URL + `/api/actuaciones/${id}/asignacion`,
-                {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ escenario: null, horaInicio: null, horaFin: null }),
-                }
-            );
+            const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/actuaciones/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ escenario: null, horario: "" }),
+            });
             const data = await resp.json();
             if (!resp.ok) {
                 setMsg(data.msg || "❌ Error al limpiar la asignación");
                 return;
             }
-            setActuaciones((prev) => prev.map((a) => (a.id === id ? data.actuacion : a)));
+            const updated = data.actuacion ?? data;
+            setActuaciones(prev => prev.map(a => a.id === id ? updated : a));
             setMsg("🧹 Asignación eliminada");
             setTimeout(() => setMsg(""), 1500);
         } catch (err) {
@@ -104,7 +111,7 @@ export default function ActuacionesList() {
         }
     };
 
-    const isAssigned = (a) => !!(a.escenario || a.horaInicio || a.horaFin);
+    const isAssigned = (a) => !!(a?.escenario || a?.horario);
 
     // Filtrado por texto
     const listFiltrada = actuaciones.filter((a) =>
@@ -114,7 +121,7 @@ export default function ActuacionesList() {
     // Columnas
     const noAsignadas = listFiltrada.filter((a) => !isAssigned(a));
 
-    // agrupar asignadas por escenario y ordenar por horaInicio
+    // agrupar asignadas por escenario y ordenar por inicio de 'horario'
     const asignadas = listFiltrada.filter(isAssigned);
     const gruposEscenario = asignadas.reduce((acc, a) => {
         const key = a.escenario || "Sin escenario";
@@ -124,112 +131,142 @@ export default function ActuacionesList() {
 
     Object.keys(gruposEscenario).forEach((key) => {
         gruposEscenario[key].sort((a, b) => {
-            if (!a.horaInicio) return 1;
-            if (!b.horaInicio) return -1;
-            return a.horaInicio.localeCompare(b.horaInicio);
+            const ia = getInicio(a.horario);
+            const ib = getInicio(b.horario);
+            if (!ia) return 1;
+            if (!ib) return -1;
+            return ia.localeCompare(ib);
         });
     });
 
-    const ActItem = ({ a }) => (
-        <li className="list-group-item">
-            <div className="d-flex justify-content-between align-items-start">
-                <div>
-                    <strong>{a.name}</strong>{" "}
-                    {isAssigned(a) ? (
-                        <span className="ms-2">
-                            <span className="badge text-bg-primary me-2">
-                                {a.escenario || "Sin escenario"}
+    const ActItem = ({ a }) => {
+        const splitHorario = (horario) => {
+            if (!horario) return { inicio: "", fin: "" };
+            const [inicio, fin] = horario.split("-").map(s => s?.trim() || "");
+            return { inicio, fin };
+        };
+        const { inicio, fin } = splitHorario(a.horario);
+        const isAssigned = (x) => !!(x?.escenario || x?.horario);
+
+        return (
+            <li className="list-group-item">
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>{a.name}</strong>{" "}
+                        {isAssigned(a) ? (
+                            <span className="ms-2">
+                                <span className="badge badge-escenario me-2">
+                                    {a.escenario || "Sin escenario"}
+                                </span>
+                                <span className="badge badge-horario">
+                                    {(inicio || "--:--")} – {(fin || "--:--")}
+                                </span>
                             </span>
-                            <span className="badge text-bg-secondary">
-                                {a.horaInicio || "--:--"} – {a.horaFin || "--:--"}
-                            </span>
-                        </span>
-                    ) : (
-                        a.hour ? <span className="text-muted">({a.hour})</span> : <span className="text-muted">Sin asignación</span>
-                    )}
-                </div>
+                        ) : (
+                            <span className="text-muted">Sin asignación</span>
+                        )}
+                    </div>
 
-                <div className="d-flex gap-2">
-                    {isAssigned(a) && (
-                        <button
-                            className="btn btn-outline-secondary btn-sm"
-                            onClick={() => limpiarAsignacion(a.id)}
-                        >
-                            Quitar asignación
-                        </button>
-                    )}
-                    <button className="btn btn-outline-danger btn-sm" onClick={() => handleDelete(a.id)}>
-                        Eliminar
-                    </button>
-                    <button className="btn btn-outline-primary btn-sm" onClick={() => toggleEditor(a.id)}>
-                        {abierta === a.id ? "Cerrar" : "Asignar"}
-                    </button>
-                </div>
-            </div>
-
-            {abierta === a.id && (
-                <div className="mt-3 border rounded p-3 bg-light">
-                    <div className="row g-3 align-items-end">
-                        <div className="col-md-4">
-                            <label className="form-label">Escenario</label>
-                            <select id={`escenario-${a.id}`} className="form-select" defaultValue={a.escenario || ""}>
-                                <option value="">Selecciona escenario</option>
-                                {ESCENARIOS.map((esc) => (
-                                    <option key={esc} value={esc}>
-                                        {esc}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label className="form-label">Inicio</label>
-                            <select id={`inicio-${a.id}`} className="form-select" defaultValue={a.horaInicio || ""}>
-                                <option value="">--:--</option>
-                                {HORAS.map((h) => (
-                                    <option key={h} value={h}>
-                                        {h}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label className="form-label">Fin</label>
-                            <select id={`fin-${a.id}`} className="form-select" defaultValue={a.horaFin || ""}>
-                                <option value="">--:--</option>
-                                {HORAS.map((h) => (
-                                    <option key={h} value={h}>
-                                        {h}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="col-md-2 d-grid">
+                    <div className="d-flex gap-2">
+                        {isAssigned(a) && (
                             <button
-                                className="btn btn-primary"
-                                onClick={() => {
-                                    const escenario = document.getElementById(`escenario-${a.id}`).value;
-                                    const inicio = document.getElementById(`inicio-${a.id}`).value;
-                                    const fin = document.getElementById(`fin-${a.id}`).value;
-                                    guardarAsignacion(a.id, escenario, inicio, fin);
-                                }}
+                                className="btn btn-borrar-rojo btn-sm"
+                                onClick={() => limpiarAsignacion(a.id)}
                             >
-                                Guardar
+                                Quitar asignación
                             </button>
-                        </div>
+                        )}
+                        <button
+                            className="btn btn-outline-rojo btn-sm"
+                            onClick={() => handleDelete(a.id)}
+                        >
+                            Eliminar
+                        </button>
+                        <button
+                            className="btn btn-rojo btn-sm"
+                            onClick={() => toggleEditor(a.id)}
+                        >
+                            {abierta === a.id ? "Cerrar" : "Asignar"}
+                        </button>
                     </div>
                 </div>
-            )}
-        </li>
-    );
+
+                {abierta === a.id && (
+                    <div className="mt-3 rounded p-3 editor">
+                        <div className="row g-3 align-items-end">
+                            <div className="col-md-4">
+                                <label className="form-label">Escenario</label>
+                                <select
+                                    id={`escenario-${a.id}`}
+                                    className="form-select"
+                                    defaultValue={a.escenario || ""}
+                                >
+                                    <option value="">Selecciona escenario</option>
+                                    {ESCENARIOS.map((esc) => (
+                                        <option key={esc} value={esc}>
+                                            {esc}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="col-md-3">
+                                <label className="form-label">Inicio</label>
+                                <select
+                                    id={`inicio-${a.id}`}
+                                    className="form-select"
+                                    defaultValue={inicio || ""}
+                                >
+                                    <option value="">--:--</option>
+                                    {HORAS.map((h) => (
+                                        <option key={h} value={h}>
+                                            {h}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="col-md-3">
+                                <label className="form-label">Fin</label>
+                                <select
+                                    id={`fin-${a.id}`}
+                                    className="form-select"
+                                    defaultValue={fin || ""}
+                                >
+                                    <option value="">--:--</option>
+                                    {HORAS.map((h) => (
+                                        <option key={h} value={h}>
+                                            {h}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="col-md-2 d-grid">
+                                <button
+                                    className="btn btn-rojo"
+                                    onClick={() => {
+                                        const escenario = document.getElementById(`escenario-${a.id}`).value;
+                                        const inicioSel = document.getElementById(`inicio-${a.id}`).value;
+                                        const finSel = document.getElementById(`fin-${a.id}`).value;
+                                        guardarAsignacion(a.id, escenario, inicioSel, finSel);
+                                    }}
+                                >
+                                    Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </li>
+        );
+    };
 
     return (
-        <div className="container mt-4" style={{ maxWidth: 1200 }}>
+        <div className="container mt-4 actuaciones-container" style={{ maxWidth: 1200 }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Actuaciones</h2>
-                <button className="btn btn-primary" onClick={() => setMostrarForm((v) => !v)}>
+                <button className="btn btn-rojo" onClick={() => setMostrarForm((v) => !v)}>
                     {mostrarForm ? "Cancelar" : "➕ Nueva actuación"}
                 </button>
             </div>
@@ -262,8 +299,9 @@ export default function ActuacionesList() {
                 {/* No asignadas */}
                 <div className="col-12 col-lg-6">
                     <div className="card h-100">
-                        <div className="card-header bg-light">
-                            <strong>No asignadas</strong> {noAsignadas.length > 0 && <span className="text-muted">({noAsignadas.length})</span>}
+                        <div className="card-header">
+                            <strong>No asignadas</strong>{" "}
+                            {noAsignadas.length > 0 && <span className="text-white-50">({noAsignadas.length})</span>}
                         </div>
                         <ul className="list-group list-group-flush">
                             {noAsignadas.length === 0 ? (
@@ -275,25 +313,22 @@ export default function ActuacionesList() {
                     </div>
                 </div>
 
-                {/* Asignadas agrupadas por escenario */}
+                {/* Asignadas */}
                 <div className="col-12 col-lg-6">
                     <div className="card h-100">
-                        <div className="card-header bg-light">
-                            <strong>Asignadas</strong> {asignadas.length > 0 && <span className="text-muted">({asignadas.length})</span>}
+                        <div className="card-header">
+                            <strong>Asignadas</strong>{" "}
+                            {asignadas.length > 0 && <span className="text-white-50">({asignadas.length})</span>}
                         </div>
-
-                        {/* Grupos por escenario */}
                         <div className="list-group list-group-flush">
                             {Object.keys(gruposEscenario).length === 0 ? (
                                 <li className="list-group-item text-muted">No hay actuaciones asignadas</li>
                             ) : (
                                 Object.keys(gruposEscenario)
-                                    .sort((a, b) => a.localeCompare(b)) // orden alfabético de escenarios
+                                    .sort((a, b) => a.localeCompare(b))
                                     .map((esc) => (
                                         <div key={esc} className="border-top">
-                                            <div className="px-3 py-2 bg-white fw-semibold">
-                                                {esc}
-                                            </div>
+                                            <div className="px-3 py-2 bg-white fw-semibold">{esc}</div>
                                             <ul className="list-group list-group-flush">
                                                 {gruposEscenario[esc].map((a) => (
                                                     <ActItem key={a.id} a={a} />

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/login.css";
 import Logo from "../assets/img/Logo.png";
+import { useAuth } from "../auth/AuthContext";
 
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
@@ -36,8 +38,9 @@ const Login = () => {
             }
 
             const token = data.access_token || data.token || "LOGGED_IN";
-            sessionStorage.setItem("token", token);
-            if (data.user) sessionStorage.setItem("user", JSON.stringify(data.user));
+            login({ token, user: data.user });
+
+            setPassword("");
 
             navigate("/festi", { replace: true });
         } catch {
@@ -87,7 +90,7 @@ const Login = () => {
                         className="password-toggle-btn"
                         tabIndex={-1}
                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} >
-                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i> 
+                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                     </button>
                 </div>
 

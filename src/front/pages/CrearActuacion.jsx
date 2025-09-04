@@ -25,7 +25,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
                     name: form.name.trim(),
                     description: form.description.trim(),
                     photo: form.photo.trim() || null,
-                    hour: form.hour || null, // el backend lo parsea con HH:MM o lo deja null
+                    hour: form.hour || null, 
                 }),
             });
 
@@ -85,7 +85,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             />
 
             <div className="mb-3">
-                <label className="form-label">Hora (opcional, formato 21:30)</label>
+                <label className="form-label">Hora que prefiere actuar (opcional, formato 21:30)</label>
                 <input
                     className="form-control"
                     type="text"
