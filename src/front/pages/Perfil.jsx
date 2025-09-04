@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import "../styles/perfil.css";
 import { useNavigate, useParams } from "react-router-dom";
 import CloudinaryUploader from "../components/Cloudinary";
+import presetPic from "../assets/img/presetPic.png";
 
 export const Perfil = () => {
   let navigate = useNavigate();
@@ -220,7 +221,11 @@ export const Perfil = () => {
       <CloudinaryUploader
         onUpload={(url) => putFotoPerfil(url)}
         className="edit-pic-btn" >
-        <img src={perfil.photo} className="profilePic" alt="Foto perfil" />
+        <img src={perfil.photo || presetPic} className="profilePic" alt="Foto perfil"
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = {presetPic}
+          }} />
       </CloudinaryUploader>
 
 
