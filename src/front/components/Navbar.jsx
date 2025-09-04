@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { useState } from "react";
 import Logo from "../assets/img/Logo.png";
+import Letras from "../assets/img/Letras.png";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
@@ -25,7 +26,9 @@ export const Navbar = () => {
 			<div className="container">
 				{!token ? (
 					<>
-						<Link className="navbar-brand fw-bold" to="/">Fiesti</Link>
+						<Link className="navbar-brand fw-bold" to="/">Fiesti
+						{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
+						</Link>
 						<div className="ms-auto d-flex gap-2">
 							<Link className="btn-loginNav" to="/login">
 								Iniciar sesión

@@ -78,7 +78,22 @@
     text-decoration: none;
 }
 
-.btn-google {
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forget {
+    color: #2d435b;
+}
+
+.signup {
+    color: #78141e
+}
+
+
+/* .btn-google {
     background: #fac263;
     color: #232428;
     border: 1px solid #fac263;
@@ -97,18 +112,4 @@
     color: #fffbe5;
     border: 1px solid #78141e;
     text-decoration: none;
-}
-
-.links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.forget {
-    color: #2d435b;
-}
-
-.signup {
-    color: #78141e
-}
+} */

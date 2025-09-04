@@ -7,8 +7,23 @@
 #2d435b azul oscuro
 */
 
+.letras {
+    display: block;
+    margin: 0 auto 0 auto;
+    max-width: 100px;
+    
+}
+
+.textoHome {
+    text-align: center;
+    margin: 0 auto;  
+    display: block;   
+    width: 100%;      
+}
+
+
 .btn-login {
-    background: #78141e;
+  background: #78141e;
     color: white;
     border: 1px solid #78141e;
     border-radius: 0.375rem; 

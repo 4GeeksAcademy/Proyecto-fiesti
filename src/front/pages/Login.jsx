@@ -87,7 +87,7 @@ const Login = () => {
                         className="password-toggle-btn"
                         tabIndex={-1}
                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} >
-                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i> 
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye-fill"}`}></i>
                     </button>
                 </div>
 
@@ -97,10 +97,10 @@ const Login = () => {
                 </button>
 
                 {/* Google Login */}
-                <p className="mt-3 text-center">Inicia sesión de forma rápida con tu cuenta de Google</p>
+                {/* <p className="mt-3 text-center">Inicia sesión de forma rápida con tu cuenta de Google</p>
                 <button type="button" className="btn-google w-100">
                     <i className="fa-brands fa-google me-2"></i><b>Google</b>
-                </button>
+                </button> */}
 
                 {/* Links */}
                 <div className="links mt-3">
