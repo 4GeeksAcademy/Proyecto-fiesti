@@ -48,14 +48,14 @@
   position: absolute;
   right: 0.5rem;
   bottom: 0;              /* lo baja al borde inferior */
-  height: 80%;           /* opcional: iguala la altura del input */
+  height: 100%;           /* iguala la altura del input */
   display: flex;
   align-items: flex-end;  /* empuja el icono hacia abajo */
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #9d9ea1;
 }
 
