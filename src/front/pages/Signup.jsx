@@ -111,7 +111,7 @@ const Signup = () => {
                     onChange={handleChange}
                 >
                     <option value="personal">Personal</option>
-                    <option value="organizador">Organizador</option>
+                    <option value="organizador">Organizador/a</option>
                 </select>
 
                 {formData.role === "personal" && (
