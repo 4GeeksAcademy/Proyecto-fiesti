@@ -170,16 +170,17 @@ export default function Personal() {
                                 {/* Desplegable para asignar puesto y hora */}
                                 {activo === emp.id && (
                                     <div className="desplegable">
-                                        <p><strong>Edad:</strong> {emp.age}</p>
-                                        <p><strong>Ciudad:</strong> {emp.city}</p>
+                                        <p className="info-personal"><strong>Edad:</strong> {emp.age}</p>
+                                        <p className="info-personal"><strong>Ciudad:</strong> {emp.city}</p>
+
                                         <Link
                                             to={`/perfil/${emp.id}`}
                                             className="enlace-perfil"
                                         >
-                                            Ver más información
+                                            Ver perfil de empleado/a
                                         </Link>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Puesto:
                                             <select id={`puesto-${emp.id}`} defaultValue={emp.puesto}>
                                                 <option value="">Selecciona un puesto</option>
@@ -196,7 +197,7 @@ export default function Personal() {
                                             </select>
                                         </label>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Horario inicio:
                                             <select id={`horario-inicio-${emp.id}`} defaultValue="">
                                                 <option value="">--</option>
@@ -208,7 +209,7 @@ export default function Personal() {
                                             </select>
                                         </label>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Horario fin:
                                             <select id={`horario-fin-${emp.id}`} defaultValue="">
                                                 <option value="">--</option>

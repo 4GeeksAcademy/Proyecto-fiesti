@@ -1,3 +1,12 @@
+/* 
+#78141e rojo
+#fffbe5 amarillo claro
+#fac263 amarillo oscuro
+#232428 negro
+#9d9ea1 gris
+#2d435b azul oscuro
+*/
+
 .personal-container {
   font-family: Arial, sans-serif;
   padding: 10px;
@@ -6,11 +15,11 @@
 }
 
 .title {
-  text-align: center;
+  text-align: left;
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: darkred;
+  color: #78141e;
 }
 
 .alta-form {
@@ -22,13 +31,13 @@
 .alta-form input {
   flex: 1;
   padding: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #9d9ea1;
   border-radius: 4px;
 }
 
 .alta-form button {
   padding: 6px 12px;
-  background-color: darkred;
+  background-color: #78141e;
   color: white;
   border: none;
   border-radius: 4px;
@@ -36,19 +45,19 @@
 }
 
 .alta-form button:hover {
-  background-color: #a10000;
+  background-color: #78141e;
 }
 
 .buscador {
   width: 100%;
   padding: 6px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #9d9ea1;
   border-radius: 4px;
 }
 
 .grupo-header {
-  background-color: darkred;
+  background-color: #78141e;
   color: white;
   font-weight: bold;
   padding: 4px 10px;
@@ -57,32 +66,35 @@
 }
 
 .empleado-section {
-  border: 1px solid #ddd;
+  border: 1px solid #78141e;
   border-top: none;
 }
 
 .empleado {
   padding: 10px;
   cursor: pointer;
-  background-color: #fefefe;
+  background-color: #ffffff;
   transition: background-color 0.2s;
   justify-content: space-between;
   display: flex;
 }
 
 .empleado:hover {
-  background-color: #f1f1f1;
+  background-color: #ffffff;
 }
 
 .empleado.asignado {
-  background-color: orange;
+  background-color: #fac263;
   font-weight: bold;
 }
 
 .desplegable {
   padding: 10px;
-  background-color: #fffbe6;
-  border-top: 1px solid #ddd;
+  background-color: #fffbe5;
+  border-top: 1px solid #9d9ea1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .desplegable label {
@@ -94,39 +106,65 @@
   width: 100%;
   padding: 5px;
   margin-top: 2px;
-  border: 1px solid #ccc;
+  border: 1px solid #78141e;
   border-radius: 4px;
 }
 
 .desplegable button {
-  margin-top: 8px;
+  align-self: flex-end;
   padding: 6px 12px;
-  background-color: darkred;
-  color: white;
+  background-color: #78141e;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .desplegable button:hover {
-  background-color: #a10000;
+  background-color: #fac263;
+  color:#78141e;
 }
+
+.info-personal{
+  color: #232428;
+  margin-bottom: 5px;
+}
+
 .info-asignacion {
   font-size: 12px;
-  color: #333;
+  color: #232428;
   margin-left: 5px;
 }
 
 .btn-borrar {
   background: transparent;
   border: none;
-  color: #900;
+  color: #78141e;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
 }
 
 .enlace-perfil {
+  color: #78141e; ;
+  display: block;
   margin-bottom: 10px;
-  margin-top: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 2px solid #9d9ea1; /* línea divisoria */
+  padding-bottom: 3px;
+}
+
+.enlace-perfil:hover {
+  text-decoration: underline;
+}
+
+.puesto-horario {
+  color:#232428;
+  font-weight: bold;
+  
+}
+
+.puesto-horario select {
+    margin-left: 10px; 
 }
