@@ -11,7 +11,7 @@ import { Single } from "./pages/Single";
 import { Perfil } from "./pages/Perfil";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Personal  from "./pages/Personal";
+import Personal from "./pages/Personal";
 import CrearActuacion from "./pages/CrearActuacion";
 import ActuacionesList from "./pages/ActuacionesList";
 import FestiActual from "./pages/FestiActual";
@@ -31,26 +31,27 @@ export const router = createBrowserRouter(
     // Root Route: All navigation will start from here.
     <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
-        {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
-        <Route index element={<Home />} />
-        <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
-        <Route path="/perfil" element={<Perfil />} />
+      {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
+      <Route index element={<Home />} />
+      <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
+      <Route path="/perfil" element={<Perfil />} />
+      
+      <Route path="/perfil/:userId" element={<Perfil />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/personal" element={<Personal />} />
+      <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
+      <Route path="/festi" element={<FestiActual />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/personal" element={<Personal />} />
-        <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
-        <Route path="/festi" element={<FestiActual />} />
 
-
-        <Route path="/actuaciones" element={<ActuacionesList/>} />
+      <Route path="/actuaciones" element={<ActuacionesList />} />
 
 
 
     </Route>
   )
-      
-     
-  
-  
+
+
+
+
 );

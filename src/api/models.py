@@ -26,7 +26,7 @@ class User(db.Model):
     phone: Mapped[int] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     photo: Mapped[str] = mapped_column(String(255), nullable=True)
-    horario: Mapped[int] = mapped_column(nullable=True)
+    horario: Mapped[str] = mapped_column(String(120), nullable=True)
     puesto: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     card_number: Mapped[Optional[str]] = mapped_column(
         String(16), nullable=True)
