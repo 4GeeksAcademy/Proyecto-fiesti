@@ -1,0 +1,17 @@
+:root{
+    --base-color: #fffbe5;
+    --base-variant: #9d9ea1;
+    --text-color: #232428;
+    --secondary-text: #9d9ea1;
+    --primary-color: #78141e;
+    --accent-color: #fac263 ;
+}
+
+.darkmode{
+    --base-color: #232428;
+    --base-variant:  #9d9ea1;
+    --text-color: #fac263;
+    --secondary-text: #fac263;
+    --primary-color: #78141e;
+    --accent-color: #78141e;
+}

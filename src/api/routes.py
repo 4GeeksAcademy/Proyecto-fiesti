@@ -11,17 +11,85 @@ from datetime import datetime
 from sqlalchemy import select
 import os
 from werkzeug.utils import secure_filename
+from app import mail, s, app
+from flask_mail import Message
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
 
+# -------------------------------ENDPOINTS DE RECUPERAR CONTRASEÑA----------------------------------
+
+@api.route('/test_email', methods=['GET'])
+def test():
+    try:
+
+        # Reemplaza 'tu_email@ejemplo.com' con tu dirección de correo real
+        recipients = ['proyectofiesti@gmail.com'] 
+        msg = Message("Prueba de Flask-Mail", recipients=recipients)
+        msg.body = "¡Hola! Si ves este correo, significa que Flask-Mail está configurado correctamente. 🎉"
+        mail.send(msg)
+        return jsonify({"msg": "Correo de prueba enviado con éxito"}), 200
+    except Exception as e:
+        print(f"Error al enviar correo de prueba: {e}")
+        return jsonify({"msg": f"Error al enviar el correo: {str(e)}"}), 500
+
+
+@api.route('/reset_password_request', methods=['POST'])
+def reset_request():
+    data = request.get_json() 
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"msg": "Email es requerido"}), 400
+
+    user = db.session.scalar(select(User).where(User.email == email))
+
+    if user:
+        token = s.dumps(user.email, salt='reset-password')
+        reset_url = url_for('api.reset_password_token', token=token, _external=True)
+        msg = Message("Solicitud de restablecimiento de contraseña",
+                      recipients=[user.email])
+        msg.body = f"Para restablecer tu contraseña, visita el siguiente enlace: {reset_url}"
+        
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print(f"Error al enviar correo: {e}")
+
+    return jsonify({"msg": "Si el email está en nuestros registros, recibirás un enlace para restablecer tu contraseña."}), 200
+
+
+
+@api.route('/reset_password_token/<token>', methods=['POST'])
+def reset_password_token(token):
+    try:
+        email = s.loads(token, salt='reset-password', max_age=1800) # El token expira en 30 minutos
+    except:
+        return jsonify({"msg": "El token es inválido o ha expirado."}), 400
+
+    user = db.session.scalar(select(User).where(User.email == email))
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+    
+    data = request.get_json() or {}
+    new_password = data.get("password")
+
+    if not new_password:
+        return jsonify({"msg": "Se requiere una nueva contraseña."}), 400
+
+    hashed_password = generate_password_hash(new_password)
+    user.password = hashed_password
+    db.session.commit()
+    
+    return jsonify({"msg": "Tu contraseña ha sido actualizada exitosamente."}), 200
+
 
 @api.route('/hello', methods=['GET'])
 def hello():
     return jsonify({"message": "Hola desde el backend"}), 200
-
 
 @api.route('/login', methods=['POST'])
 def login():
