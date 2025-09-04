@@ -3,7 +3,7 @@
 #fffbe5 amarillo claro
 #fac263 amarillo oscuro
 #232428 negro
-#9d9ea1 gris
+var(--gray-color) gris
 #2d435b azul oscuro
 */
 
@@ -19,7 +19,7 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: #78141e;
+  color: var(--primary-color);
 }
 
 .alta-form {
@@ -31,7 +31,7 @@
 .alta-form input {
   flex: 1;
   padding: 6px;
-  border: 1px solid #9d9ea1;
+  border: 1px solid var(--gray-color);
   border-radius: 4px;
 }
 
@@ -52,7 +52,7 @@
   width: 100%;
   padding: 6px;
   margin-bottom: 15px;
-  border: 1px solid #9d9ea1;
+  border: 1px solid var(--gray-color);
   border-radius: 4px;
 }
 
@@ -90,8 +90,8 @@
 
 .desplegable {
   padding: 10px;
-  background-color: #fffbe5;
-  border-top: 1px solid #9d9ea1;
+  background-color: var(--background-color);
+  border-top: 1px solid var(--gray-color);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -126,7 +126,7 @@
 }
 
 .info-personal{
-  color: #232428;
+  color: var(--text-color);
   margin-bottom: 5px;
 }
 
@@ -146,12 +146,12 @@
 }
 
 .enlace-perfil {
-  color: #78141e; ;
+  color: var(--primary-color); ;
   display: block;
   margin-bottom: 10px;
   text-decoration: none;
   font-weight: bold;
-  border-bottom: 2px solid #9d9ea1; /* línea divisoria */
+  border-bottom: 2px solid var(--gray-color); /* línea divisoria */
   padding-bottom: 3px;
 }
 
@@ -160,7 +160,7 @@
 }
 
 .puesto-horario {
-  color:#232428;
+  color:var(--text-color);
   font-weight: bold;
   
 }

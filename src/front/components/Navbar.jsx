@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
 import Letras from "../assets/img/Letras.png";
+import "../index.css";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
@@ -17,9 +19,25 @@ export const Navbar = () => {
 	// ---------------Modo noche---------------------
 	const [darkMode, setDarkMode] = useState(false);
 
+	useEffect(() => {
+		const savedTheme = localStorage.getItem("theme");
+		if (savedTheme === "dark") {
+			setDarkMode(true);
+			document.body.setAttribute("data-theme", "dark");
+		} else {
+			setDarkMode(false);
+			document.body.setAttribute("data-theme", "light");
+		}
+	}, []);
+
 	const toggleModo = () => {
-		setDarkMode(!darkMode);
+		const newMode = !darkMode;
+		setDarkMode(newMode);
+		document.body.setAttribute("data-theme", newMode ? "dark" : "light");
+		// Guardar en localStorage
+		localStorage.setItem("theme", newMode ? "dark" : "light");
 	};
+
 
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -27,7 +45,7 @@ export const Navbar = () => {
 				{!token ? (
 					<>
 						<Link className="navbar-brand fw-bold" to="/">Fiesti
-						{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
+							{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
 						</Link>
 						<div className="ms-auto d-flex gap-2">
 							<Link className="btn-loginNav" to="/login">
@@ -41,7 +59,11 @@ export const Navbar = () => {
 				) : (
 					<>
 						<Link to="/festi">
-							<img src={Logo} alt="Logo Fiesti" className="logoNav mb-4" />
+							<img
+								src={darkMode ? LogoDark : Logo}
+								alt="Logo Fiesti"
+								className="logoNav mb-4"
+							/>
 						</Link>
 
 						<button
@@ -65,6 +87,7 @@ export const Navbar = () => {
 										<i className="fa-solid fa-moon"></i>
 									)}
 								</li>
+
 								<li className="nav-item">
 									<Link
 										className="btn-actuacionesNav" to="/actuaciones">

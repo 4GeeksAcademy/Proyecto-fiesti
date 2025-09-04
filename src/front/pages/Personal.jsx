@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/personallist.css";
+import "../index.css";
 
 
 export default function Personal() {
@@ -126,7 +127,7 @@ export default function Personal() {
             <input
                 className="buscador"
                 type="text"
-                placeholder="Buscar empleado..."
+                placeholder="Buscar empleado/a..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
             />

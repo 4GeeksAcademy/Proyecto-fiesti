@@ -4,6 +4,7 @@ import "../styles/perfil.css";
 import { useNavigate, useParams } from "react-router-dom";
 import CloudinaryUploader from "../components/Cloudinary";
 import presetPic from "../assets/img/presetPic.png";
+import "../index.css";
 
 export const Perfil = () => {
   let navigate = useNavigate();

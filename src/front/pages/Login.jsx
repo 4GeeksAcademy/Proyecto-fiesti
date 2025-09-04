@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/login.css";
 import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
+import "../index.css";
 
 
 const Login = () => {
@@ -47,9 +49,11 @@ const Login = () => {
         }
     };
 
+    const isDarkMode = localStorage.getItem("theme") === "dark"; // Para que el logo cambie con el modo noche
+
     return (
         <div className="container mt-5" style={{ maxWidth: 420 }}>
-            <img src={Logo} alt="Logo Fiesti" className="logo mb-4" />
+            <img src={isDarkMode ? LogoDark : Logo} alt="Logo Fiesti" className="logo mb-4" />
             <h1 className="mb-4 text-center">Iniciar sesión</h1>
             {msg && <div className="alert text-center">{msg}</div>}
 

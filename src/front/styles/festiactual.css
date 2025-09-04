@@ -3,7 +3,7 @@
 #fffbe5 amarillo claro
 #fac263 amarillo oscuro
 #232428 negro
-#9d9ea1 gris
+var(--gray-color) gris
 #2d435b azul oscuro
 */
 
@@ -12,7 +12,7 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: #78141e;
+  color: var(--primary-color);
 }
 .festi-container {
   font-family: Arial, sans-serif;
@@ -42,7 +42,7 @@
 .actuacion {
   padding: 10px;
   cursor: pointer;
-  background-color: #fefefe;
+  background-color: #ffffff;
   transition: background-color 0.2s;
   justify-content: space-between;
   display: flex;
@@ -52,7 +52,7 @@
 }
 .info-actuacion {
   font-size: 12px;
-  color: #9d9ea1;
+  color: var(--gray-color);
   margin-left: 5px;
 }
 .buscador {
@@ -62,5 +62,5 @@
 
 Link {
   text-decoration: none;
-  color: #78141e;
+  color: var(--primary-color);
 }

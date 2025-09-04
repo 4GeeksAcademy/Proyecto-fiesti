@@ -1,14 +1,14 @@
 /* 
-#78141e rojo
-#fffbe5 amarillo claro
-#fac263 amarillo oscuro
+var(--primary-color) rojo
+var(--background-color) amarillo claro
+var(--secondary-color) amarillo oscuro
 #232428 negro
-#9d9ea1 gris
+var(--gray-color) gris
 #2d435b azul oscuro
 */
 
 .navbar {
-  background-color: #fffbe5 !important;
+  background-color: var(--background-color) !important;
   padding: 10px 20px;
 }
 
@@ -31,10 +31,10 @@
 }
 
 .btn-actuacionesNav, .btn-personalNav {
-  background-color: #fffbe5;
-  color: #78141e;
+  background-color: var(--background-color);
+  color: var(--primary-color);
   font-weight: bold;
-  border: #78141e 1px solid;
+  border: var(--primary-color) 1px solid;
   border-radius: 5px;
   display: inline-block;
   padding: 5px 15px;
@@ -52,7 +52,7 @@
 }
 
 .modo {
-  color: #78141e;
+  color: var(--primary-color);
   font-size: 20px;
   cursor: pointer;
   padding: 5px 10px;

@@ -1,8 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@300;400;600;800&display=swap');
 
 body {
-    background-color: #fffbe5;
-    color: #78141e;
+    background-color: var(--background-color);
+    color: var(--primary-color);
     font-family: 'Atkinson Hyperlegible Next', sans-serif;
 }
 
+:root {
+    --primary-color: #78141e;
+    --secondary-color: #fac263;
+    --background-color: #fffbe5;
+    --text-color: #232428;
+    --gray-color: #9d9ea1;
+    --dark-blue-color: #2d435b;
+}
+
+[data-theme="light"] {
+    --primary-color: #78141e;
+    --secondary-color: #fac263;
+    --background-color: #fffbe5;
+    --text-color: #232428;
+    --gray-color: #9d9ea1;
+    --dark-blue-color: #2d435b;
+}
+
+[data-theme="dark"] {
+    --primary-color: #fac263;
+    --secondary-color: #78141e;
+    --background-color: #232428;
+    --text-color: #fffbe5;
+    --gray-color: #9d9ea1;
+    --dark-blue-color: #fffbe5;
+}
+
+input::placeholder {
+    color: var(--gray-color) !important;
+}
