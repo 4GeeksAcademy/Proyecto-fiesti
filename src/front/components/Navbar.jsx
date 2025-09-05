@@ -1,8 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { useAuth } from "../auth/AuthContext";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
+import Letras from "../assets/img/Letras.png";
+import "../index.css";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
@@ -27,9 +30,25 @@ export const Navbar = () => {
 	// ---------------Modo noche---------------------
 	const [darkMode, setDarkMode] = useState(false);
 
+	useEffect(() => {
+		const savedTheme = localStorage.getItem("theme");
+		if (savedTheme === "dark") {
+			setDarkMode(true);
+			document.body.setAttribute("data-theme", "dark");
+		} else {
+			setDarkMode(false);
+			document.body.setAttribute("data-theme", "light");
+		}
+	}, []);
+
 	const toggleModo = () => {
-		setDarkMode(!darkMode);
+		const newMode = !darkMode;
+		setDarkMode(newMode);
+		document.body.setAttribute("data-theme", newMode ? "dark" : "light");
+		// Guardar en localStorage
+		localStorage.setItem("theme", newMode ? "dark" : "light");
 	};
+
 
 	return (
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,11 +56,9 @@ export const Navbar = () => {
 				{!token ? (
 					//Navbar sin sesión
 					<>
-						<Link className="navbar-brand fw-bold d-flex align-items-center gap-2" to="/">
-							<img src={Logo} alt="Logo Fiesti" className="logoNav" />
-							Fiesti
+						<Link className="navbar-brand fw-bold" to="/">Fiesti
+							{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
 						</Link>
-
 						<div className="ms-auto d-flex gap-2">
 							<Link className="btn-loginNav" to="/login">
 								Iniciar sesión
@@ -54,9 +71,12 @@ export const Navbar = () => {
 				) : (
 					//Navbar con sesión
 					<>
-						{/* Logo que lleva a Festi actual */}
-						<Link to="/festi" className="d-flex align-items-center">
-							<img src={Logo} alt="Logo Fiesti" className="logoNav mb-4" />
+						<Link to="/festi">
+							<img
+								src={darkMode ? LogoDark : Logo}
+								alt="Logo Fiesti"
+								className="logoNav mb-4"
+							/>
 						</Link>
 
 						<button
@@ -82,12 +102,6 @@ export const Navbar = () => {
 									)}
 								</li>
 
-								{/* siempre visible para usuarios logueados */}
-								<li className="nav-item">
-									<Link className="btn-perfilNav" to="/perfil">
-										Perfil
-									</Link>
-								</li>
 
 								{/* Solo ORGANIZADOR: Actuaciones y Personal */}
 								{role === "organizador" && (
@@ -104,6 +118,13 @@ export const Navbar = () => {
 										</li>
 									</>
 								)}
+
+								{/* siempre visible para usuarios logueados */}
+								<li className="nav-item">
+									<Link className="btn-perfilNav" to="/perfil">
+										Perfil
+									</Link>
+								</li>
 
 								{/* Logout destacado y separado */}
 								<li className="nav-item ms-3">

@@ -1,79 +1,133 @@
+/* 
+var(--primary-color) rojo
+var(--background-color) amarillo claro
+var(--secondary-color) amarillo oscuro
+var(--text-color) negro
+var(--gray-color) gris
+#2d435b azul oscuro
+*/
+
 body {
-    background: #fffbe5;
+  background: var(--background-color);
 }
 
 .profilePic {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.edit-profile-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 20px;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: none;
+.edit-pic-btn {
+  all: unset;
+  display: inline-block;
   cursor: pointer;
-  font-size: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.bodyPerfil {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 32px 24px;
+  background: var(--background-color);
+  text-align: center;
 }
 
 .infoPerfil {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 32px 24px;
-    background: #fffbe5;
-    border-radius: 16px;
-    text-align: center;
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: center;
 }
 
 h1 {
-    color: #78141e;
-    font-size: 2rem;
-    margin-bottom: 8px;
-    text-align: left;
-    font-weight: bold;
+  margin-bottom: 8px;
+  text-align: left !important;
 }
 
 .nombre {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #232428;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-
 .email {
-    color: #9d9ea1;
-    font-size: 1.1rem;
-    margin-bottom: 16px;
+  color: var(--gray-color);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
 }
 
 h3 {
-    color: #78141e;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
-.telefono {
-    color: #232428;
+.infoEditable {
+  color: var(--text-color);
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
 }
 
+.edit-btn {
+  color: var(--text-color);
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.card {
+  background: var(--background-color);
+  border-radius: 12px;
+  border-color: var(--primary-color);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.botonesCard {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btn-pagar {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn-ahoraNo {
+  background: var(--primary-color);
+  color: white;
+  border: 1px solid var(--primary-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+  white-space: nowrap;
+}

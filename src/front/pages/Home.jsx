@@ -3,6 +3,7 @@ import Logo from "../assets/img/Logo.png";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
+import Letras from "../assets/img/Letras.png";
 
 export const Home = () => {
 	const navigate = useNavigate();
@@ -47,29 +48,27 @@ export const Home = () => {
 	}, [navigate]);
 
 	return (
-		<div className="text-center mt-5">
-			<img
-				src={Logo}
-				className="img-fluid mb-3"
-				alt="Logo Fiesti"
-				style={{ maxWidth: 150 }}
-			/>
-			<h1>Fiesti</h1>
+		<div className="container text-center mt-5" style={{ maxWidth: 850 }}>
+			<img src={Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
+			<img src={Letras} alt="Letras Fiesti" className="letras mb-4" />
 
 			<h2 className="lead fw-bold">
 				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones🎉
 			</h2>
-			<p className="mt-3">
-				Con <strong>Fiesti</strong>, conecta organizadores con personal especializado.
-			</p>
-			<p className="mt-3">
-				Si quieres formar parte de un festival, podrás mostrar tu disponibilidad para ser elegido en el puesto que más encaje contigo.
-			</p>
-			<p className="mt-3">
-				Si eres organizador, podrás gestionar el personal disponible y los horarios de las actuaciones para cubrir todas las necesidades del evento.
-			</p>
+			<div className="textoHome " style={{ maxWidth: 450 }}>
+				<p className="mt-3">
+					Con <strong>Fiesti</strong>, conecta organizadores con personal especializado.
+				</p>
+				<p className="mt-3">
+					Si quieres formar parte de un festival, podrás mostrar tu disponibilidad para ser elegido en el puesto que más encaje contigo.
+				</p>
+				<p className="mt-3">
+					Si eres organizador, podrás gestionar el personal disponible y los horarios de las actuaciones para cubrir todas las necesidades del evento.
+				</p>
+			</div>
 
-			<div className="d-grid gap-3 col-6 col-md-4 mx-auto mt-4">
+			{/* Login y Signup */}
+			<div className="d-grid gap-3 col-6 col-md-4 mx-auto mt-4 w-50">
 				<button className="btn-login btn-lg" onClick={() => navigate("/login")}>
 					<b>Iniciar sesión</b>
 				</button>
