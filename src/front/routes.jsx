@@ -19,6 +19,7 @@ import ActuacionesList from "./pages/ActuacionesList";
 import FestiActual from "./pages/FestiActual";
 import Reset from "./pages/Reset";
 import Email from "./pages/Email";
+import Artista from "./pages/Artista";
 
 
 
@@ -44,6 +45,7 @@ export const router = createBrowserRouter(
       <Route path="/reset_password" element={<Reset />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/email" element={<Email />} />
+      <Route path="/actuaciones/:theId" element={<Artista />} />
 
 
       {/* PROTEGIDAS (cualquier usuario logueado) */}
