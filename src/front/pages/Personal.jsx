@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/personallist.css";
+import "../index.css";
 
 
 export default function Personal() {
@@ -126,7 +127,7 @@ export default function Personal() {
             <input
                 className="buscador"
                 type="text"
-                placeholder="Buscar empleado..."
+                placeholder="Buscar empleado/a..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
             />
@@ -170,16 +171,17 @@ export default function Personal() {
                                 {/* Desplegable para asignar puesto y hora */}
                                 {activo === emp.id && (
                                     <div className="desplegable">
-                                        <p><strong>Edad:</strong> {emp.age}</p>
-                                        <p><strong>Ciudad:</strong> {emp.city}</p>
+                                        <p className="info-personal"><strong>Edad:</strong> {emp.age}</p>
+                                        <p className="info-personal"><strong>Ciudad:</strong> {emp.city}</p>
+
                                         <Link
                                             to={`/perfil/${emp.id}`}
                                             className="enlace-perfil"
                                         >
-                                            Ver más información
+                                            Ver perfil de empleado/a
                                         </Link>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Puesto:
                                             <select id={`puesto-${emp.id}`} defaultValue={emp.puesto}>
                                                 <option value="">Selecciona un puesto</option>
@@ -196,7 +198,7 @@ export default function Personal() {
                                             </select>
                                         </label>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Horario inicio:
                                             <select id={`horario-inicio-${emp.id}`} defaultValue="">
                                                 <option value="">--</option>
@@ -208,7 +210,7 @@ export default function Personal() {
                                             </select>
                                         </label>
 
-                                        <label>
+                                        <label className="puesto-horario">
                                             Horario fin:
                                             <select id={`horario-fin-${emp.id}`} defaultValue="">
                                                 <option value="">--</option>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../styles/festiactual.css";
 import CloudinaryUploader from "../components/Cloudinary";
+import { useNavigate, Link } from "react-router-dom";
 
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
@@ -183,7 +184,7 @@ const FestiActual = () => {
       />
 
       {/* Lista de empleados */}
-      <h3>Lista de empleados</h3>
+      <Link to="/personal"><h3>Lista de empleados</h3></Link>
       {Object.keys(grupos)
         .sort()
         .map((letra) => (
@@ -208,7 +209,7 @@ const FestiActual = () => {
         ))}
 
       {/* Lista de actuaciones */}
-      <h3 className="head">Lista de actuaciones</h3>
+      <Link to="/actuacioneslist"><h3 className="head">Lista de actuaciones</h3></Link>
       {Object.keys(gruposActuaciones)
         .sort()
         .map((letra) => (
