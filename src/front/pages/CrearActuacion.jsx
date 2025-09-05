@@ -5,7 +5,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
         name: "",
         description: "",
         photo: "",
-        hour: "", // "HH:MM" opcional
+        horario: "", // "HH:MM" opcional
     });
     const [msg, setMsg] = useState("");
     const [loading, setLoading] = useState(false);
@@ -18,14 +18,19 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
         setLoading(true);
 
         try {
+            const token = sessionStorage.getItem("token");
             const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/actuaciones", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}) // ← JWT
+                },
                 body: JSON.stringify({
                     name: form.name.trim(),
                     description: form.description.trim(),
                     photo: form.photo.trim() || null,
-                    hour: form.hour || null, // el backend lo parsea con HH:MM o lo deja null
+                    // Envío horario solo si hay algo escrito; el backend valida "HH:MM-HH:MM"
+                    ...(form.horario.trim() ? { horario: form.horario.trim() } : {})
                 }),
             });
 
@@ -41,7 +46,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             if (typeof onCreated === "function") onCreated(data.actuacion);
 
             // Limpia y cierra
-            setForm({ name: "", description: "", photo: "", hour: "" });
+            setForm({ name: "", description: "", photo: "", horario: "" });
             setLoading(false);
             if (typeof onCancel === "function") onCancel();
         } catch (err) {
@@ -85,12 +90,12 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             />
 
             <div className="mb-3">
-                <label className="form-label">Hora (opcional, formato 21:30)</label>
+                <label className="form-label">Hora que prefiere actuar (opcional, formato 21:30)</label>
                 <input
                     className="form-control"
                     type="text"
                     name="hour"
-                    value={form.hour}
+                    value={form.horario}
                     onChange={onChange}
                     placeholder="HH:MM"
                 />

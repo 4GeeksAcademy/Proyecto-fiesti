@@ -18,6 +18,19 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
+def current_user_or_401():
+    uid = get_jwt_identity()
+    try:
+        uid = int(uid)
+    except (TypeError, ValueError):
+        return None
+    return User.query.get(uid)
+
+
+def require_role(user, role: RolEnum) -> bool:
+    return bool(user and user.role == role)
+
+
 @api.route('/hello', methods=['GET'])
 def hello():
     return jsonify({"message": "Hola desde el backend"}), 200
@@ -141,47 +154,48 @@ def get_actuacion(act_id):
     return jsonify(act.serialize()), 200
 
 
-def parse_time_or_none(value: str | None):
-    if not value:
-        return None
-    value = value.strip()
-    try:
-        return datetime.strptime(value, "%H:%M").time()
-    except ValueError:
-        raise ValueError("Formato de hora inválido. Usa HH:MM")
-
-
 @api.route("/actuaciones", methods=["POST"])
+@jwt_required()
 def create_actuacion():
-    data = request.get_json() or {}
-
-    name = (data.get("name") or "").strip()
-    description = (data.get("description") or "").strip()
-    photo = (data.get("photo") or None)
-    hour_str = (data.get("hour") or "").strip()
-
-    if not name or not description:
-        return jsonify({"msg": "Faltan campos obligatorios (name, description)"}), 400
-
     try:
-        hour_val = parse_time_or_none(hour_str)
-    except ValueError:
-        return jsonify({"msg": "Formato de hora inválido. Usa HH:MM"}), 400
+        user = current_user_or_401()
+        if not require_role(user, RolEnum.ORGANIZADOR):
+            return jsonify({"msg": "Solo organizadores"}), 403
 
-    act = Actuacion(
-        name=name,
-        description=description,
-        photo=photo or None,
-        hour=hour_val
-    )
-    db.session.add(act)
-    db.session.commit()
+        data = request.get_json() or {}
+        name = (data.get("name") or "").strip()
+        description = (data.get("description") or "").strip()
+        if not name or not description:
+            return jsonify({"msg": "Faltan campos obligatorios (name, description)"}), 400
 
-    return jsonify({"msg": "Actuación creada", "actuacion": act.serialize()}), 201
+        horario = (data.get("horario") or "").strip()
+        # Validación mínima opcional
+        if horario:
+            import re
+            if not re.match(r"^\d{2}:\d{2}-\d{2}:\d{2}$", horario):
+                return jsonify({"msg": "Formato de horario inválido. Usa 'HH:MM-HH:MM'."}), 400
+
+        act = Actuacion(
+            name=name,
+            description=description,
+            photo=(data.get("photo") or None),
+            escenario=((data.get("escenario") or "").strip() or None),
+            horario=(horario or None),
+        )
+        db.session.add(act)
+        db.session.commit()
+        return jsonify({"msg": "Actuación creada", "actuacion": act.serialize()}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @api.route("/actuaciones/<int:act_id>", methods=["DELETE"])
+@jwt_required()
 def delete_actuacion(act_id):
+    user = current_user_or_401()
+    if not require_role(user, RolEnum.ORGANIZADOR):
+        return jsonify({"msg": "Solo organizadores"}), 403
+
     act = Actuacion.query.get(act_id)
     if not act:
         return jsonify({"msg": "Actuación no encontrada"}), 404
@@ -191,35 +205,79 @@ def delete_actuacion(act_id):
     return jsonify({"msg": "Actuación eliminada"}), 200
 
 
-@api.route("/actuaciones/<int:act_id>/asignacion", methods=["PATCH"])
-def asignar_actuacion(act_id):
-    data = request.get_json() or {}
-
-    escenario = (data.get("escenario") or "").strip() or None
-    inicio_str = (data.get("horaInicio") or data.get(
-        "hora_inicio") or "").strip()
-    fin_str = (data.get("horaFin") or data.get("hora_fin") or "").strip()
+@api.route('/actuaciones/<int:act_id>', methods=['PUT'])
+@jwt_required()
+def edit_actuacion(act_id):
+    user = current_user_or_401()
+    if not require_role(user, RolEnum.ORGANIZADOR):
+        return jsonify({"msg": "Solo organizadores"}), 403
 
     try:
-        inicio = parse_time_or_none(inicio_str)
-        fin = parse_time_or_none(fin_str)
-    except ValueError as e:
-        return jsonify({"msg": str(e)}), 400
+        data = request.get_json() or {}
+        act = Actuacion.query.get(act_id)
+        if not act:
+            return jsonify({"msg": "Actuación no encontrada"}), 404
 
-    if inicio and fin and fin <= inicio:
+        ALLOWED = {"name", "description", "photo", "escenario", "horario"}
+        payload = {k: v for k, v in data.items() if k in ALLOWED}
+
+        for k in ("name", "description", "photo", "escenario", "horario"):
+            if k in payload and isinstance(payload[k], str):
+                payload[k] = payload[k].strip()
+        if "escenario" in payload:
+            payload["escenario"] = payload["escenario"] or None
+        if "horario" in payload:
+            import re
+            if payload["horario"]:
+                if not re.match(r"^\d{2}:\d{2}-\d{2}:\d{2}$", payload["horario"]):
+                    return jsonify({"msg": "Formato de horario inválido. Usa 'HH:MM-HH:MM'."}), 400
+            else:
+                payload["horario"] = None
+
+        Actuacion.query.filter_by(id=act_id).update(payload)
+        db.session.commit()
+
+        updated = Actuacion.query.get(act_id)
+        return jsonify({"msg": "Cambio aplicado", "actuacion": updated.serialize()}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@api.route("/actuaciones/<int:act_id>/asignacion", methods=["PATCH"])
+@jwt_required()
+def asignar_actuacion(act_id):
+    user = current_user_or_401()
+    if not require_role(user, RolEnum.ORGANIZADOR):
+        return jsonify({"msg": "Solo organizadores"}), 403
+
+    data = request.get_json() or {}
+    escenario = (data.get("escenario") or "").strip() or None
+    inicio = (data.get("horaInicio") or data.get(
+        "hora_inicio") or "").strip() or None
+    fin = (data.get("horaFin") or data.get("hora_fin") or "").strip() or None
+
+    # Validar formatos si vienen
+    if inicio and not es_hora(inicio):
+        return jsonify({"msg": "Formato inválido en horaInicio. Usa HH:MM."}), 400
+    if fin and not es_hora(fin):
+        return jsonify({"msg": "Formato inválido en horaFin. Usa HH:MM."}), 400
+
+    # Validar orden si ambos
+    if inicio and fin and a_minutos(fin) <= a_minutos(inicio):
         return jsonify({"msg": "La hora de fin debe ser posterior a la de inicio"}), 400
 
     act = Actuacion.query.get(act_id)
     if not act:
         return jsonify({"msg": "Actuación no encontrada"}), 404
 
-    # Guardar asignación
     act.escenario = escenario
     act.hora_inicio = inicio
     act.hora_fin = fin
 
-    # para ocultar la preferencia inicial una vez asignado:
-    act.hour = None
+    # Si hay asignación, ocultamos la preferencia "horario"
+    if escenario or inicio or fin:
+        act.horario = None
 
     db.session.commit()
     return jsonify({"msg": "Asignación guardada", "actuacion": act.serialize()}), 200
@@ -228,8 +286,12 @@ def asignar_actuacion(act_id):
 # -------------------------------ENDPOINTS DE PERSONAL----------------------------------
 
 @api.route('/users/personal', methods=['GET'])
+@jwt_required()
 def get_personal_users():
-
+    user = current_user_or_401()
+    if not require_role(user, RolEnum.ORGANIZADOR):
+        return jsonify({"msg": "Solo organizadores"}), 403
+    
     try:
         users = User.query.filter_by(role=RolEnum.PERSONAL).all()
         return jsonify([user.serialize() for user in users]), 200
@@ -238,8 +300,12 @@ def get_personal_users():
 
 
 @api.route('/users/personal/<int:user_id>', methods=['PUT'])
+@jwt_required()
 def edit_personal_users(user_id):
-
+    user = current_user_or_401()
+    if not require_role(user, RolEnum.ORGANIZADOR):
+        return jsonify({"msg": "Solo organizadores"}), 403
+    
     try:
         data = request.get_json()
         user = User.query.get(user_id)
@@ -257,7 +323,7 @@ def edit_personal_users(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 
 # @api.route("/actuaciones/photo", methods=["PUT"])
 # @jwt_required()
@@ -357,7 +423,6 @@ def perfil_usuario_por_id(user_id):
         return jsonify({"error": "Usuario no encontrado"}), 404
 
     return jsonify({"user": query_user.serialize()}), 200
-
 
 
 # -------------------------------ENDPOINT PARA PAGO ORGANIZADOR----------------------------------
