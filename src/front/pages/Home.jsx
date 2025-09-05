@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../ThemeContext"; // modo noche
 import "../styles/home.css";
 import Letras from "../assets/img/Letras.png";
+import LetrasDark from "../assets/img/LetrasDark.png";
 
 export const Home = () => {
 	const navigate = useNavigate();
-	const { dispatch } = useGlobalReducer();
+	const { dispatch, store } = useGlobalReducer();
 
 	const loadMessage = async (signal) => {
 		const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -47,10 +50,12 @@ export const Home = () => {
 		return () => controller.abort();
 	}, [navigate]);
 
+    const { darkMode } = useTheme(); // Para que logo y letras cambien con el modo noche
+
 	return (
 		<div className="container text-center mt-5" style={{ maxWidth: 850 }}>
-			<img src={Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
-			<img src={Letras} alt="Letras Fiesti" className="letras mb-4" />
+			<img src={darkMode ? LogoDark : Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
+			<img src={darkMode ? LetrasDark : Letras} alt="Letras Fiesti" className="letras mb-4" />
 
 			<h2 className="lead fw-bold">
 				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones🎉

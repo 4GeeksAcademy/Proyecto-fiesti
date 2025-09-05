@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
 import Logo from "../assets/img/Logo.png";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../ThemeContext";
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ const Signup = () => {
                 setTimeout(() => {
                     navigate("/login");
                 }, 3000);
-               
+
             } else {
                 setMessage(data.msg || "❌ Error al crear cuenta");
             }
@@ -49,6 +50,7 @@ const Signup = () => {
             setMessage("❌ Error de conexión con el servidor");
         }
     };
+    const { darkMode } = useTheme();
 
     return (
         <div className="container mt-5" style={{ maxWidth: 420 }}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CrearActuacion from "./CrearActuacion";
 import "../styles/actuacioneslist.css"
+import { useTheme } from "../../ThemeContext";
 
 export default function ActuacionesList() {
     const [actuaciones, setActuaciones] = useState([]);
@@ -159,6 +160,8 @@ export default function ActuacionesList() {
         };
         const { inicio, fin } = splitHorario(a.horario);
         const isAssigned = (x) => !!(x?.escenario || x?.horario);
+
+    const { darkMode } = useTheme();    
 
         return (
             <li className="list-group-item">

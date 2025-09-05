@@ -5,6 +5,7 @@ import Logo from "../assets/img/Logo.png";
 import { useAuth } from "../auth/AuthContext";
 import LogoDark from "../assets/img/LogoDark.png";
 import "../index.css";
+import { useTheme } from "../../ThemeContext";
 
 
 const Login = () => {
@@ -52,11 +53,11 @@ const Login = () => {
         }
     };
 
-    const isDarkMode = localStorage.getItem("theme") === "dark"; // Para que el logo cambie con el modo noche
+    const { darkMode } = useTheme(); // Para que el logo cambie con el modo noche
 
     return (
         <div className="container mt-5" style={{ maxWidth: 420 }}>
-            <img src={isDarkMode ? LogoDark : Logo} alt="Logo Fiesti" className="logo mb-4" />
+            <img src={darkMode ? LogoDark : Logo} alt="Logo Fiesti" className="logo mb-4" />
             <h1 className="mb-4 text-center">Iniciar sesión</h1>
             {msg && <div className="alert text-center">{msg}</div>}
 

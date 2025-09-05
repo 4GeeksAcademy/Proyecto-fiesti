@@ -1,10 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
 import { useAuth } from "../auth/AuthContext";
-import { useMemo, useState, useEffect } from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
+import { createContext, useState, useEffect, useContext, useMemo } from "react";
+import { useTheme } from "../../ThemeContext"; // modo noche
 import Logo from "../assets/img/Logo.png";
 import LogoDark from "../assets/img/LogoDark.png";
 import Letras from "../assets/img/Letras.png";
+import LetrasDark from "../assets/img/LetrasDark.png";
 import "../index.css";
 
 export const Navbar = () => {
@@ -28,26 +31,9 @@ export const Navbar = () => {
 	};
 
 	// ---------------Modo noche---------------------
-	const [darkMode, setDarkMode] = useState(false);
 
-	useEffect(() => {
-		const savedTheme = localStorage.getItem("theme");
-		if (savedTheme === "dark") {
-			setDarkMode(true);
-			document.body.setAttribute("data-theme", "dark");
-		} else {
-			setDarkMode(false);
-			document.body.setAttribute("data-theme", "light");
-		}
-	}, []);
+	const { darkMode, toggleModo } = useTheme();
 
-	const toggleModo = () => {
-		const newMode = !darkMode;
-		setDarkMode(newMode);
-		document.body.setAttribute("data-theme", newMode ? "dark" : "light");
-		// Guardar en localStorage
-		localStorage.setItem("theme", newMode ? "dark" : "light");
-	};
 
 
 	return (
@@ -56,15 +42,23 @@ export const Navbar = () => {
 				{!token ? (
 					//Navbar sin sesión
 					<>
-						<Link className="navbar-brand fw-bold" to="/">Fiesti
-							{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
+						<Link className="navbar-brand fw-bold" to="/">
+							<img src={darkMode ? LetrasDark : Letras} alt="Letras Fiesti" className="letrasNav" />
 						</Link>
 						<div className="ms-auto d-flex gap-2">
+							<li className="modo" onClick={toggleModo} style={{ cursor: "pointer" }}>
+								{darkMode ? (
+									<i className="fa-solid fa-sun"></i>
+								) : (
+									<i className="fa-solid fa-moon"></i>
+								)}
+							</li>
+
 							<Link className="btn-loginNav" to="/login">
-								Iniciar sesión
+								<b>Iniciar sesión</b>
 							</Link>
-							<Link className="btn-singupNav" to="/signup">
-								Crear cuenta
+							<Link className="btn-signupNav" to="/signup">
+								<b>Crear cuenta</b>
 							</Link>
 						</div>
 					</>

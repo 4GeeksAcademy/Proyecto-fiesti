@@ -3,6 +3,7 @@ import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
 import CloudinaryUploader from "../components/Cloudinary";
 import { useNavigate, Link } from "react-router-dom";
+import { useTheme } from "../../ThemeContext";
 
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
@@ -171,6 +172,8 @@ const FestiActual = () => {
     acc[letra].push(act);
     return acc;
   }, {});
+
+  const { darkMode } = useTheme();
 
   return (
     <div className="festi-container">
