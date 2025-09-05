@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 import Logo from "../assets/img/Logo.png";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { useNavigate } from "react-router-dom";
@@ -7,40 +7,52 @@ import Letras from "../assets/img/Letras.png";
 
 export const Home = () => {
 	const navigate = useNavigate();
-	const { store, dispatch } = useGlobalReducer()
+	const { dispatch } = useGlobalReducer();
 
-	const loadMessage = async () => {
-		try {
-			const backendUrl = import.meta.env.VITE_BACKEND_URL
-
-			if (!backendUrl) throw new Error("VITE_BACKEND_URL is not defined in .env file")
-
-			const response = await fetch(backendUrl + "/api/hello")
-			const data = await response.json()
-
-			if (response.ok) dispatch({ type: "set_hello", payload: data.message })
-
-			return data
-
-		} catch (error) {
-			if (error.message) throw new Error(
-				`Could not fetch the message from the backend.
-				Please check if the backend is running and the backend port is public.`
-			);
+	const loadMessage = async (signal) => {
+		const backendUrl = import.meta.env.VITE_BACKEND_URL;
+		if (!backendUrl) {
+			console.warn("VITE_BACKEND_URL no está definida en .env");
+			return;
 		}
-
-	}
+		try {
+			const resp = await fetch(backendUrl + "/api/hello", { signal });
+			if (!resp.ok) {
+				console.warn("No se pudo cargar /api/hello:", resp.status);
+				return;
+			}
+			const data = await resp.json();
+			if (data?.message) {
+				dispatch({ type: "set_hello", payload: data.message });
+			}
+		} catch (err) {
+			if (err.name !== "AbortError") {
+				console.warn(
+					"No se pudo obtener el mensaje del backend. ¿Backend levantado y público?",
+					err
+				);
+			}
+		}
+	};
 
 	useEffect(() => {
-		loadMessage()
-	}, [])
+		// si ya hay sesión, manda directo a /festi
+		const token = sessionStorage.getItem("token");
+		if (token) {
+			navigate("/festi", { replace: true });
+			return;
+		}
+		const controller = new AbortController();
+		loadMessage(controller.signal);
+		return () => controller.abort();
+	}, [navigate]);
 
 	return (
 		<div className="container text-center mt-5" style={{ maxWidth: 850 }}>
 			<img src={Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
 			<img src={Letras} alt="Letras Fiesti" className="letras mb-4" />
 
-			<h2 className="lead fw-bold ">
+			<h2 className="lead fw-bold">
 				🎉La forma más fácil, rápida y segura de organizar tus eventos y celebraciones🎉
 			</h2>
 			<div className="textoHome " style={{ maxWidth: 450 }}>

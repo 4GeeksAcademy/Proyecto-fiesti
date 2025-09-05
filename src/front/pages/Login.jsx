@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/login.css";
 import Logo from "../assets/img/Logo.png";
+import { useAuth } from "../auth/AuthContext";
 import LogoDark from "../assets/img/LogoDark.png";
 import "../index.css";
 
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
@@ -38,8 +40,9 @@ const Login = () => {
             }
 
             const token = data.access_token || data.token || "LOGGED_IN";
-            sessionStorage.setItem("token", token);
-            if (data.user) sessionStorage.setItem("user", JSON.stringify(data.user));
+            login({ token, user: data.user });
+
+            setPassword("");
 
             navigate("/festi", { replace: true });
         } catch {

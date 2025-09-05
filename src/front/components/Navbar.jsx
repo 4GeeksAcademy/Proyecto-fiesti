@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/navbar.css";
-import { useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { useMemo, useState, useEffect } from "react";
 import Logo from "../assets/img/Logo.png";
 import LogoDark from "../assets/img/LogoDark.png";
 import Letras from "../assets/img/Letras.png";
@@ -8,11 +9,21 @@ import "../index.css";
 
 export const Navbar = () => {
 	const navigate = useNavigate();
-	const token = sessionStorage.getItem("token");
+	const { token: ctxToken, user: ctxUser, logout } = useAuth();
+	const token = ctxToken || sessionStorage.getItem("token");
+	//token y user los guardamos en el login, mantener sesion
+	const role = useMemo(() => {
+		try {
+			if (ctxUser?.role) return ctxUser.role;
+			const raw = sessionStorage.getItem("user");
+			return raw ? JSON.parse(raw).role : null;
+		} catch {
+			return null;
+		}
+	}, [ctxUser]);
 
 	const handleLogout = () => {
-		sessionStorage.removeItem("token");
-		sessionStorage.removeItem("user");
+		logout(); // limpia contexto + storage
 		navigate("/login");
 	};
 
@@ -43,6 +54,7 @@ export const Navbar = () => {
 		<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			<div className="container">
 				{!token ? (
+					//Navbar sin sesión
 					<>
 						<Link className="navbar-brand fw-bold" to="/">Fiesti
 							{/* <img src={Letras} alt="Letras Fiesti" className="letras mb-4" /> */}
@@ -57,6 +69,7 @@ export const Navbar = () => {
 						</div>
 					</>
 				) : (
+					//Navbar con sesión
 					<>
 						<Link to="/festi">
 							<img
@@ -79,7 +92,8 @@ export const Navbar = () => {
 						</button>
 
 						<div className="collapse navbar-collapse" id="navbarNav">
-							<ul className="navbar-nav ms-auto gap-2">
+							<ul className="navbar-nav ms-auto gap-2 align-items-center">
+								{/* Modo noche */}
 								<li className="modo" onClick={toggleModo} style={{ cursor: "pointer" }}>
 									{darkMode ? (
 										<i className="fa-solid fa-sun"></i>
@@ -88,27 +102,33 @@ export const Navbar = () => {
 									)}
 								</li>
 
+
+								{/* Solo ORGANIZADOR: Actuaciones y Personal */}
+								{role === "organizador" && (
+									<>
+										<li className="nav-item">
+											<Link className="btn-actuacionesNav" to="/actuaciones">
+												Actuaciones
+											</Link>
+										</li>
+										<li className="nav-item">
+											<Link className="btn-personalNav" to="/personal">
+												Personal
+											</Link>
+										</li>
+									</>
+								)}
+
+								{/* siempre visible para usuarios logueados */}
 								<li className="nav-item">
-									<Link
-										className="btn-actuacionesNav" to="/actuaciones">
-										Actuaciones
-									</Link>
-								</li>
-								<li className="nav-item">
-									<Link
-										className="btn-personalNav" to="/personal">
-										Personal
-									</Link>
-								</li>
-								<li className="nav-item">
-									<Link
-										className="btn-perfilNav" to="/perfil" >
+									<Link className="btn-perfilNav" to="/perfil">
 										Perfil
 									</Link>
 								</li>
+
+								{/* Logout destacado y separado */}
 								<li className="nav-item ms-3">
-									<button
-										className="btn-logoutNav px-4" onClick={handleLogout}>
+									<button className="btn-logoutNav px-4" onClick={handleLogout}>
 										Salir
 									</button>
 								</li>
@@ -117,6 +137,6 @@ export const Navbar = () => {
 					</>
 				)}
 			</div>
-		</nav>
+		</nav >
 	);
 };

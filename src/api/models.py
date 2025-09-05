@@ -4,7 +4,6 @@ from sqlalchemy import String, Boolean, Column, Table, ForeignKey, Integer, Enum
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from datetime import time
 from typing import Optional
 
 db = SQLAlchemy()
@@ -59,10 +58,10 @@ class Actuacion(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=False)
     photo: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    hour: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
+    horario: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
     escenario: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
-    hora_inicio: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
-    hora_fin: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
+    hora_inicio: Mapped[str] = mapped_column(String(120), nullable=True)
+    hora_fin: Mapped[str] = mapped_column(String(120), nullable=True)
 
     def serialize(self):
         return {
@@ -70,8 +69,8 @@ class Actuacion(db.Model):
             "name": self.name,
             "description": self.description,
             "photo": self.photo,
-            "hour": self.hour.strftime("%H:%M") if self.hour else None,
+            "horario": self.horario,
             "escenario": self.escenario,
-            "horaInicio": self.hora_inicio.strftime("%H:%M") if self.hora_inicio else None,
-            "horaFin": self.hora_fin.strftime("%H:%M") if self.hora_fin else None,
+            "horaInicio": self.hora_inicio,
+            "horaFin": self.hora_fin
         }
