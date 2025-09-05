@@ -6,7 +6,9 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
         name: "",
         description: "",
         photo: "",
-        horario: "", // "HH:MM" opcional
+        num_personas: "",
+        cache: "",
+        peticiones: "",
     });
     const [msg, setMsg] = useState("");
     const [loading, setLoading] = useState(false);
@@ -19,20 +21,25 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
         setLoading(true);
 
         try {
+            // Validación mínima en cliente
+            const payload = {
+                name: form.name.trim(),
+                description: form.description.trim(),
+                photo: form.photo.trim() || null,
+                // si se han informado, los convertimos correctamente
+                ...(form.num_personas !== "" ? { num_personas: parseInt(form.num_personas, 10) } : {}),
+                ...(form.cache !== "" ? { cache: parseFloat(form.cache) } : {}),
+                ...(form.peticiones.trim() ? { peticiones: form.peticiones.trim() } : {}),
+            };
+
             const token = sessionStorage.getItem("token");
             const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/actuaciones", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}) // ← JWT
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 },
-                body: JSON.stringify({
-                    name: form.name.trim(),
-                    description: form.description.trim(),
-                    photo: form.photo.trim() || null,
-                    // Envío horario solo si hay algo escrito; el backend valida "HH:MM-HH:MM"
-                    ...(form.horario.trim() ? { horario: form.horario.trim() } : {})
-                }),
+                body: JSON.stringify(payload),
             });
 
             const data = await resp.json().catch(() => ({}));
@@ -47,7 +54,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             if (typeof onCreated === "function") onCreated(data.actuacion);
 
             // Limpia y cierra
-            setForm({ name: "", description: "", photo: "", horario: "" });
+            setForm({ name: "", description: "", photo: "", num_personas: "", cache: "", peticiones: "", });
             setLoading(false);
             if (typeof onCancel === "function") onCancel();
         } catch (err) {
@@ -92,16 +99,46 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
                 onChange={onChange}
             />
 
-            <div className="mb-3">
-                <label className="form-label">Hora que prefiere actuar (opcional, formato 21:30)</label>
-                <input
-                    className="form-control"
-                    type="text"
-                    name="hour"
-                    value={form.horario}
-                    onChange={onChange}
-                    placeholder="HH:MM"
-                />
+            <div className="row g-3 mb-3">
+                <div className="col-md-4">
+                    <label className="form-label">Nº de personas</label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        name="num_personas"
+                        min="1"
+                        step="1"
+                        placeholder="Ej. 4"
+                        value={form.num_personas}
+                        onChange={onChange}
+                    />
+                </div>
+
+                <div className="col-md-4">
+                    <label className="form-label">Caché (€)</label>
+                    <input
+                        className="form-control"
+                        type="number"
+                        name="cache"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ej. 1500.00"
+                        value={form.cache}
+                        onChange={onChange}
+                    />
+                </div>
+
+                <div className="col-12">
+                    <label className="form-label">Peticiones de la actuación (rider)</label>
+                    <textarea
+                        className="form-control"
+                        name="peticiones"
+                        rows="3"
+                        placeholder="Backline, bebidas, camerino, etc."
+                        value={form.peticiones}
+                        onChange={onChange}
+                    />
+                </div>
             </div>
 
             <div className="d-flex gap-2 justify-content-end">

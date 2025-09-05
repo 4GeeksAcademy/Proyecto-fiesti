@@ -1,6 +1,6 @@
 import enum
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Column, Table, ForeignKey, Integer, Enum, Time
+from sqlalchemy import String, Boolean, Column, Table, ForeignKey, Integer, Enum, Time, Numeric, Text
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -56,12 +56,15 @@ class User(db.Model):
 class Actuacion(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    description: Mapped[str] = mapped_column(String(120), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
     photo: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     horario: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
     escenario: Mapped[Optional[str]] = mapped_column(String(80), nullable=True)
-    hora_inicio: Mapped[str] = mapped_column(String(120), nullable=True)
-    hora_fin: Mapped[str] = mapped_column(String(120), nullable=True)
+    hora_inicio: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+    hora_fin: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+    num_personas: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    cache: Mapped[Optional[float]] = mapped_column(Numeric(10, 2), nullable=True)   
+    peticiones: Mapped[Optional[str]] = mapped_column(Text, nullable=True)           
 
     def serialize(self):
         return {
@@ -72,5 +75,8 @@ class Actuacion(db.Model):
             "horario": self.horario,
             "escenario": self.escenario,
             "horaInicio": self.hora_inicio,
-            "horaFin": self.hora_fin
+            "horaFin": self.hora_fin,
+            "num_personas": self.num_personas,
+            "cache": float(self.cache) if self.cache is not None else None,
+            "peticiones": self.peticiones,
         }
