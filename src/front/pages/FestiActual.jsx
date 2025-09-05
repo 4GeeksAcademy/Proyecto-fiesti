@@ -3,6 +3,7 @@ import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
 import CloudinaryUploader from "../components/Cloudinary";
 import { useNavigate, Link } from "react-router-dom";
+import { useTheme } from "../../ThemeContext";
 
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
@@ -172,6 +173,8 @@ const FestiActual = () => {
     return acc;
   }, {});
 
+  const { darkMode } = useTheme();
+
   return (
     <div className="festi-container">
       <h1 className="festi-title">Festival Actual</h1>
@@ -227,7 +230,7 @@ const FestiActual = () => {
         ))}
 
       {/* Lista de actuaciones */}
-      <Link to="/actuacioneslist"><h3 className="head">Lista de actuaciones</h3></Link>
+      <Link to="/actuaciones"><h3 className="head">Lista de actuaciones</h3></Link>
       {Object.keys(gruposActuaciones)
         .sort()
         .map((letra) => (
