@@ -209,7 +209,7 @@ const FestiActual = () => {
         ))}
 
       {/* Lista de actuaciones */}
-      <Link to="/actuacioneslist"><h3 className="head">Lista de actuaciones</h3></Link>
+      <Link to="/actuaciones"><h3 className="head">Lista de actuaciones</h3></Link>
       {Object.keys(gruposActuaciones)
         .sort()
         .map((letra) => (
