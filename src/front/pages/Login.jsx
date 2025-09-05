@@ -111,7 +111,7 @@ const Login = () => {
 
                 {/* Links */}
                 <div className="links mt-3">
-                    <Link to="#" className="forget" ><b>¿Has olvidado tu contraseña?</b></Link>
+                    <Link to="/email" className="forget" ><b>¿Has olvidado tu contraseña?</b></Link>
                     <span className="signup ms-2">
                         <Link to="/signup" className="signup"><b>Crear cuenta</b></Link>
                     </span>

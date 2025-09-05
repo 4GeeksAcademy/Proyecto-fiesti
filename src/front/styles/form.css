@@ -1,0 +1,177 @@
+/* FiestiStyles.css - Solo estilos para los formularios */
+
+.fiesti-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f1e8 0%, #ede3d3 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.fiesti-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.fiesti-logo h1 {
+    color: #8b2635;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin: 0;
+}
+
+.fiesti-logo p {
+    color: #6b5b73;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 10px 0 0 0;
+}
+
+.fiesti-form-container {
+    display: flex;
+    justify-content: center;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.fiesti-form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(139, 38, 53, 0.1);
+    min-width: 350px;
+    max-width: 450px;
+    width: 100%;
+}
+
+.fiesti-form-title {
+    color: #8b2635;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.fiesti-form-group {
+    margin-bottom: 20px;
+}
+
+.fiesti-form-group label {
+    display: block;
+    color: #6b5b73;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.fiesti-form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e8ddd4;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    box-sizing: border-box;
+}
+
+.fiesti-form-group input:focus {
+    outline: none;
+    border-color: #8b2635;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
+}
+
+.fiesti-form-group input.error {
+    border-color: #e74c3c;
+    background: #fdf2f2;
+}
+
+.fiesti-form-group input.success {
+    border-color: #27ae60;
+    background: #f2fdf2;
+}
+
+.fiesti-error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.fiesti-success-message {
+    color: #27ae60;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.fiesti-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #8b2635;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.fiesti-submit-btn:hover:not(:disabled) {
+    background: #a12d3d;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(139, 38, 53, 0.3);
+}
+
+.fiesti-submit-btn:active {
+    transform: translateY(0);
+}
+
+.fiesti-submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .fiesti-form-card {
+        min-width: 300px;
+        padding: 30px;
+    }
+
+    .fiesti-logo h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Estilos específicos para el formulario de contraseña */
+.fiesti-password-strength {
+    margin-top: 10px;
+}
+
+.fiesti-strength-bar {
+    height: 4px;
+    background: #e8ddd4;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.fiesti-strength-fill {
+    height: 100%;
+    width: 0%;
+    background: #e74c3c;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.fiesti-strength-text {
+    font-size: 0.8rem;
+    color: #6b5b73;
+}
