@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
-//import CloudinaryUploader from "../components/Cloudinary";
 import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useTheme } from "../../ThemeContext";
 
 const HORAS = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
 const ESCENARIOS = Array.from({ length: 5 }, (_, i) => `Escenario ${i + 1}`);
@@ -78,47 +79,7 @@ const FestiActual = () => {
     loadPersonal();
   }, [user]);
 
-  // Actualizar foto con la URL de Cloudinary
-  /* const putFotoFesti = async (url) => {
 
-    let token = sessionStorage.getItem("token");
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    const raw = JSON.stringify({ photo: url });
-
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(
-        import.meta.env.VITE_BACKEND_URL + "/api/festival/photo",
-        requestOptions
-      );
-      if (response.status !== 200) {
-        throw new Error("Error al actualizar la foto del festival");
-      }
-      dispatch({
-        type: "SET_MESSAGE",
-        payload: "Foto del festival actualizada correctamente",
-      });
-      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
-      getPerfil();
-    } catch (error) {
-      console.error(error);
-      dispatch({
-        type: "SET_MESSAGE",
-        payload: "Error al actualizar la foto del festival",
-      });
-      dispatch({ type: "SET_SHOW_MESSAGE", payload: true });
-    }
-  }; */
 
   //filtro trabajadores y actuaciones
   const actsFiltradas = useMemo(() => {
@@ -283,6 +244,8 @@ const FestiActual = () => {
       setMsg("❌ Error de conexión");
     }
   };
+
+  const { darkMode } = useTheme();
 
   return (
     <div className="festi-container">

@@ -12,11 +12,59 @@ var(--gray-color) gris
   padding: 10px 20px;
 }
 
+.letrasNav {
+  max-width: 70px;
+}
+
 .logoNav {
   height: 35px;             
   width: auto;
   vertical-align: middle;
   margin-top: 20px;
+}
+
+.btn-loginNav {
+  background: #78141e;
+  color: #fffbe5;
+  border: 1px solid #78141e;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-loginNav:hover, .btn-loginNav:focus {
+  background: #fac263;
+  color: #78141e;
+  border: 1px solid #78141e;
+  text-decoration: none;
+}
+
+.btn-signupNav {
+  background: #fac263;
+  color: #232428;
+  border: 1px solid #fac263;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-signupNav:hover, .btn-signupNav:focus {
+  background: #78141e;
+  color: #fac263;
+  border: 1px solid #78141e;
+  text-decoration: none;
 }
 
 .btn-perfilNav {

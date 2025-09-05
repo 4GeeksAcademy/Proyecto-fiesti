@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/personallist.css";
 import "../index.css";
+import { useTheme } from "../../ThemeContext";
 
 
 export default function Personal() {

@@ -7,14 +7,17 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
-from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail
+from dotenv import load_dotenv # Import this to load .env variables
 from datetime import timedelta
 
-# from models import Person
+# Load environment variables at the top of the file
+load_dotenv()
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -24,12 +27,11 @@ app.url_map.strict_slashes = False
 
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
-
 app.config["JWT_SECRET_KEY"] = os.getenv("FLASK_APP_KEY", "change-me")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 jwt = JWTManager(app)
 
-# database condiguration
+# Database configuration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
@@ -41,25 +43,36 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
 
+# **IMPORTANT: CONFIGURE FLASK-MAIL BEFORE INITIALIZING THE 'mail' OBJECT**
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('EMAIL_USER')
+# Optional: Print to verify the variables are loaded correctly
+print("Email User:", os.environ.get('EMAIL_USER'))
+
+# **NOW INITIALIZE THE EXTENSIONS, AFTER ALL CONFIGURATION**
+mail = Mail(app)
+s = URLSafeTimedSerializer(os.environ.get('SECRET_KEY')) # Use app.config for consistency
+
 # add the admin
 setup_admin(app)
 
 # add the admin
 setup_commands(app)
 
-# Add all endpoints form the API with a "api" prefix
+# **IMPORTANT: IMPORT AND REGISTER THE BLUEPRINT AT THE END**
+from api.routes import api
 app.register_blueprint(api, url_prefix='/api')
 
 # Handle/serialize errors like a JSON object
-
-
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
-
-
 @app.route('/')
 def sitemap():
     if ENV == "development":
@@ -74,8 +87,6 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
-
-
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

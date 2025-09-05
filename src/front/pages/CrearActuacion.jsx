@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTheme } from "../../ThemeContext";
 
 const CrearActuacion = ({ onCreated, onCancel }) => {
     const [form, setForm] = useState({
@@ -55,6 +56,8 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             setLoading(false);
         }
     };
+
+    const { darkMode } = useTheme();
 
     return (
         <form onSubmit={onSubmit}>
