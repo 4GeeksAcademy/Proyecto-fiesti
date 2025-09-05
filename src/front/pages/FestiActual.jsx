@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
 import CloudinaryUploader from "../components/Cloudinary";
+import { useNavigate, Link } from "react-router-dom";
 
 const FestiActual = () => {
   const [imagenFestival, setImagenFestival] = useState(null);
-  const [user, setUser] = useState(null);
   const [empleados, setEmpleados] = useState([]);
   const [activo, setActivo] = useState(null);
   const [busqueda, setBusqueda] = useState("");
   const [actuaciones, setActuaciones] = useState([]);
+  const { user } = useAuth();
 
   const ESCENARIOS = ["Escenario 1", "Escenario 2", "Escenario 3", "Escenario 4", "Escenario 5"];
   const HORAS = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
-
+  const toggleEmpleado = (id) => setActivo((prev) => (prev === id ? null : id));
   // Función para manejar la carga de imagen
   const handleImagenChange = (e) => {
     const file = e.target.files[0];
@@ -23,66 +25,85 @@ const FestiActual = () => {
 
   //  Cargar artistas/actuaciones desde backend
   useEffect(() => {
-    const load = async () => {
+    const loadActs = async () => {
       try {
         const resp = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/actuaciones");
-        const data = await resp.json();
-        if (resp.ok) setActuaciones(data);
+        const data = await resp.json().catch(() => []);
+        if (resp.ok && Array.isArray(data)) setActuaciones(data);
+        else setActuaciones([]);
       } catch (e) {
         console.error("No se pudo cargar actuaciones del backend", e);
+        setActuaciones([]);
       }
     };
-    load();
+    loadActs();
   }, []);
 
   //  Cargar empleados desde backend
   useEffect(() => {
-    fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        setEmpleados(data);
-      })
-      .catch((err) => console.error("Error cargando empleados:", err));
-  }, []);
+    const loadPersonal = async () => {
+      // si no hay usuario o no es organizador, no pidas nada
+      if (!user || user.role !== "organizador") {
+        setEmpleados([]);
+        return;
+      }
+      try {
+        const token = sessionStorage.getItem("token");
+        const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          console.warn("Error /users/personal:", res.status, err);
+          setEmpleados([]);
+          return;
+        }
+        const data = await res.json().catch(() => []);
+        setEmpleados(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error cargando empleados:", err);
+        setEmpleados([]);
+      }
+    };
+    loadPersonal();
+  }, [user]);
 
 
 
   //  Obtener usuario para luego poder manejar el rol
-  useEffect(() => {
-    const fetchUser = async () => {
-      let token = sessionStorage.getItem("token");
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     let token = sessionStorage.getItem("token");
+  //     const myHeaders = new Headers();
+  //     myHeaders.append("Authorization", `Bearer ${token}`);
 
-      const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-      };
+  //     const requestOptions = {
+  //       method: "GET",
+  //       headers: myHeaders,
+  //     };
 
-      try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
-        const result = await response.json();
-        console.log(result);
-        if (!response.ok) {
-          console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
-          setUser(null);
-          return;
-        }
+  //     try {
+  //       const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
+  //       const result = await response.json();
+  //       console.log(result);
+  //       if (!response.ok) {
+  //         console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
+  //         setUser(null);
+  //         return;
+  //       }
 
-        setUser(result);
-        console.log("Usuario cargado:", result);
-      } catch (error) {
-        console.error("Error fetch user:", error);
-        setUser(null);
-      }
-    };
-    fetchUser();
-  }, []);
+  //       setUser(result);
+  //       console.log("Usuario cargado:", result);
+  //     } catch (error) {
+  //       console.error("Error fetch user:", error);
+  //       setUser(null);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
 
 
-// Actualizar foto con la URL de Cloudinary
+  // Actualizar foto con la URL de Cloudinary
   /* const putFotoFesti = async (url) => {
 
     let token = sessionStorage.getItem("token");
@@ -126,16 +147,14 @@ const FestiActual = () => {
 
 
   // Filtrado por búsqueda empleado
-  const empleadosFiltrados = empleados.filter((emp) =>
-    emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
+  const empleadosFiltrados = (Array.isArray(empleados) ? empleados : []).filter((emp) =>
+    (emp?.name || "").toLowerCase().includes(busqueda.toLowerCase())
   );
 
-  // Agrupación por inicial empleados
   const grupos = empleadosFiltrados.reduce((acc, emp) => {
-    if (!emp?.name) return acc;
-    const letra = emp.name[0].toUpperCase();
-    if (!acc[letra]) acc[letra] = [];
-    acc[letra].push(emp);
+    const letra = (emp?.name?.[0] || "").toUpperCase();
+    if (!letra) return acc;
+    (acc[letra] ||= []).push(emp);
     return acc;
   }, {});
 
@@ -183,7 +202,7 @@ const FestiActual = () => {
       />
 
       {/* Lista de empleados */}
-      <h3>Lista de empleados</h3>
+      <Link to="/personal"><h3>Lista de empleados</h3></Link>
       {Object.keys(grupos)
         .sort()
         .map((letra) => (
@@ -208,7 +227,7 @@ const FestiActual = () => {
         ))}
 
       {/* Lista de actuaciones */}
-      <h3 className="head">Lista de actuaciones</h3>
+      <Link to="/actuacioneslist"><h3 className="head">Lista de actuaciones</h3></Link>
       {Object.keys(gruposActuaciones)
         .sort()
         .map((letra) => (
@@ -220,7 +239,7 @@ const FestiActual = () => {
                   <div>
                     {act.name}
                     <span className="info-actuacion">
-                      {" - " + (act.escenario || "Sin escenario") + " (" + (act.hora || "Sin horario") + ")"}
+                      {" - " + (act.escenario || "Sin escenario") + " (" + (act.horario || "Sin horario") + ")"}
                     </span>
                   </div>
                 </div>

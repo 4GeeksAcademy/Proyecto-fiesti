@@ -5,6 +5,8 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import RoleRoute from "./auth/RoleRoute";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
@@ -32,21 +34,29 @@ export const router = createBrowserRouter(
     // Root Route: All navigation will start from here.
     <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
-      {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
+      {/* PÚBLICAS */}
       <Route index element={<Home />} />
-      <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
-      <Route path="/perfil" element={<Perfil />} />
-      
-      <Route path="/perfil/:userId" element={<Perfil />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/personal" element={<Personal />} />
       <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
       <Route path="/festi" element={<FestiActual />} />
       <Route path="/reset_password" element={<Reset />} />
+      <Route path="/single/:theId" element={<Single />} />
 
+      {/* PROTEGIDAS (cualquier usuario logueado) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/festi" element={<FestiActual />} />
+        <Route path="/perfil" element={<Perfil />} />
+      </Route>
 
-      <Route path="/actuaciones" element={<ActuacionesList />} />
+      {/* SÓLO ORGANIZADOR */}
+      <Route element={<RoleRoute allow={["organizador"]} />}>
+        <Route path="/actuaciones" element={<ActuacionesList />} />
+        <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
+        <Route path="/personal" element={<Personal />} />
+        <Route path="/perfil/:userId" element={<Perfil />} />
+      </Route>
 
 
 

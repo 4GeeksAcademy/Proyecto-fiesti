@@ -50,7 +50,7 @@
   padding-right: 40px; 
 }
 
-.password-toggle-btn {
+.password-signup-btn {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -59,6 +59,7 @@
   border: none;
   cursor: pointer;
   color: #9d9ea1;
+  font-size: 1.5rem;
 }
 
 .crear {

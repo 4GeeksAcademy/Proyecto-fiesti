@@ -14,6 +14,7 @@ from flask_jwt_extended import JWTManager
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail
 from dotenv import load_dotenv # Import this to load .env variables
+from datetime import timedelta
 
 # Load environment variables at the top of the file
 load_dotenv()
@@ -27,6 +28,7 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 app.config["JWT_SECRET_KEY"] = os.getenv("FLASK_APP_KEY", "change-me")
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 jwt = JWTManager(app)
 
 # Database configuration

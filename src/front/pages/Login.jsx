@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/login.css";
 import Logo from "../assets/img/Logo.png";
+import { useAuth } from "../auth/AuthContext";
+import LogoDark from "../assets/img/LogoDark.png";
+import "../index.css";
 
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
@@ -36,8 +40,9 @@ const Login = () => {
             }
 
             const token = data.access_token || data.token || "LOGGED_IN";
-            sessionStorage.setItem("token", token);
-            if (data.user) sessionStorage.setItem("user", JSON.stringify(data.user));
+            login({ token, user: data.user });
+
+            setPassword("");
 
             navigate("/festi", { replace: true });
         } catch {
@@ -47,9 +52,11 @@ const Login = () => {
         }
     };
 
+    const isDarkMode = localStorage.getItem("theme") === "dark"; // Para que el logo cambie con el modo noche
+
     return (
         <div className="container mt-5" style={{ maxWidth: 420 }}>
-            <img src={Logo} alt="Logo Fiesti" className="logo mb-4" />
+            <img src={isDarkMode ? LogoDark : Logo} alt="Logo Fiesti" className="logo mb-4" />
             <h1 className="mb-4 text-center">Iniciar sesión</h1>
             {msg && <div className="alert text-center">{msg}</div>}
 
@@ -87,7 +94,7 @@ const Login = () => {
                         className="password-toggle-btn"
                         tabIndex={-1}
                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} >
-                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i> 
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye-fill"}`}></i>
                     </button>
                 </div>
 
@@ -97,10 +104,10 @@ const Login = () => {
                 </button>
 
                 {/* Google Login */}
-                <p className="mt-3 text-center">Inicia sesión de forma rápida con tu cuenta de Google</p>
+                {/* <p className="mt-3 text-center">Inicia sesión de forma rápida con tu cuenta de Google</p>
                 <button type="button" className="btn-google w-100">
                     <i className="fa-brands fa-google me-2"></i><b>Google</b>
-                </button>
+                </button> */}
 
                 {/* Links */}
                 <div className="links mt-3">

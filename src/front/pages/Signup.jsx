@@ -86,11 +86,11 @@ const Signup = () => {
                     {formData.password && (<button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        className="password-toggle-btn"
+                        className="password-signup-btn"
                         tabIndex={-1}
                         aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                     >
-                        <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye-fill"}`}></i>
                     </button>)}
                 </div>
 
@@ -111,7 +111,7 @@ const Signup = () => {
                     onChange={handleChange}
                 >
                     <option value="personal">Personal</option>
-                    <option value="organizador">Organizador</option>
+                    <option value="organizador">Organizador/a</option>
                 </select>
 
                 {formData.role === "personal" && (

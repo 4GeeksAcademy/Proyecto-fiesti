@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import "../styles/perfil.css";
 import { useNavigate, useParams } from "react-router-dom";
 import CloudinaryUploader from "../components/Cloudinary";
+import presetPic from "../assets/img/presetPic.png";
+import "../index.css";
 
 export const Perfil = () => {
   let navigate = useNavigate();
@@ -61,7 +63,7 @@ export const Perfil = () => {
 
   // Iniciar edición
   const handleEditar = (campo, valorInicial) => {
-    if (!isOwnProfile) return; 
+    if (!isOwnProfile) return;
     setEditando(campo);
     setValorTemp(valorInicial);
   };
@@ -213,22 +215,20 @@ export const Perfil = () => {
   };
 
   return (
-    <div className="infoPerfil">
+    <div className="bodyPerfil">
       <h1>Perfil</h1>
 
       {/* Imagen de perfil */}
-      <div
-        className="perfil-img-section"
-        style={{ position: "relative", display: "inline-block" }}
-      >
-        <img src={perfil.photo} className="profilePic" alt="Foto perfil" />
-        <CloudinaryUploader
-          onUpload={(url) => putFotoPerfil(url)}
-          className="edit-profile-btn"
-        >
-          <i className="fa-solid fa-pen-to-square"></i>
-        </CloudinaryUploader>
-      </div>
+      <CloudinaryUploader
+        onUpload={(url) => putFotoPerfil(url)}
+        className="edit-pic-btn" >
+        <img src={perfil.photo || presetPic} className="profilePic" alt="Foto perfil"
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = {presetPic}
+          }} />
+      </CloudinaryUploader>
+
 
       {/* Nombre */}
       <h2 className="nombre">
@@ -259,9 +259,9 @@ export const Perfil = () => {
 
       <div className="infoPerfil">
         {/* Teléfono */}
-        <div className="telefono">
-          <h3>
-            Teléfono
+        <div className="telefono-container">
+          <h3>Teléfono</h3>
+          <div className="infoEditable">
             {editando === "phone" ? (
               <input
                 type="text"
@@ -272,24 +272,24 @@ export const Perfil = () => {
               />
             ) : (
               <>
-                {" "}
                 {perfil.phone}
                 <span>
                   <i
-                    className="fa-solid fa-pen-to-square"
+                    className="edit-btn fa-solid fa-pen-to-square"
                     type="button"
                     onClick={() => handleEditar("phone", perfil.phone)}
                   ></i>
                 </span>
               </>
             )}
-          </h3>
+          </div>
         </div>
+
 
         {/* Edad */}
         <div className="age">
-          <h3>
-            Edad
+          <h3> Edad </h3>
+          <div className="infoEditable">
             {editando === "age" ? (
               <input
                 type="text"
@@ -304,20 +304,20 @@ export const Perfil = () => {
                 {perfil.age}
                 <span>
                   <i
-                    className="fa-solid fa-pen-to-square"
+                    className="edit-btn fa-solid fa-pen-to-square"
                     type="button"
                     onClick={() => handleEditar("age", perfil.age)}
                   ></i>
                 </span>
               </>
             )}
-          </h3>
+          </div>
         </div>
 
         {/* Ciudad */}
         <div className="city">
-          <h3>
-            Ciudad
+          <h3> Ciudad </h3>
+          <div className="infoEditable">
             {editando === "city" ? (
               <input
                 type="text"
@@ -332,21 +332,21 @@ export const Perfil = () => {
                 {perfil.city}
                 <span>
                   <i
-                    className="fa-solid fa-pen-to-square"
+                    className="edit-btn fa-solid fa-pen-to-square"
                     type="button"
                     onClick={() => handleEditar("city", perfil.city)}
                   ></i>
                 </span>
               </>
             )}
-          </h3>
+          </div>
         </div>
       </div> {/* cierra infoPerfil */}
 
       {/* pago solo organizador sin tarjeta, una vez paga desaparece */}
       {needsPayment && (
-        <div className="card card-body border-danger mt-4" style={{ maxWidth: 720 }}>
-          <h5 className="text-danger">Completa tu pago de organizador</h5>
+        <div className="card card-body mt-4">
+          <h4><b>Completa tu pago de organizador/a</b></h4>
           {payMsg && <div className="alert alert-info my-2">{payMsg}</div>}
 
           <form onSubmit={doPay} className="row g-3">
@@ -383,8 +383,8 @@ export const Perfil = () => {
               />
             </div>
 
-            <div className="col-8">
-              <label className="form-label">Caducidad (MM/AAAA)</label>
+            <div className="col-4">
+              <label className="form-label">Caducidad</label>
               <input
                 className="form-control"
                 placeholder="MM/AAAA"
@@ -394,15 +394,9 @@ export const Perfil = () => {
               />
             </div>
 
-            <div className="col-12 d-grid d-sm-flex gap-2 mt-2">
-              <button className="btn btn-primary">Pagar</button>
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => navigate("/festi")}
-              >
-                Ahora no
-              </button>
+            <div className="botonesCard col-4">
+              <button className="btn-pagar">Pagar</button>
+              <button className="btn-ahoraNo" onClick={() => navigate("/festi")}> Ahora no </button>
             </div>
           </form>
         </div>

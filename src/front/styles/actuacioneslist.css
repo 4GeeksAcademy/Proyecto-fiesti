@@ -1,0 +1,56 @@
+.actuaciones-container .card-header {
+  background-color: darkred !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.actuaciones-container .list-group-item {
+  border-color: #ddd;
+}
+
+
+.btn-rojo {
+  background-color: darkred;
+  color: white;
+  border: none;
+}
+.btn-rojo:hover {
+  background-color: #a10000;
+  color: white;
+}
+
+.btn-outline-rojo {
+  background: transparent;
+  color: darkred;
+  border: 1px solid darkred;
+}
+.btn-outline-rojo:hover {
+  background-color: #ffe6e6; 
+  color: darkred;
+}
+
+
+.btn-borrar-rojo {
+  background: transparent;
+  border: 1px solid #900;
+  color: #900;
+}
+.btn-borrar-rojo:hover {
+  background: #fff0f0;
+}
+
+
+.badge-escenario {
+  background-color: darkred;
+  color: white;
+}
+.badge-horario {
+  background-color: #6c757d; 
+  color: white;
+}
+
+
+.actuaciones-container .editor {
+  background-color: #fffbe6;
+  border: 1px solid #ddd;
+}
