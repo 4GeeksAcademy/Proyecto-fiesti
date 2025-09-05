@@ -2,12 +2,18 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
 import { Link } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useTheme } from "../../ThemeContext";
 
 const HORAS = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
 const ESCENARIOS = Array.from({ length: 5 }, (_, i) => `Escenario ${i + 1}`);
 const BARRAS = Array.from({ length: 10 }, (_, i) => `Barra ${i + 1}`);
+
+const splitHorario = (horario) => {
+  if (!horario) return { inicio: "", fin: "" };
+  const [inicio, fin] = horario.split("-").map((s) => s?.trim() || "");
+  return { inicio, fin };
+};
 
 const getInicio = (horario) => {
   if (!horario || typeof horario !== "string") return "";
