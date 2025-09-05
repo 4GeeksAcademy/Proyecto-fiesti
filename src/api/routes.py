@@ -21,12 +21,13 @@ CORS(api)
 
 # -------------------------------ENDPOINTS DE RECUPERAR CONTRASEÑA----------------------------------
 
+
 @api.route('/test_email', methods=['GET'])
 def test():
     try:
 
         # Reemplaza 'tu_email@ejemplo.com' con tu dirección de correo real
-        recipients = ['proyectofiesti@gmail.com'] 
+        recipients = ['proyectofiesti@gmail.com']
         msg = Message("Prueba de Flask-Mail", recipients=recipients)
         msg.body = "¡Hola! Si ves este correo, significa que Flask-Mail está configurado correctamente. 🎉"
         mail.send(msg)
@@ -38,7 +39,7 @@ def test():
 
 @api.route('/reset_password_request', methods=['POST'])
 def reset_request():
-    data = request.get_json() 
+    data = request.get_json()
     email = data.get("email")
 
     if not email:
@@ -53,7 +54,7 @@ def reset_request():
         msg = Message("Solicitud de restablecimiento de contraseña",
                       recipients=[user.email])
         msg.body = f"Para restablecer tu contraseña, visita el siguiente enlace: {reset_url}"
-        
+
         try:
             mail.send(msg)
         except Exception as e:
@@ -62,11 +63,11 @@ def reset_request():
     return jsonify({"msg": "Si el email está en nuestros registros, recibirás un enlace para restablecer tu contraseña."}), 200
 
 
-
 @api.route('/reset_password_token/<token>', methods=['POST'])
 def reset_password_token(token):
     try:
-        email = s.loads(token, salt='reset-password', max_age=1800) # El token expira en 30 minutos
+        # El token expira en 30 minutos
+        email = s.loads(token, salt='reset-password', max_age=1800)
     except:
         return jsonify({"msg": "El token es inválido o ha expirado."}), 400
 
@@ -74,7 +75,7 @@ def reset_password_token(token):
 
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
-    
+
     data = request.get_json() or {}
     new_password = data.get("password")
 
@@ -84,7 +85,7 @@ def reset_password_token(token):
     hashed_password = generate_password_hash(new_password)
     user.password = hashed_password
     db.session.commit()
-    
+
     return jsonify({"msg": "Tu contraseña ha sido actualizada exitosamente."}), 200
 
 
@@ -104,6 +105,7 @@ def require_role(user, role: RolEnum) -> bool:
 @api.route('/hello', methods=['GET'])
 def hello():
     return jsonify({"message": "Hola desde el backend"}), 200
+
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -237,25 +239,55 @@ def create_actuacion():
         if not name or not description:
             return jsonify({"msg": "Faltan campos obligatorios (name, description)"}), 400
 
+        photo = (data.get("photo") or None)
+        escenario = ((data.get("escenario") or "").strip() or None)
+
         horario = (data.get("horario") or "").strip()
-        # Validación mínima opcional
         if horario:
             import re
             if not re.match(r"^\d{2}:\d{2}-\d{2}:\d{2}$", horario):
                 return jsonify({"msg": "Formato de horario inválido. Usa 'HH:MM-HH:MM'."}), 400
+        else:
+            horario = None
+
+        num_personas = data.get("num_personas", None)
+        cache = data.get("cache", None)
+        peticiones = (data.get("peticiones") or None)
+
+        if num_personas is not None:
+            try:
+                num_personas = int(num_personas)
+                if num_personas <= 0:
+                    return jsonify({"msg": "num_personas debe ser > 0"}), 400
+            except Exception:
+                return jsonify({"msg": "num_personas debe ser un entero"}), 400
+
+        if cache is not None:
+            try:
+                cache = float(cache)
+                if cache < 0:
+                    return jsonify({"msg": "cache no puede ser negativa"}), 400
+            except Exception:
+                return jsonify({"msg": "cache debe ser numérico"}), 400
 
         act = Actuacion(
             name=name,
             description=description,
-            photo=(data.get("photo") or None),
-            escenario=((data.get("escenario") or "").strip() or None),
-            horario=(horario or None),
+            photo=photo,
+            escenario=escenario,
+            horario=horario,
+            num_personas=num_personas,
+            cache=cache,
+            peticiones=peticiones,
         )
         db.session.add(act)
         db.session.commit()
         return jsonify({"msg": "Actuación creada", "actuacion": act.serialize()}), 201
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"msg": "Error interno creando actuación", "error": str(e)}), 500
 
 
 @api.route("/actuaciones/<int:act_id>", methods=["DELETE"])
@@ -287,14 +319,19 @@ def edit_actuacion(act_id):
         if not act:
             return jsonify({"msg": "Actuación no encontrada"}), 404
 
-        ALLOWED = {"name", "description", "photo", "escenario", "horario"}
+        ALLOWED = {"name", "description", "photo", "escenario",
+                   "horario", "num_personas", "cache", "peticiones"}
         payload = {k: v for k, v in data.items() if k in ALLOWED}
 
-        for k in ("name", "description", "photo", "escenario", "horario"):
+        # strip para strings
+        for k in ("name", "description", "photo", "escenario", "horario", "peticiones"):
             if k in payload and isinstance(payload[k], str):
                 payload[k] = payload[k].strip()
+
+        # normalizar escenario y horario
         if "escenario" in payload:
             payload["escenario"] = payload["escenario"] or None
+
         if "horario" in payload:
             import re
             if payload["horario"]:
@@ -303,6 +340,29 @@ def edit_actuacion(act_id):
             else:
                 payload["horario"] = None
 
+        # casting numéricos
+        if "num_personas" in payload:
+            if payload["num_personas"] in (None, ""):
+                payload["num_personas"] = None
+            else:
+                try:
+                    payload["num_personas"] = int(payload["num_personas"])
+                    if payload["num_personas"] <= 0:
+                        return jsonify({"msg": "num_personas debe ser > 0"}), 400
+                except Exception:
+                    return jsonify({"msg": "num_personas debe ser un entero"}), 400
+
+        if "cache" in payload:
+            if payload["cache"] in (None, ""):
+                payload["cache"] = None
+            else:
+                try:
+                    payload["cache"] = float(payload["cache"])
+                    if payload["cache"] < 0:
+                        return jsonify({"msg": "cache no puede ser negativa"}), 400
+                except Exception:
+                    return jsonify({"msg": "cache debe ser numérico"}), 400
+
         Actuacion.query.filter_by(id=act_id).update(payload)
         db.session.commit()
 
@@ -310,7 +370,9 @@ def edit_actuacion(act_id):
         return jsonify({"msg": "Cambio aplicado", "actuacion": updated.serialize()}), 200
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"msg": "Error interno actualizando actuación", "error": str(e)}), 500
 
 
 @api.route("/actuaciones/<int:act_id>/asignacion", methods=["PATCH"])
@@ -360,7 +422,7 @@ def get_personal_users():
     user = current_user_or_401()
     if not require_role(user, RolEnum.ORGANIZADOR):
         return jsonify({"msg": "Solo organizadores"}), 403
-    
+
     try:
         users = User.query.filter_by(role=RolEnum.PERSONAL).all()
         return jsonify([user.serialize() for user in users]), 200
@@ -374,7 +436,7 @@ def edit_personal_users(user_id):
     user = current_user_or_401()
     if not require_role(user, RolEnum.ORGANIZADOR):
         return jsonify({"msg": "Solo organizadores"}), 403
-    
+
     try:
         data = request.get_json()
         user = User.query.get(user_id)

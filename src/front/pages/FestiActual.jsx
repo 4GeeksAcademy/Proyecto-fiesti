@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
 import { Link } from "react-router-dom";
-import { useNavigate} from "react-router-dom";
 import { useTheme } from "../../ThemeContext";
 
 const HORAS = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
@@ -196,12 +195,9 @@ const FestiActual = () => {
   const guardarPersonal = async (id, barra, inicio, fin) => {
     if (!isOrganizador) return;
     setMsg("");
-    if (inicio && fin && fin <= inicio) {
-      setMsg("⚠️ La hora de fin debe ser posterior a la de inicio.");
-      return;
-    }
-    const payload = { puesto: barra || "", horario: inicio && fin ? `${inicio}-${fin}` : "" };
+    if (inicio && fin && fin <= inicio) { setMsg("⚠️ La hora de fin debe ser posterior a la de inicio."); return; }
 
+    const payload = { puesto: barra || "", horario: inicio && fin ? `${inicio}-${fin}` : "" };
     try {
       const token = sessionStorage.getItem("token");
       const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/personal/${id}`, {
@@ -209,17 +205,12 @@ const FestiActual = () => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),
       });
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        setMsg(err.msg || "❌ Error al guardar la asignación del personal");
-        return;
-      }
-      const updated = await resp.json();
-      setEmpleados((prev) =>
-        prev.map((p) =>
-          p.id === id ? { ...p, puesto: payload.puesto, horario: payload.horario } : p
-        )
-      );
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) { setMsg(data.msg || "❌ Error al guardar la asignación del personal"); return; }
+      // Actualiza en memoria
+      setEmpleados(prev => prev.map(p =>
+        p.id === id ? { ...p, puesto: payload.puesto, horario: payload.horario } : p
+      ));
       setMsg("✅ Asignación de personal guardada");
       setTimeout(() => setMsg(""), 1500);
     } catch {
@@ -254,7 +245,7 @@ const FestiActual = () => {
   const { darkMode } = useTheme();
 
   return (
-    <div className="festi-container">
+    <div className="festi-container" style={{ maxWidth: 1200 }}>
       <h1 className="festi-title">Festival Actual</h1>
 
       {/* Buscador */}
