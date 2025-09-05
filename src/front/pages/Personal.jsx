@@ -9,18 +9,36 @@ export default function Personal() {
     const [busqueda, setBusqueda] = useState("");
 
 
-    //  Cargar empleados desde backend y actualizados
+    // cargar empleados requiere JWT y rol organizador en tu backend
     useEffect(() => {
-        fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal")
-            .then((res) => res.json())
-            .then((data) => {
-                const empleadosConAsignado = data.map(emp => ({
+        const load = async () => {
+            try {
+                const token = sessionStorage.getItem("token");
+                const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/users/personal", {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    console.warn("Error /users/personal:", res.status, err);
+                    setEmpleados([]);
+                    return;
+                }
+
+                const data = await res.json().catch(() => []);
+                const arr = Array.isArray(data) ? data : [];
+                // marco asignado si tiene puesto y horario
+                const empleadosConAsignado = arr.map(emp => ({
                     ...emp,
-                    asignado: emp.puesto && emp.horario ? true : false,
+                    asignado: Boolean(emp.puesto && emp.horario),
                 }));
                 setEmpleados(empleadosConAsignado);
-            })
-            .catch((err) => console.error("Error cargando empleados:", err));
+            } catch (e) {
+                console.error("Error cargando empleados:", e);
+                setEmpleados([]);
+            }
+        };
+        load();
     }, []);
 
 
@@ -31,37 +49,25 @@ export default function Personal() {
 
     //   Guardar asignación con FETCH
     const guardarAsignacion = async (id, puesto, horario) => {
-        const userData = { puesto, horario };
         const token = sessionStorage.getItem("token");
-
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        if (token) {
-            myHeaders.append("Authorization", `Bearer ${token}`);
-        }
-
         try {
-            const response = await fetch(
+            const res = await fetch(
                 import.meta.env.VITE_BACKEND_URL + `/api/users/personal/${id}`,
                 {
                     method: "PUT",
-                    headers: myHeaders,
-                    body: JSON.stringify(userData),
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
+                    body: JSON.stringify({ puesto, horario }),
                 }
             );
+            if (!res.ok) throw new Error("Error al guardar la asignación.");
 
-            if (!response.ok) {
-                throw new Error("Error al guardar la asignación.");
-            }
-
-            const data = await response.json();
-            console.log("Asignación guardada con éxito:", data);
-
-            setEmpleados(
-                empleados.map((e) =>
-                    e.id === id ? { ...e, puesto, horario, asignado: true } : e
-                )
-            );
+            await res.json().catch(() => null);
+            setEmpleados(empleados.map(e =>
+                e.id === id ? { ...e, puesto, horario, asignado: true } : e
+            ));
             setActivo(null);
         } catch (error) {
             console.error("Hubo un problema al guardar la asignación:", error);
@@ -70,34 +76,24 @@ export default function Personal() {
 
     //   Borrar asignación con FETCH
     const borrarAsignacion = async (id) => {
-        const userData = { puesto: "", horario: "" };
         const token = sessionStorage.getItem("token");
-
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        if (token) {
-            myHeaders.append("Authorization", `Bearer ${token}`);
-        }
-
         try {
-            const response = await fetch(
+            const res = await fetch(
                 import.meta.env.VITE_BACKEND_URL + `/api/users/personal/${id}`,
                 {
                     method: "PUT",
-                    headers: myHeaders,
-                    body: JSON.stringify(userData),
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
+                    body: JSON.stringify({ puesto: "", horario: "" }),
                 }
             );
+            if (!res.ok) throw new Error("Error al borrar la asignación.");
 
-            if (!response.ok) {
-                throw new Error("Error al borrar la asignación.");
-            }
-
-            setEmpleados(
-                empleados.map((e) =>
-                    e.id === id ? { ...e, puesto: "", horario: "", asignado: false } : e
-                )
-            );
+            setEmpleados(empleados.map(e =>
+                e.id === id ? { ...e, puesto: "", horario: "", asignado: false } : e
+            ));
         } catch (error) {
             console.error("Hubo un problema al borrar la asignación:", error);
         }
@@ -105,16 +101,15 @@ export default function Personal() {
 
 
     // Filtrado por búsqueda
-    const empleadosFiltrados = empleados.filter((emp) =>
-        emp?.name?.toLowerCase().includes(busqueda.toLowerCase())
+    const empleadosFiltrados = (Array.isArray(empleados) ? empleados : []).filter(emp =>
+        (emp?.name || "").toLowerCase().includes(busqueda.toLowerCase())
     );
 
     // Agrupación por inicial
     const grupos = empleadosFiltrados.reduce((acc, emp) => {
-        if (!emp?.name) return acc;
-        const letra = emp.name[0].toUpperCase();
-        if (!acc[letra]) acc[letra] = [];
-        acc[letra].push(emp);
+        const letra = (emp?.name?.[0] || "").toUpperCase();
+        if (!letra) return acc;
+        (acc[letra] ||= []).push(emp);
         return acc;
     }, {});
 

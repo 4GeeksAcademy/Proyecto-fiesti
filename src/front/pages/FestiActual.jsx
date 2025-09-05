@@ -70,36 +70,36 @@ const FestiActual = () => {
 
 
   //  Obtener usuario para luego poder manejar el rol
-  useEffect(() => {
-    const fetchUser = async () => {
-      let token = sessionStorage.getItem("token");
-      const myHeaders = new Headers();
-      myHeaders.append("Authorization", `Bearer ${token}`);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     let token = sessionStorage.getItem("token");
+  //     const myHeaders = new Headers();
+  //     myHeaders.append("Authorization", `Bearer ${token}`);
 
-      const requestOptions = {
-        method: "GET",
-        headers: myHeaders,
-      };
+  //     const requestOptions = {
+  //       method: "GET",
+  //       headers: myHeaders,
+  //     };
 
-      try {
-        const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
-        const result = await response.json();
-        console.log(result);
-        if (!response.ok) {
-          console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
-          setUser(null);
-          return;
-        }
+  //     try {
+  //       const response = await fetch(import.meta.env.VITE_BACKEND_URL + "/api/me", requestOptions);
+  //       const result = await response.json();
+  //       console.log(result);
+  //       if (!response.ok) {
+  //         console.error(`Error al obtener usuario: ${response.status} ${response.statusText}`);
+  //         setUser(null);
+  //         return;
+  //       }
 
-        setUser(result);
-        console.log("Usuario cargado:", result);
-      } catch (error) {
-        console.error("Error fetch user:", error);
-        setUser(null);
-      }
-    };
-    fetchUser();
-  }, []);
+  //       setUser(result);
+  //       console.log("Usuario cargado:", result);
+  //     } catch (error) {
+  //       console.error("Error fetch user:", error);
+  //       setUser(null);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
 
 
   // Actualizar foto con la URL de Cloudinary

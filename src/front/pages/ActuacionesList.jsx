@@ -25,9 +25,13 @@ export default function ActuacionesList() {
     const handleDelete = async (id) => {
         if (!window.confirm("¿Seguro que quieres eliminar esta actuación?")) return;
         try {
+            const token = sessionStorage.getItem("token");
             const resp = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/actuaciones/${id}`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
             });
             const data = await resp.json();
             if (!resp.ok) {
@@ -68,9 +72,13 @@ export default function ActuacionesList() {
         const payload = { escenario, horario: inicio && fin ? `${inicio}-${fin}` : "" };
 
         try {
+            const token = sessionStorage.getItem("token");
             const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/actuaciones/${id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
                 body: JSON.stringify(payload),
             });
             const data = await resp.json();
@@ -79,7 +87,7 @@ export default function ActuacionesList() {
                 return;
             }
             const updated = data.actuacion ?? data;
-            setActuaciones(prev => prev.map(a => a.id === id ? updated : a));
+            setActuaciones((prev) => prev.map((a) => (a.id === id ? updated : a)));
             setAbierta(null);
             setMsg("✅ Asignación guardada");
             setTimeout(() => setMsg(""), 1500);
@@ -91,9 +99,13 @@ export default function ActuacionesList() {
 
     const limpiarAsignacion = async (id) => {
         try {
+            const token = sessionStorage.getItem("token");
             const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/actuaciones/${id}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
                 body: JSON.stringify({ escenario: null, horario: "" }),
             });
             const data = await resp.json();
@@ -102,7 +114,7 @@ export default function ActuacionesList() {
                 return;
             }
             const updated = data.actuacion ?? data;
-            setActuaciones(prev => prev.map(a => a.id === id ? updated : a));
+            setActuaciones((prev) => prev.map((a) => (a.id === id ? updated : a)));
             setMsg("🧹 Asignación eliminada");
             setTimeout(() => setMsg(""), 1500);
         } catch (err) {
