@@ -15,6 +15,7 @@ import Personal from "./pages/Personal";
 import CrearActuacion from "./pages/CrearActuacion";
 import ActuacionesList from "./pages/ActuacionesList";
 import FestiActual from "./pages/FestiActual";
+import Reset from "./pages/Reset";
 
 
 
@@ -42,6 +43,7 @@ export const router = createBrowserRouter(
       <Route path="/personal" element={<Personal />} />
       <Route path="/actuaciones/nueva" element={<CrearActuacion />} />
       <Route path="/festi" element={<FestiActual />} />
+      <Route path="/reset_password" element={<Reset />} />
 
 
       <Route path="/actuaciones" element={<ActuacionesList />} />

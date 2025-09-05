@@ -48,7 +48,8 @@ def reset_request():
 
     if user:
         token = s.dumps(user.email, salt='reset-password')
-        reset_url = url_for('api.reset_password_token', token=token, _external=True)
+        frontend_url = os.environ.get('FRONTEND_URL')
+        reset_url = f"{frontend_url}/reset_password?token={token}"
         msg = Message("Solicitud de restablecimiento de contraseña",
                       recipients=[user.email])
         msg.body = f"Para restablecer tu contraseña, visita el siguiente enlace: {reset_url}"
