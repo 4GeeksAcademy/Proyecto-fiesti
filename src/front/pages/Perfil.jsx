@@ -24,12 +24,6 @@ export const Perfil = () => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
 
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
-
     try {
       const url = userId
         ? import.meta.env.VITE_BACKEND_URL + `/api/perfil/${userId}`
@@ -104,17 +98,14 @@ export const Perfil = () => {
       [editando]: valorTemp,
     });
 
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
     try {
       const response = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/perfil",
-        requestOptions
+        {
+          method: "PUT",
+          headers: myHeaders,
+          body: raw,
+        }
       );
       const result = await response.json();
       if (response.status !== 200) {
@@ -143,17 +134,14 @@ export const Perfil = () => {
 
     const raw = JSON.stringify({ photo: url });
 
-    const requestOptions = {
-      method: "PUT",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
-
     try {
       const response = await fetch(
         import.meta.env.VITE_BACKEND_URL + "/api/perfil/photo",
-        requestOptions
+        {
+          method: "PUT",
+          headers: myHeaders,
+          body: raw,
+        }
       );
       if (response.status !== 200) {
         throw new Error("Error al actualizar la foto de perfil");
@@ -206,9 +194,8 @@ export const Perfil = () => {
         return;
       }
       setPayMsg("✅ Pago registrado");
-      // el backend debería devolver { user: {...} }
       if (data.user) setPerfil(data.user);
-      setNeedsPayment(false); // ya no se muestra el bloque
+      setNeedsPayment(false);
     } catch (err) {
       console.error(err);
       setPayMsg("❌ Error de conexión");
@@ -222,14 +209,18 @@ export const Perfil = () => {
       {/* Imagen de perfil */}
       <CloudinaryUploader
         onUpload={(url) => putFotoPerfil(url)}
-        className="edit-pic-btn" >
-        <img src={perfil.photo || presetPic} className="profilePic" alt="Foto perfil"
+        className="edit-pic-btn"
+      >
+        <img
+          src={perfil.photo || presetPic}
+          className="profilePic"
+          alt="Foto perfil"
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
-            currentTarget.src = { presetPic }
-          }} />
+            currentTarget.src = { presetPic };
+          }}
+        />
       </CloudinaryUploader>
-
 
       {/* Nombre */}
       <h2 className="nombre">
@@ -245,13 +236,15 @@ export const Perfil = () => {
         ) : (
           <>
             {perfil.name}
-            <span>
-              <i
-                className="fa-solid fa-pen-to-square"
-                type="button"
-                onClick={() => handleEditar("name", perfil.name)}
-              ></i>
-            </span>
+            {isOwnProfile && (
+              <span>
+                <i
+                  className="fa-solid fa-pen-to-square"
+                  type="button"
+                  onClick={() => handleEditar("name", perfil.name)}
+                ></i>
+              </span>
+            )}
           </>
         )}
       </h2>
@@ -276,22 +269,23 @@ export const Perfil = () => {
             ) : (
               <>
                 {perfil.phone}
-                <span>
-                  <i
-                    className="edit-btn fa-solid fa-pen-to-square"
-                    type="button"
-                    onClick={() => handleEditar("phone", perfil.phone)}
-                  ></i>
-                </span>
+                {isOwnProfile && (
+                  <span>
+                    <i
+                      className="edit-btn fa-solid fa-pen-to-square"
+                      type="button"
+                      onClick={() => handleEditar("phone", perfil.phone)}
+                    ></i>
+                  </span>
+                )}
               </>
             )}
           </div>
         </div>
 
-
         {/* Edad */}
         <div className="age">
-          <h3> Edad </h3>
+          <h3>Edad</h3>
           <div className="infoEditable">
             {editando === "age" ? (
               <input
@@ -304,15 +298,16 @@ export const Perfil = () => {
               />
             ) : (
               <>
-                {" "}
                 {perfil.age}
-                <span>
-                  <i
-                    className="edit-btn fa-solid fa-pen-to-square"
-                    type="button"
-                    onClick={() => handleEditar("age", perfil.age)}
-                  ></i>
-                </span>
+                {isOwnProfile && (
+                  <span>
+                    <i
+                      className="edit-btn fa-solid fa-pen-to-square"
+                      type="button"
+                      onClick={() => handleEditar("age", perfil.age)}
+                    ></i>
+                  </span>
+                )}
               </>
             )}
           </div>
@@ -320,7 +315,7 @@ export const Perfil = () => {
 
         {/* Ciudad */}
         <div className="city">
-          <h3> Ciudad </h3>
+          <h3>Ciudad</h3>
           <div className="infoEditable">
             {editando === "city" ? (
               <input
@@ -333,25 +328,27 @@ export const Perfil = () => {
               />
             ) : (
               <>
-                {" "}
                 {perfil.city}
-                <span>
-                  <i
-                    className="edit-btn fa-solid fa-pen-to-square"
-                    type="button"
-                    onClick={() => handleEditar("city", perfil.city)}
-                  ></i>
-                </span>
+                {isOwnProfile && (
+                  <span>
+                    <i
+                      className="edit-btn fa-solid fa-pen-to-square"
+                      type="button"
+                      onClick={() => handleEditar("city", perfil.city)}
+                    ></i>
+                  </span>
+                )}
               </>
             )}
           </div>
         </div>
-      </div> {/* cierra infoPerfil */}
+      </div>
 
       {/* pago solo organizador sin tarjeta, una vez paga desaparece */}
-      <form onSubmit={doPay} className="row g-3 g-sm-4">
+      <form onSubmit={doPay} className="pago row g-3 g-sm-4">
+        <h5>Método de pago</h5>
         <div className="col-12">
-          <label className="form-label">Titular</label>
+          <label className="form-perfil">Titular</label>
           <input
             className="form-control"
             value={card.card_holder}
@@ -361,7 +358,7 @@ export const Perfil = () => {
         </div>
 
         <div className="col-12">
-          <label className="form-label">Número de tarjeta</label>
+          <label className="form-perfil">Número de tarjeta</label>
           <input
             className="form-control"
             inputMode="numeric"
@@ -373,7 +370,7 @@ export const Perfil = () => {
         </div>
 
         <div className="col-12 col-sm-4 col-md-3">
-          <label className="form-label">CVC</label>
+          <label className="form-perfil">CVC</label>
           <input
             className="form-control"
             inputMode="numeric"
@@ -384,7 +381,7 @@ export const Perfil = () => {
         </div>
 
         <div className="col-12 col-sm-4 col-md-3">
-          <label className="form-label">Caducidad</label>
+          <label className="form-perfil">Caducidad</label>
           <input
             className="form-control"
             placeholder="MM/AAAA"
