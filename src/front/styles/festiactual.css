@@ -21,18 +21,18 @@ var(--gray-color) gris
   margin: auto;
 }
 .festi-img-section {
-  position: relative; 
+  position: relative;
   max-width: 600px;
   max-height: 400px;
   margin: auto;
-  overflow: hidden; 
+  overflow: hidden;
 }
 .festi-img {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
   display: block;
-  z-index: 1; 
+  z-index: 1;
   position: relative;
 }
 .festi-input {
@@ -63,4 +63,60 @@ var(--gray-color) gris
 Link {
   text-decoration: none;
   color: var(--primary-color);
+}
+
+/* --- Fix responsive en móvil --- */
+@media (max-width: 576px) {
+  /* Hace que las columnas se apilen sin desbordarse */
+  .card .row {
+    flex-direction: column;
+  }
+
+  /* Elimina el ancho mínimo fijo en los editores inline */
+  .list-group-item div[style] {
+    min-width: unset !important;
+    width: 100%;
+  }
+
+  /* Selects ocupan todo el ancho en móvil */
+  .form-select-sm {
+    width: 100%;
+  }
+
+  /* Botones se apilan en móvil */
+  .d-flex.gap-2.justify-content-end {
+    justify-content: flex-start !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .d-flex.gap-2.justify-content-end button {
+    flex: 1 1 auto;
+  }
+}
+/* Fondo de la columna Escenario */
+.col-12.col-lg-6.p-3.border-end {
+  background-color: blueviolet;
+}
+
+/* Fondo de la columna Barra */
+.col-12.col-lg-6.p-3 {
+  background-color: #f4f6fa;
+}
+
+/* Opcional: redondear bordes inferiores de las cards */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Forzar redondeo en las cards */
+.festi-container .card {
+  border-radius: 16px !important; /* el !important asegura que gane a Bootstrap */
+  overflow: hidden; /* respeta las esquinas */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* opcional */
+}
+
+/* También redondea los bordes internos de las columnas */
+.festi-container .card .col-12 {
+  border-radius: 0 !important; /* elimina bordes rectos que pueda meter bootstrap */
 }

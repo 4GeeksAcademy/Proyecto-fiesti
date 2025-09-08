@@ -90,15 +90,6 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
                 required
             />
 
-            <input
-                className="form-control mb-3"
-                type="url"
-                name="photo"
-                placeholder="URL de imagen (opcional)"
-                value={form.photo}
-                onChange={onChange}
-            />
-
             <div className="row g-3 mb-3">
                 <div className="col-md-4">
                     <label className="form-label">Nº de personas</label>
@@ -142,10 +133,10 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
             </div>
 
             <div className="d-flex gap-2 justify-content-end">
-                <button type="button" className="btn btn-outline-secondary" onClick={onCancel} disabled={loading}>
+                <button type="button" className="btn-cancelador" onClick={onCancel} disabled={loading}>
                     Cancelar
                 </button>
-                <button className="btn btn-primary" disabled={loading}>
+                <button className="btn-guardador" disabled={loading}>
                     {loading ? "Guardando..." : "Guardar actuación"}
                 </button>
             </div>

@@ -1,6 +1,10 @@
 .actuaciones-container .card-header {
   background-color: var(--primary-color) !important;
-  color: white !important;
+  color: var(--background-color) !important;
+  font-weight: bold;
+}
+
+h2 {
   font-weight: bold;
 }
 
@@ -8,26 +12,70 @@
   border-color: var(--gray-color);
 }
 
+/*ASIGNAR O EDITAR*/
 .btn-rojo {
   background-color: #fac263;
-  color: white;
+  color: #78141e;
   border: none;
 }
 .btn-rojo:hover {
-  background-color:#fac263;
-  color: white;
+  background-color: #fac263;
+  color: #78141e;
   border: 1px solid #78141e;
 }
 
+/* BOTÓN GUARDAR DEL FORM */
+.btn-guardador {
+  background-color: #fac263;
+  color: #78141e;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+.btn-guardador:hover {
+  background-color: #fac263;
+  color: #78141e;
+  border: 1px solid #78141e;
+}
+
+/* BOTÓN CANCELAR DEL FORM */
+.btn-cancelador {
+  background-color: #78141e;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+}
+.btn-cancelador:hover {
+  background-color: #fac263;
+  color: #78141e;
+  border: 1px solid #78141e;
+}
+
+/*VER MÁS*/
 .btn-outline-rojo {
   background: transparent;
   color: #78141e;
   border: 1px solid #78141e;
 }
 .btn-outline-rojo:hover {
-  color: var(--primary-color);
+  color: #78141e;
+  border: 1px solid #fac263;
 }
 
+/*QUITAR ASIGNACIÓN*/
 .btn-borrar-rojo {
   background: #78141e;
   border: 1px solid #78141e;
@@ -35,31 +83,114 @@
 }
 .btn-borrar-rojo:hover {
   background: #fac263;
-}
-
-.badge-escenario {
-  background-color: var(--primary-color);
-  color: white;
+  color: #78141e;
 }
 
 .badge-horario {
   background-color: var(--gray-color);
   color: white;
+  font-size: 0.75rem;
+  font-weight: normal;
+  display: inline-block;
 }
 
 .actuaciones-container .editor {
-  background-color: var(--background-color);
+  background-color: white;
   border: 1px solid var(--gray-color);
+  color: var(--primary-color);
 }
 
+/*NUEVA ACTUACIÓN */
 .btn-nuevo {
   border-radius: 10%;
   background: #78141e;
   border: none;
   color: white;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
 }
 .btn-nuevo:hover {
   border-radius: 10%;
   background: #fac263;
+  color: #78141e;
   border: none;
+}
+
+.act-item-right .buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+.buttons .btn {
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+.act-item-row {
+  flex-wrap: wrap;
+}
+
+.act-item-right .buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+.act-item-right .buttons .btn {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* Solución específica para el editor */
+.actuaciones-container .editor .row {
+  align-items: end !important;
+  margin-right: 5px;
+}
+
+.actuaciones-container .editor .col-md-2.d-grid {
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+.actuaciones-container .editor .btn {
+  height: calc(1.5em + 0.75rem + 2px);
+  margin: 0;
+}
+
+.minihead {
+  color: #78141e;
+  font-weight: bold !important;
+}
+
+.act-item-row {
+    align-items: flex-end !important;
+}
+
+.act-item-left {
+    min-width: 0; 
+}
+
+.act-item-left strong {
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.act-item-right .buttons {
+    white-space: nowrap;
+}
+
+.form-label{
+color: #78141e;
 }
