@@ -51,6 +51,16 @@ class User(db.Model):
             "card_expiration": self.card_expiration,
             "card_holder": self.card_holder
         }
+    def serialize_public(self):
+        # Solo lo que un trabajador debe ver de sus compañeros
+        return {
+            "id": self.id,
+            "name": self.name,
+            "photo": self.photo,
+            "puesto": self.puesto,
+            "horario": self.horario,
+            "city": self.city
+        }
 
 
 class Actuacion(db.Model):
