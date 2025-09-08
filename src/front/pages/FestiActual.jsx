@@ -275,7 +275,7 @@ const FestiActual = () => {
           <div className="row g-0">
             {/* Columna Actuaciones */}
             <div className="col-12 col-lg-6 p-3 border-end">
-              {/* Título a Actuaciones (siempre clicable) */}
+              {/* Título a Actuaciones */}
               <h6 className="fw-semibold mb-2">
                 {isOrganizador ? (
                   <Link to="/actuaciones" className="text-decoration-none">
