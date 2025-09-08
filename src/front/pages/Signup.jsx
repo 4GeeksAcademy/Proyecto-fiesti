@@ -38,7 +38,7 @@ const Signup = () => {
             });
             const data = await resp.json();
             if (resp.ok) {
-                setMessage("✅ Registro exitoso. Serás redirigido al login.");
+                setMessage("✅ Registro completado. Redirigiendo a la página de inicio de sesión...");
                 setTimeout(() => {
                     navigate("/login");
                 }, 3000);
