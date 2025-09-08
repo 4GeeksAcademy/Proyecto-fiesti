@@ -273,7 +273,7 @@ export default function ActuacionesList() {
     };
 
     return (
-        <div className="container mt-4 actuaciones-container" style={{ maxWidth: 1200 }}>
+        <div className="container mt-4 actuaciones-contain" style={{ maxWidth: 1200 }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Actuaciones</h2>
                 <button className="btn-nuevo" onClick={() => setMostrarForm((v) => !v)}>

@@ -92,7 +92,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
 
             <div className="row g-3 mb-3">
                 <div className="col-md-4">
-                    <label className="form-label">Nº de personas</label>
+                    <label className="form-labelito">Nº de personas</label>
                     <input
                         className="form-control"
                         type="number"
@@ -106,7 +106,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
                 </div>
 
                 <div className="col-md-4">
-                    <label className="form-label">Caché (€)</label>
+                    <label className="form-labelito">Caché (€)</label>
                     <input
                         className="form-control"
                         type="number"
@@ -120,7 +120,7 @@ const CrearActuacion = ({ onCreated, onCancel }) => {
                 </div>
 
                 <div className="col-12">
-                    <label className="form-label">Peticiones de la actuación (rider)</label>
+                    <label className="form-labelito">Peticiones de la actuación (rider)</label>
                     <textarea
                         className="form-control"
                         name="peticiones"

@@ -204,7 +204,7 @@ export const Perfil = () => {
 
   return (
     <div className="bodyPerfil">
-      <h1>Perfil</h1>
+      <h2 className="titleperfil">Perfil</h2>
 
       {/* Imagen de perfil */}
       <CloudinaryUploader
