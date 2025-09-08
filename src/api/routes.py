@@ -420,12 +420,16 @@ def asignar_actuacion(act_id):
 @jwt_required()
 def get_personal_users():
     user = current_user_or_401()
-    if not require_role(user, RolEnum.ORGANIZADOR):
-        return jsonify({"msg": "Solo organizadores"}), 403
-
     try:
         users = User.query.filter_by(role=RolEnum.PERSONAL).all()
-        return jsonify([user.serialize() for user in users]), 200
+
+        if require_role(user, RolEnum.ORGANIZADOR):
+            payload = [u.serialize() for u in users]
+        else:
+            # trabajador u otro rol autenticado: lista visible pero saneada
+            payload = [u.serialize_public() for u in users]
+
+        return jsonify(payload), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

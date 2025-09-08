@@ -226,7 +226,7 @@ export const Perfil = () => {
         <img src={perfil.photo || presetPic} className="profilePic" alt="Foto perfil"
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
-            currentTarget.src = {presetPic}
+            currentTarget.src = { presetPic }
           }} />
       </CloudinaryUploader>
 
@@ -240,6 +240,7 @@ export const Perfil = () => {
             onChange={(e) => setValorTemp(e.target.value)}
             onKeyDown={handleKeyDown}
             autoFocus
+            className="edit-input"
           />
         ) : (
           <>
@@ -270,6 +271,7 @@ export const Perfil = () => {
                 onChange={(e) => setValorTemp(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
+                className="edit-input"
               />
             ) : (
               <>
@@ -298,6 +300,7 @@ export const Perfil = () => {
                 onChange={(e) => setValorTemp(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
+                className="edit-input"
               />
             ) : (
               <>
@@ -326,6 +329,7 @@ export const Perfil = () => {
                 onChange={(e) => setValorTemp(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
+                className="edit-input"
               />
             ) : (
               <>
@@ -402,6 +406,8 @@ export const Perfil = () => {
           </form>
         </div>
       )}
+
+     
     </div>
   );
 };

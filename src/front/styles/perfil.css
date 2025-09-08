@@ -131,3 +131,21 @@ h3 {
   cursor: pointer;
   white-space: nowrap;
 }
+
+.edit-input {
+  background: var(--background-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 0.375rem; /* 6px */
+  padding: 6px 10px;
+  font-size: 1rem;
+  color: var(--text-color);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+.edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+

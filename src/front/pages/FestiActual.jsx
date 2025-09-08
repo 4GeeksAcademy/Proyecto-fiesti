@@ -246,14 +246,16 @@ const FestiActual = () => {
 
   return (
     <div className="festi-container" style={{ maxWidth: 1200 }}>
-      <h1 className="festi-title">Festival Actual</h1>
+      <h1 className="festi-title">Festi Actual</h1>
+
+      {/* Mensajes */}
+      {msg && <div className="alert alert-info py-2">{msg}</div>}
 
       {/* Buscador */}
-      {msg && <div className="alert alert-info py-2">{msg}</div>}
-      <div className="d-flex justify-content-end mb-3">
+      <div className="d-flex justify-content-center mb-3">
         <input
           className="form-control"
-          style={{ maxWidth: 360 }}
+          style={{ maxWidth: 480, width: "100%" }}
           type="text"
           placeholder="Buscar actuación o empleado…"
           value={busqueda}
@@ -273,11 +275,15 @@ const FestiActual = () => {
           <div className="row g-0">
             {/* Columna Actuaciones */}
             <div className="col-12 col-lg-6 p-3 border-end">
-              {/* Título clicable a Actuaciones */}
+              {/* Título a Actuaciones */}
               <h6 className="fw-semibold mb-2">
-                <Link to="/actuaciones" className="text-decoration-none">
-                  {escenarioLabel}
-                </Link>
+                {isOrganizador ? (
+                  <Link to="/actuaciones" className="text-decoration-none">
+                    {escenarioLabel}
+                  </Link>
+                ) : (
+                  <span>{escenarioLabel}</span>
+                )}
               </h6>
 
               {acts.length === 0 ? (
@@ -303,9 +309,12 @@ const FestiActual = () => {
                             )}
                             <div className="d-flex flex-column">
                               <strong>{a.name}</strong>
-                              <small className="text-muted">
-                                {(inicio || "--:--")} — {(fin || "--:--")}
-                              </small>
+                              {/* Mostrar horario SOLO si NO es organizador */}
+                              {!isOrganizador && (
+                                <small className="text-muted">
+                                  {(inicio || "--:--")} — {(fin || "--:--")}
+                                </small>
+                              )}
                             </div>
                           </div>
 
@@ -387,11 +396,17 @@ const FestiActual = () => {
 
             {/* Columna Personal */}
             <div className="col-12 col-lg-6 p-3">
-              {/* Título clicable a Personal */}
+              {/* Título a Personal:
+                - Organizadores: clicable a /personal
+                - Trabajadores: NO clicable */}
               <h6 className="fw-semibold mb-2">
-                <Link to="/personal" className="text-decoration-none">
-                  {barraLabel}
-                </Link>
+                {isOrganizador ? (
+                  <Link to="/personal" className="text-decoration-none">
+                    {barraLabel}
+                  </Link>
+                ) : (
+                  <span>{barraLabel}</span>
+                )}
               </h6>
 
               {pers.length === 0 ? (
@@ -405,9 +420,12 @@ const FestiActual = () => {
                         <div className="d-flex justify-content-between align-items-start gap-3">
                           <div className="d-flex flex-column">
                             <strong>{e.name}</strong>
-                            <small className="text-muted">
-                              {(inicio || "--:--")} — {(fin || "--:--")}
-                            </small>
+                            {/* Mostrar horario SOLO si NO es organizador */}
+                            {!isOrganizador && (
+                              <small className="text-muted">
+                                {(inicio || "--:--")} — {(fin || "--:--")}
+                              </small>
+                            )}
                           </div>
 
                           {/* Editor inline (solo organizador) */}
@@ -491,5 +509,4 @@ const FestiActual = () => {
     </div>
   );
 };
-
 export default FestiActual;

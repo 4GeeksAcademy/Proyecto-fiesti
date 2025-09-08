@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import "../styles/artista.css";
 
 const Artista = () => {
     const { theId: id } = useParams();
@@ -136,24 +137,24 @@ const Artista = () => {
     return (
         <div className="artista-container">
             <div className="artista-header">
+                <h1>Detalles actuación</h1>
                 <div className="header-content">
+                    
+                    {/* Nombre */}
                     {editingField === "name" ? (
-                        <div>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                disabled={saving}
-                                className="edit-title"
-                            />
-                            <button onClick={() => handleSaveField("name")} disabled={saving}>
-                                {saving ? "Guardando..." : "Guardar"}
-                            </button>
-                            <button onClick={() => handleCancelField("name")} disabled={saving}>
-                                Cancelar
-                            </button>
-                        </div>
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSaveField("name");
+                                }
+                            }}
+                            autoFocus
+                            className="edit-input"
+                        />
                     ) : (
                         <h1>
                             {actuacion.name}
@@ -165,207 +166,197 @@ const Artista = () => {
                         </h1>
                     )}
                 </div>
-            </div>
 
-            {error && (
-                <div className="error-message">
-                    <p>{error}</p>
-                </div>
-            )}
+                {error && (
+                    <div className="error-message">
+                        <p>{error}</p>
+                    </div>
+                )}
 
-            <div className="artista-content">
-                <div className="artista-info">
+                <div className="artista-content">
+                    <div className="artista-info">
 
-                    {/* Descripción */}
-                    <div className="info-section">
-                        <h3>Descripción</h3>
-                        {editingField === "description" ? (
-                            <div>
+                        {/* Descripción */}
+                        <div className="info-section">
+                            <h3>Descripción</h3>
+                            {editingField === "description" ? (
                                 <textarea
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    disabled={saving}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault(); // evita salto de línea
+                                            handleSaveField("description");
+                                        }
+                                    }}
+                                    autoFocus
+                                    className="edit-input"
                                     rows="4"
                                 />
-                                <button onClick={() => handleSaveField("description")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("description")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.description}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("description")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.description}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("description")}
+                                    />
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Escenario */}
-                    <div className="info-section">
-                        <h3>Escenario</h3>
-                        {editingField === "escenario" ? (
-                            <div>
+                        {/* Escenario */}
+                        <div className="info-section">
+                            <h3>Escenario</h3>
+                            {editingField === "escenario" ? (
                                 <input
                                     type="text"
                                     name="escenario"
                                     value={formData.escenario}
                                     onChange={handleChange}
-                                    disabled={saving}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveField("escenario");
+                                        }
+                                    }}
+                                    autoFocus
+                                    className="edit-input"
                                 />
-                                <button onClick={() => handleSaveField("escenario")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("escenario")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.escenario || "No especificado"}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("escenario")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.escenario || "No especificado"}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("escenario")}
+                                    />
+                                </p>
+                            )}
 
-                    {/* Horario */}
-                    <div className="info-section">
-                        <h3>Horario</h3>
-                        {editingField === "horario" ? (
-                            <div>
+                        </div>
+
+                        {/* Horario */}
+                        <div className="info-section">
+                            <h3>Horario</h3>
+                            {editingField === "horario" ? (
                                 <input
                                     type="text"
                                     name="horario"
                                     value={formData.horario}
                                     onChange={handleChange}
-                                    disabled={saving}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveField("horario");
+                                        }
+                                    }}
+                                    autoFocus
                                     placeholder="ej: 20:00-22:00"
+                                    className="edit-input"
                                 />
-                                <button onClick={() => handleSaveField("horario")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("horario")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.horario || "No especificado"}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("horario")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.horario || "No especificado"}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("horario")}
+                                    />
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Número de personas */}
-                    <div className="info-section">
-                        <h3>Número de personas</h3>
-                        {editingField === "num_personas" ? (
-                            <div>
+                        {/* Número de personas */}
+                        <div className="info-section">
+                            <h3>Número de personas</h3>
+                            {editingField === "num_personas" ? (
                                 <input
                                     type="number"
                                     name="num_personas"
                                     value={formData.num_personas}
                                     onChange={handleChange}
-                                    disabled={saving}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveField("num_personas");
+                                        }
+                                    }}
+                                    autoFocus
                                     min="1"
+                                    className="edit-input"
                                 />
-                                <button onClick={() => handleSaveField("num_personas")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("num_personas")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.num_personas || "No especificado"}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("num_personas")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.num_personas || "No especificado"}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("num_personas")}
+                                    />
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Caché */}
-                    <div className="info-section">
-                        <h3>Caché</h3>
-                        {editingField === "cache" ? (
-                            <div>
+                        {/* Caché */}
+                        <div className="info-section">
+                            <h3>Caché</h3>
+                            {editingField === "cache" ? (
                                 <input
                                     type="number"
                                     name="cache"
                                     value={formData.cache}
                                     onChange={handleChange}
-                                    disabled={saving}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveField("cache");
+                                        }
+                                    }}
+                                    autoFocus
                                     min="0"
                                     step="0.01"
+                                    className="edit-input"
                                 />
-                                <button onClick={() => handleSaveField("cache")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("cache")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.cache ? `${actuacion.cache.toFixed(2)} €` : "No especificado"}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("cache")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.cache ? `${actuacion.cache.toFixed(2)} €` : "No especificado"}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("cache")}
+                                    />
+                                </p>
+                            )}
+                        </div>
 
-                    {/* Peticiones */}
-                    <div className="info-section">
-                        <h3>Peticiones especiales</h3>
-                        {editingField === "peticiones" ? (
-                            <div>
-                                <textarea
+                        {/* Peticiones */}
+                        <div className="info-section">
+                            <h3>Peticiones especiales</h3>
+                            {editingField === "peticiones" ? (
+                                <input
+                                    type="text"
                                     name="peticiones"
                                     value={formData.peticiones}
                                     onChange={handleChange}
-                                    disabled={saving}
-                                    rows="3"
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveField("peticiones");
+                                        }
+                                    }}
+                                    autoFocus
+                                    className="edit-input"
                                 />
-                                <button onClick={() => handleSaveField("peticiones")} disabled={saving}>
-                                    {saving ? "Guardando..." : "Guardar"}
-                                </button>
-                                <button onClick={() => handleCancelField("peticiones")} disabled={saving}>
-                                    Cancelar
-                                </button>
-                            </div>
-                        ) : (
-                            <p>
-                                {actuacion.peticiones || "Ninguna"}
-                                <i
-                                    className="fa-regular fa-pen-to-square"
-                                    style={{ marginLeft: "10px", cursor: "pointer" }}
-                                    onClick={() => setEditingField("peticiones")}
-                                />
-                            </p>
-                        )}
-                    </div>
+                            ) : (
+                                <p>
+                                    {actuacion.peticiones || "Ninguna"}
+                                    <i
+                                        className="fa-regular fa-pen-to-square"
+                                        style={{ marginLeft: "10px", cursor: "pointer" }}
+                                        onClick={() => setEditingField("peticiones")}
+                                    />
+                                </p>
+                            )}
+                        </div>
 
+                    </div>
                 </div>
             </div>
         </div>
