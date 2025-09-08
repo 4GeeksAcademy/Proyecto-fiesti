@@ -349,65 +349,65 @@ export const Perfil = () => {
       </div> {/* cierra infoPerfil */}
 
       {/* pago solo organizador sin tarjeta, una vez paga desaparece */}
-      {needsPayment && (
-        <div className="card card-body mt-4">
-          <h4><b>Completa tu pago de organizador/a</b></h4>
-          {payMsg && <div className="alert alert-info my-2">{payMsg}</div>}
-
-          <form onSubmit={doPay} className="row g-3">
-            <div className="col-12">
-              <label className="form-label">Titular</label>
-              <input
-                className="form-control"
-                value={card.card_holder}
-                onChange={(e) => setCard({ ...card, card_holder: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="col-12">
-              <label className="form-label">Número de tarjeta</label>
-              <input
-                className="form-control"
-                inputMode="numeric"
-                placeholder="4111 1111 1111 1111"
-                value={card.card_number}
-                onChange={(e) => setCard({ ...card, card_number: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="col-4">
-              <label className="form-label">CVC</label>
-              <input
-                className="form-control"
-                inputMode="numeric"
-                value={card.card_cvc}
-                onChange={(e) => setCard({ ...card, card_cvc: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="col-4">
-              <label className="form-label">Caducidad</label>
-              <input
-                className="form-control"
-                placeholder="MM/AAAA"
-                value={card.card_expiration}
-                onChange={(e) => setCard({ ...card, card_expiration: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="botonesCard col-4">
-              <button className="btn-pagar">Pagar</button>
-              <button className="btn-ahoraNo" onClick={() => navigate("/festi")}> Ahora no </button>
-            </div>
-          </form>
+      <form onSubmit={doPay} className="row g-3 g-sm-4">
+        <div className="col-12">
+          <label className="form-label">Titular</label>
+          <input
+            className="form-control"
+            value={card.card_holder}
+            onChange={(e) => setCard({ ...card, card_holder: e.target.value })}
+            required
+          />
         </div>
-      )}
 
-     
+        <div className="col-12">
+          <label className="form-label">Número de tarjeta</label>
+          <input
+            className="form-control"
+            inputMode="numeric"
+            placeholder="1111 1111 1111 1111"
+            value={card.card_number}
+            onChange={(e) => setCard({ ...card, card_number: e.target.value })}
+            required
+          />
+        </div>
+
+        <div className="col-12 col-sm-4 col-md-3">
+          <label className="form-label">CVC</label>
+          <input
+            className="form-control"
+            inputMode="numeric"
+            value={card.card_cvc}
+            onChange={(e) => setCard({ ...card, card_cvc: e.target.value })}
+            required
+          />
+        </div>
+
+        <div className="col-12 col-sm-4 col-md-3">
+          <label className="form-label">Caducidad</label>
+          <input
+            className="form-control"
+            placeholder="MM/AAAA"
+            value={card.card_expiration}
+            onChange={(e) => setCard({ ...card, card_expiration: e.target.value })}
+            required
+          />
+        </div>
+
+        {/* Botones: full-width en móvil, a la derecha en pantallas grandes */}
+        <div className="col-12 col-sm-4 col-md-6 d-flex flex-column flex-sm-row gap-2 justify-content-sm-end">
+          <button className="btn-pagar w-100 w-sm-auto">Pagar</button>
+          <button
+            type="button"
+            className="btn-ahoraNo w-100 w-sm-auto"
+            onClick={() => navigate("/festi")}
+          >
+            Ahora no
+          </button>
+        </div>
+      </form>
+
+
     </div>
   );
 };
