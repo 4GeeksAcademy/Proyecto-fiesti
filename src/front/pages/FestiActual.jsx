@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
 import "../styles/festiactual.css";
+import "../styles/actuacioneslist.css";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../ThemeContext";
 
@@ -246,7 +247,7 @@ const FestiActual = () => {
 
   return (
     <div className="festi-container" style={{ maxWidth: 1200 }}>
-      <h1 className="festi-title">Festi Actual</h1>
+      <h1 className="festi-title">Fiesti Actual</h1>
 
       {/* Mensajes */}
       {msg && <div className="alert alert-info py-2">{msg}</div>}
@@ -255,7 +256,7 @@ const FestiActual = () => {
       <div className="d-flex justify-content-center mb-3">
         <input
           className="form-control"
-          style={{ maxWidth: 480, width: "100%" }}
+          style={{ width: "100%" }}
           type="text"
           placeholder="Buscar actuación o empleado…"
           value={busqueda}
@@ -271,35 +272,34 @@ const FestiActual = () => {
       )}
 
       {bloques.map(({ n, escenarioLabel, barraLabel, acts, pers }) => (
-        <div className="card mb-4" key={n}>
-          <div className="row g-0">
-            {/* Columna Actuaciones */}
-            <div className="col-12 col-lg-6 p-3 border-end">
-              {/* Título a Actuaciones */}
-              <h6 className="fw-semibold mb-2">
-                {isOrganizador ? (
-                  <Link to="/actuaciones" className="text-decoration-none">
-                    {escenarioLabel}
-                  </Link>
+        <div className="row g-4 mb-4 actuaciones-container" key={n}>
+          {/* Columna Escenario */}
+          <div className="col-12 col-lg-6">
+            <div className="card h-100">
+              <div className="card-header festi-card-header">
+                <h6 className="fw-semibold mb-2 m-0">
+                  {isOrganizador ? (
+                    <Link to="/actuaciones" className="titulo-act">
+                      {escenarioLabel}
+                    </Link>
+                  ) : (
+                    <span>{escenarioLabel}</span>
+                  )}
+                </h6>
+              </div>
+              <div className="p-3">
+                {acts.length === 0 ? (
+                  <div className="text-muted">No hay actuaciones asignadas a este escenario.</div>
                 ) : (
-                  <span>{escenarioLabel}</span>
-                )}
-              </h6>
-
-              {acts.length === 0 ? (
-                <div className="text-muted">No hay actuaciones asignadas a este escenario.</div>
-              ) : (
-                <ul className="list-group list-group-flush">
-                  {acts.map((a) => {
-                    const { inicio, fin } = splitHorario(a.horario);
-                    return (
-                      <li
-                        className="list-group-item"
-                        key={a.id}
-                        style={{ background: "var(--bs-body-bg)" }}
-                      >
-                        <div className="d-flex justify-content-between align-items-start gap-3">
-                          <div className="d-flex gap-3 align-items-center">
+                  <ul className="list-group list-group-flush">
+                    {acts.map((a) => {
+                      const { inicio, fin } = splitHorario(a.horario);
+                      return (
+                        <li
+                          className="list-group-item d-flex justify-content-between align-items-center"
+                          key={a.id}
+                        >
+                          <div className="d-flex gap-3 align-items-center w-100">
                             {a.photo && (
                               <img
                                 src={a.photo}
@@ -307,18 +307,15 @@ const FestiActual = () => {
                                 style={{ width: 42, height: 42, objectFit: "cover", borderRadius: 6 }}
                               />
                             )}
-                            <div className="d-flex flex-column">
+                            <div className="d-flex flex-column flex-grow-1">
                               <strong>{a.name}</strong>
-                              {/* Mostrar horario SOLO si NO es organizador */}
                               {!isOrganizador && (
-                                <small className="text-muted">
-                                  {(inicio || "--:--")} — {(fin || "--:--")}
-                                </small>
+                                <span className="badge badge-horario mt-1">
+                                  {(inicio || "--:--")} – {(fin || "--:--")}
+                                </span>
                               )}
                             </div>
                           </div>
-
-                          {/* Editor inline (solo organizador) */}
                           {isOrganizador && (
                             <div style={{ minWidth: 260 }}>
                               <div className="row g-2">
@@ -364,15 +361,15 @@ const FestiActual = () => {
                                     ))}
                                   </select>
                                 </div>
-                                <div className="col-12 d-flex gap-2 justify-content-end">
+                                <div className="col-12 d-flex gap-2 justify-content-end buttons">
                                   <button
-                                    className="btn btn-sm btn-outline-secondary"
+                                    className="btn btn-borrar-rojo btn-sm"
                                     onClick={() => limpiarActuacion(a.id)}
                                   >
                                     Quitar
                                   </button>
                                   <button
-                                    className="btn btn-sm btn-primary"
+                                    className="btn btn-rojo btn-sm"
                                     onClick={() => {
                                       const esc = document.getElementById(`esc-${a.id}`).value;
                                       const ini = document.getElementById(`ai-${a.id}`).value;
@@ -386,49 +383,45 @@ const FestiActual = () => {
                               </div>
                             </div>
                           )}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-
-            {/* Columna Personal */}
-            <div className="col-12 col-lg-6 p-3">
-              {/* Título a Personal:
-                - Organizadores: clicable a /personal
-                - Trabajadores: NO clicable */}
-              <h6 className="fw-semibold mb-2">
-                {isOrganizador ? (
-                  <Link to="/personal" className="text-decoration-none">
-                    {barraLabel}
-                  </Link>
-                ) : (
-                  <span>{barraLabel}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 )}
-              </h6>
-
-              {pers.length === 0 ? (
-                <div className="text-muted">No hay personal asignado a esta barra.</div>
-              ) : (
-                <ul className="list-group list-group-flush">
-                  {pers.map((e) => {
-                    const { inicio, fin } = splitHorario(e.horario);
-                    return (
-                      <li className="list-group-item" key={e.id}>
-                        <div className="d-flex justify-content-between align-items-start gap-3">
-                          <div className="d-flex flex-column">
+              </div>
+            </div>
+          </div>
+          {/* Columna Barra */}
+          <div className="col-12 col-lg-6">
+            <div className="card h-100">
+              <div className="card-header festi-card-header">
+                <h6 className="fw-semibold mb-2 m-0">
+                  {isOrganizador ? (
+                    <Link to="/personal" className="titulo-act">
+                      {barraLabel}
+                    </Link>
+                  ) : (
+                    <span>{barraLabel}</span>
+                  )}
+                </h6>
+              </div>
+              <div className="p-3">
+                {pers.length === 0 ? (
+                  <div className="text-muted">No hay personal asignado a esta barra.</div>
+                ) : (
+                  <ul className="list-group list-group-flush">
+                    {pers.map((e) => {
+                      const { inicio, fin } = splitHorario(e.horario);
+                      return (
+                        <li className="list-group-item d-flex justify-content-between align-items-center" key={e.id}>
+                          <div className="d-flex flex-column flex-grow-1">
                             <strong>{e.name}</strong>
-                            {/* Mostrar horario SOLO si NO es organizador */}
                             {!isOrganizador && (
-                              <small className="text-muted">
-                                {(inicio || "--:--")} — {(fin || "--:--")}
-                              </small>
+                              <span className="badge badge-horario mt-1">
+                                {(inicio || "--:--")} – {(fin || "--:--")}
+                              </span>
                             )}
                           </div>
-
-                          {/* Editor inline (solo organizador) */}
                           {isOrganizador && (
                             <div style={{ minWidth: 260 }}>
                               <div className="row g-2">
@@ -474,15 +467,15 @@ const FestiActual = () => {
                                     ))}
                                   </select>
                                 </div>
-                                <div className="col-12 d-flex gap-2 justify-content-end">
+                                <div className="col-12 d-flex gap-2 justify-content-end buttons">
                                   <button
-                                    className="btn btn-sm btn-outline-secondary"
+                                    className="btn btn-borrar-rojo btn-sm"
                                     onClick={() => limpiarPersonal(e.id)}
                                   >
                                     Quitar
                                   </button>
                                   <button
-                                    className="btn btn-sm btn-primary"
+                                    className="btn btn-rojo btn-sm"
                                     onClick={() => {
                                       const barra = document.getElementById(`pb-${e.id}`).value;
                                       const ini = document.getElementById(`pi-${e.id}`).value;
@@ -496,12 +489,12 @@ const FestiActual = () => {
                               </div>
                             </div>
                           )}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
         </div>

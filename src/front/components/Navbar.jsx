@@ -60,7 +60,7 @@ export const Navbar = () => {
 							aria-expanded="false"
 							aria-label="Toggle navigation"
 						>
-							<span className="navbar-toggler-icon"></span>
+							<i className="burger fa-solid fa-burger"></i>
 						</button>
 
 						<div className="collapse navbar-collapse" id="navbarNoAuth">
@@ -91,7 +91,7 @@ export const Navbar = () => {
 						</Link>
 
 						<button
-							className="navbar-toggler"
+							className="navbar-toggler mb-4"
 							type="button"
 							data-bs-toggle="collapse"
 							data-bs-target="#navbarNav"
@@ -99,7 +99,7 @@ export const Navbar = () => {
 							aria-expanded="false"
 							aria-label="Toggle navigation"
 						>
-							<span className="navbar-toggler-icon"></span>
+							<i className="burger fa-solid fa-burger"></i>
 						</button>
 
 						<div className="collapse navbar-collapse justify-content-lg-end" id="navbarNav">

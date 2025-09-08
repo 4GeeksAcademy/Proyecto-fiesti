@@ -8,16 +8,16 @@ var(--gray-color) gris
 */
 
 .personal-container {
-  font-family: Arial, sans-serif;
   padding: 10px;
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
 }
 
 .title {
   text-align: left;
-  font-size: 20px;
+  font-size: 33px;
   font-weight: bold;
+  margin-top: 15px;
   margin-bottom: 15px;
   color: var(--primary-color);
 }
@@ -124,10 +124,10 @@ var(--gray-color) gris
 
 .desplegable button:hover {
   background-color: #fac263;
-  color:#78141e;
+  color: #78141e;
 }
 
-.info-personal{
+.info-personal {
   color: var(--text-color);
   margin-bottom: 5px;
 }
@@ -148,7 +148,7 @@ var(--gray-color) gris
 }
 
 .enlace-perfil {
-  color: var(--primary-color); ;
+  color: var(--primary-color);
   display: block;
   margin-bottom: 10px;
   text-decoration: none;
@@ -162,11 +162,10 @@ var(--gray-color) gris
 }
 
 .puesto-horario {
-  color:var(--text-color);
+  color: var(--text-color);
   font-weight: bold;
-  
 }
 
 .puesto-horario select {
-    margin-left: 10px; 
+  margin-left: 10px;
 }

@@ -175,22 +175,22 @@ h2 {
 }
 
 .act-item-row {
-    align-items: flex-end !important;
+  align-items: flex-end !important;
 }
 
 .act-item-left {
-    min-width: 0; 
+  min-width: 0;
 }
 
 .act-item-left strong {
-    margin-bottom: 0;
-    line-height: 1.2;
+  margin-bottom: 0;
+  line-height: 1.2;
 }
 
 .act-item-right .buttons {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
-.form-label{
-color: #78141e;
+.form-labelito {
+  color: var(--primary-color);
 }

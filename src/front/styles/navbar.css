@@ -6,6 +6,10 @@ var(--secondary-color) amarillo oscuro
 var(--gray-color) gris
 #2d435b azul oscuro
 */
+.burger {
+  margin-top: 0px;
+  color: var(--primary-color);
+}
 
 .navbar {
   background-color: var(--background-color) !important;
@@ -112,27 +116,13 @@ var(--gray-color) gris
   display: flex;
 }
 
-/* modo noche fondo oscuro en la barra */
-.navbar.nav-dark {
-  background-color: #232428 !important;
-}
-
 /* asegurar contraste del icono hamburger */
 .navbar-dark .navbar-toggler {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.navbar-dark .navbar-toggler-icon {
-  /* icono blanco */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  border-color: var(--primary-color);
 }
 
 .navbar-light .navbar-toggler {
-  border-color: rgba(0, 0, 0, 0.1);
-}
-.navbar-light .navbar-toggler-icon {
-  /* icono oscuro (por si tu fondo claro cambia con el tema) */
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(30,30,30,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  border-color: var(--primary-color);
 }
 
 /* reset botón “modo” cuando lo usamos como <button> */
@@ -183,14 +173,14 @@ var(--gray-color) gris
 .navbar.nav-dark .btn-actuacionesNav,
 .navbar.nav-dark .btn-personalNav {
   background-color: transparent;
-  color: #fffbe5; 
+  color: #fffbe5;
   border-color: #fffbe5;
 }
 
 .navbar.nav-dark .btn-actuacionesNav:hover,
 .navbar.nav-dark .btn-personalNav:hover {
   background-color: #fffbe5;
-  color: #232428; 
+  color: #232428;
 }
 
 .navbar.nav-dark .btn-perfilNav {
