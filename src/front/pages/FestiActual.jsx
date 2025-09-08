@@ -245,8 +245,8 @@ const FestiActual = () => {
   const { darkMode } = useTheme();
 
   return (
-    <div className="festi-container" style={{ maxWidth: 1200 }}>
-      <h1 className="festi-title">Festi Actual</h1>
+    <div className="festi-container" style={{ maxWidth: 800 }}>
+      <h1 className="festi-title">Fiesti Actual</h1>
 
       {/* Mensajes */}
       {msg && <div className="alert alert-info py-2">{msg}</div>}
@@ -255,7 +255,7 @@ const FestiActual = () => {
       <div className="d-flex justify-content-center mb-3">
         <input
           className="form-control"
-          style={{ maxWidth: 480, width: "100%" }}
+          style={{ width: "100%" }}
           type="text"
           placeholder="Buscar actuación o empleado…"
           value={busqueda}

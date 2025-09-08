@@ -194,3 +194,7 @@ h2 {
 .form-label{
 color: #78141e;
 }
+
+.form-label-nuevaActu{
+  color: var(--primary-color);
+}

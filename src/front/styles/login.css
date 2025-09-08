@@ -14,6 +14,9 @@
     border: 1px solid var(--primary-color);
     font-weight: 500;
 }
+.form-label-login{
+    color: var(--primary-color);
+}
 
 .form-control {
     background: transparent;
