@@ -7,8 +7,8 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: linear-gradient(135deg, #f5f1e8 0%, #ede3d3 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--background-color);
+    
 }
 
 .fiesti-logo {
@@ -16,18 +16,12 @@
     margin-bottom: 40px;
 }
 
-.fiesti-logo h1 {
-    color: #8b2635;
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    margin: 0;
-}
+
 
 .fiesti-logo p {
-    color: #6b5b73;
+    color: var(--text-color);
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: bold;
     margin: 10px 0 0 0;
 }
 
@@ -42,14 +36,13 @@
     background: white;
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 10px 30px rgba(139, 38, 53, 0.1);
     min-width: 350px;
     max-width: 450px;
     width: 100%;
 }
 
 .fiesti-form-title {
-    color: #8b2635;
+    color: #78141e;
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 30px;
@@ -62,7 +55,7 @@
 
 .fiesti-form-group label {
     display: block;
-    color: #6b5b73;
+    color: var(--gray-color);
     font-weight: 500;
     margin-bottom: 8px;
     font-size: 0.95rem;
@@ -75,35 +68,35 @@
     border-radius: 12px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: #fafafa;
+    background: #fffbe5;
     box-sizing: border-box;
 }
 
 .fiesti-form-group input:focus {
     outline: none;
-    border-color: #8b2635;
+    border-color: #78141e;
     background: white;
     box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
 }
 
 .fiesti-form-group input.error {
-    border-color: #e74c3c;
-    background: #fdf2f2;
+    border-color: #78141e;
+    background: var(--background-color);
 }
 
 .fiesti-form-group input.success {
-    border-color: #27ae60;
-    background: #f2fdf2;
+    border-color: #2d435b;
+    background: var(--background-color);
 }
 
 .fiesti-error-message {
-    color: #e74c3c;
+    color: #78141e;
     font-size: 0.85rem;
     margin-top: 5px;
 }
 
 .fiesti-success-message {
-    color: #27ae60;
+    color: #2d435b;
     font-size: 0.85rem;
     margin-top: 5px;
 }
@@ -111,7 +104,7 @@
 .fiesti-submit-btn {
     width: 100%;
     padding: 15px;
-    background: #8b2635;
+    background: #78141e;
     color: white;
     border: none;
     border-radius: 12px;
@@ -123,9 +116,10 @@
 }
 
 .fiesti-submit-btn:hover:not(:disabled) {
-    background: #a12d3d;
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(139, 38, 53, 0.3);
+    background: #78141e;
+    color: #fac263;
+    text-decoration: none;
+    border: 1px solid #fac263;
 }
 
 .fiesti-submit-btn:active {
@@ -173,5 +167,5 @@
 
 .fiesti-strength-text {
     font-size: 0.8rem;
-    color: #6b5b73;
+    color: var(--gray-color);
 }

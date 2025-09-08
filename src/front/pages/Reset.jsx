@@ -117,7 +117,7 @@ const Reset = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert("✅ Tu contraseña ha sido actualizada exitosamente.");
+                alert("✅ Tu contraseña ha sido actualizada correctamente.");
                 navigate("/login");
             } else {
                 alert(`❌ Error: ${data.msg}`);

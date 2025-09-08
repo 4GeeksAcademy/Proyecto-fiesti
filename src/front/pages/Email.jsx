@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import "../styles/form.css";
+import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
+import Letras from "../assets/img/Letras.png";
+import LetrasDark from "../assets/img/LetrasDark.png";
+import { useTheme } from "../../ThemeContext";
 
 const EmailForm = () => {
     const [email, setEmail] = useState('');
@@ -72,10 +77,13 @@ const EmailForm = () => {
         return className;
     };
 
+    const { darkMode } = useTheme();
+
     return (
         <div className="fiesti-container">
             <div className="fiesti-logo">
-                <h1>Fiesti</h1>
+                <img src={darkMode ? LogoDark : Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
+                <img src={darkMode ? LetrasDark : Letras} alt="Letras Fiesti" className="letras mb-4" />
                 <p>🎉 La forma más fácil, rápida y segura de organizar tus eventos y celebraciones 🎉</p>
             </div>
 
