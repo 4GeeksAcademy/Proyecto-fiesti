@@ -104,9 +104,9 @@ h3 {
 }
 
 .btn-pagar {
-  background: var(--secondary-color);
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
+  background: #fac263;
+  color: #78141e;
+  border: 1px solid #fac263;
   border-radius: 0.375rem;
   padding: 0.5rem 1rem;
   font-weight: 500;
@@ -118,9 +118,9 @@ h3 {
 }
 
 .btn-ahoraNo {
-  background: var(--primary-color);
+  background: #78141e;
   color: white;
-  border: 1px solid var(--primary-color);
+  border: 1px solid #78141e;
   border-radius: 0.375rem;
   padding: 0.5rem 1rem;
   font-weight: 500;
