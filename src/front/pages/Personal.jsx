@@ -120,13 +120,17 @@ export default function Personal() {
             <h2 className="title">Personal</h2>
 
             {/* Buscador */}
-            <input
-                className="buscador"
-                type="text"
-                placeholder="Buscar empleado/a..."
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-            />
+            <div className="d-flex justify-content-center mb-3">
+                <input
+                    className="form-control"
+                    style={{ maxWidth: 480, width: "100%" }}
+                    type="text"
+                    placeholder="Buscar actuación o empleado…"
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                />
+            </div>
+
 
             {/* Lista de empleados */}
             {Object.keys(grupos)

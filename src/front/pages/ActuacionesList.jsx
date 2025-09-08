@@ -166,22 +166,17 @@ export default function ActuacionesList() {
 
         return (
             <li className="list-group-item">
-                <div className="d-flex justify-content-between align-items-start act-item-row">
-                    <div className="act-item-left flex-grow-1 pe-3">
-                        <strong className="d-block text-truncate">{a.name}</strong>
+                <div className="d-flex justify-content-between align-items-center act-item-row">
+                    <div className="act-item-left flex-grow-1">
+                        <strong className="d-block">{a.name}</strong>
+                        {isAssigned(a) && (
+                            <span className="badge badge-horario mt-1">
+                                {(inicio || "--:--")} – {(fin || "--:--")}
+                            </span>
+                        )}
                     </div>
 
-                    <div className="act-item-right d-flex align-items-start">
-                        {isAssigned(a) ? (
-                            <div className="right-info d-flex flex-column text-end me-3">
-                                <span className="badge badge-horario">
-                                    {(inicio || "--:--")} – {(fin || "--:--")}
-                                </span>
-                            </div>
-                        ) : (
-                            <div className="text-muted me-3">Sin asignación</div>
-                        )}
-
+                    <div className="act-item-right">
                         <div className="buttons d-flex gap-2">
                             {isAssigned(a) && (
                                 <button
@@ -343,7 +338,7 @@ export default function ActuacionesList() {
                                     .sort((a, b) => a.localeCompare(b))
                                     .map((esc) => (
                                         <div key={esc} className="border-top">
-                                            <div className="px-3 py-2 bg-white fw-semibold">{esc}</div>
+                                            <div className="minihead px-3 py-2 bg-white fw-semibold">{esc}</div>
                                             <ul className="list-group list-group-flush">
                                                 {gruposEscenario[esc].map((a) => (
                                                     <ActItem key={a.id} a={a} />
