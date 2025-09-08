@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import "../styles/form.css";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Logo from "../assets/img/Logo.png";
+import LogoDark from "../assets/img/LogoDark.png";
+import Letras from "../assets/img/Letras.png";
+import LetrasDark from "../assets/img/LetrasDark.png";
+import { useTheme } from "../../ThemeContext";
 
 const Reset = () => {
     const navigate = useNavigate();
@@ -12,11 +17,15 @@ const Reset = () => {
     const [passwordStrength, setPasswordStrength] = useState({
         strength: 0,
         feedback: 'Introduce una contraseña',
-        color: '#e8ddd4'
+        color: 'var(--gray-color)'
     });
     const [isFormValid, setIsFormValid] = useState(false);
 
-    const token = new URLSearchParams(location.search).get("token")
+    const token = new URLSearchParams(location.search).get("token");
+
+    // 👁 estados para mostrar/ocultar contraseñas
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const checkPasswordStrength = (password) => {
         let strength = 0;
@@ -31,16 +40,16 @@ const Reset = () => {
 
         if (password.length === 0) {
             feedback = 'Introduce una contraseña';
-            color = '#e8ddd4';
+            color = '#fffbe5';
         } else if (strength <= 2) {
             feedback = 'Contraseña débil';
-            color = '#e74c3c';
+            color = '#78141e';
         } else if (strength <= 3) {
             feedback = 'Contraseña moderada';
-            color = '#f39c12';
+            color = '#fac263';
         } else {
             feedback = 'Contraseña fuerte';
-            color = '#27ae60';
+            color = '#2d435b';
         }
 
         return { strength, feedback, color };
@@ -70,27 +79,15 @@ const Reset = () => {
         const strength = checkPasswordStrength(newPassword);
         setPasswordStrength(strength);
 
-        // Validar longitud mínima
         if (newPassword.length > 0 && newPassword.length < 8) {
-            setPasswordError('La contraseña debe tener al menos 8 caracteres');
+            setPasswordError('La contraseña debe tener mínimo 8 caracteres.');
         } else {
             setPasswordError('');
         }
 
-        // Validar coincidencia de contraseñas
         const isMatchValid = validatePasswordMatch();
-
-        // El formulario es válido si la contraseña tiene al menos 8 caracteres y las contraseñas coinciden
         setIsFormValid(newPassword.length >= 8 && isMatchValid);
     }, [newPassword, confirmPassword]);
-
-    const handleNewPasswordChange = (e) => {
-        setNewPassword(e.target.value);
-    };
-
-    const handleConfirmPasswordChange = (e) => {
-        setConfirmPassword(e.target.value);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -108,9 +105,7 @@ const Reset = () => {
         try {
             const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/api/reset_password_token/${token}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ password: newPassword })
             });
 
@@ -124,15 +119,11 @@ const Reset = () => {
             }
         } catch (error) {
             console.error("Error en la solicitud:", error);
-            alert("Error en el servidor. Intenta nuevamente.");
+            alert("Error en el servidor. Inténtalo de nuevo.");
         }
-
     };
 
-    const getNewPasswordClassName = () => {
-        return passwordError ? ' error' : '';
-    };
-
+    const getNewPasswordClassName = () => passwordError ? ' error' : '';
     const getConfirmPasswordClassName = () => {
         if (confirmError) return ' error';
         if (confirmSuccess) return ' success';
@@ -140,11 +131,13 @@ const Reset = () => {
     };
 
     const strengthPercentage = (passwordStrength.strength / 5) * 100;
+    const { darkMode } = useTheme();
 
     return (
         <div className="fiesti-container">
             <div className="fiesti-logo">
-                <h1>Fiesti</h1>
+                <img src={darkMode ? LogoDark : Logo} className="img-fluid" alt="Logo Fiesti" style={{ maxWidth: 150 }} />
+                <img src={darkMode ? LetrasDark : Letras} alt="Letras Fiesti" className="letras mb-4" />
                 <p>🎉 La forma más fácil, rápida y segura de organizar tus eventos y celebraciones 🎉</p>
             </div>
 
@@ -152,17 +145,30 @@ const Reset = () => {
                 <div className="fiesti-form-card">
                     <h2 className="fiesti-form-title">Crear contraseña nueva</h2>
                     <form onSubmit={handleSubmit}>
-                        <div className="fiesti-form-group">
+
+                        {/* Contraseña nueva */}
+                        <div className="fiesti-form-group reset-password-wrapper">
                             <label htmlFor="newPassword">Contraseña nueva</label>
                             <input
-                                type="password"
+                                type={showNewPassword ? "text" : "password"}
                                 id="newPassword"
                                 name="newPassword"
                                 value={newPassword}
-                                onChange={handleNewPasswordChange}
+                                onChange={(e) => setNewPassword(e.target.value)}
                                 className={getNewPasswordClassName()}
                                 required
                             />
+                            {newPassword && (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNewPassword((v) => !v)}
+                                    className="password-reset-btn"
+                                    tabIndex={-1}
+                                    aria-label={showNewPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                >
+                                    <i className={`bi ${showNewPassword ? "bi-eye-slash" : "bi-eye-fill"}`}></i>
+                                </button>
+                            )}
                             <div className="fiesti-password-strength">
                                 <div className="fiesti-strength-bar">
                                     <div
@@ -178,17 +184,29 @@ const Reset = () => {
                             {passwordError && <div className="fiesti-error-message">{passwordError}</div>}
                         </div>
 
-                        <div className="fiesti-form-group">
+                        {/* Confirmar contraseña */}
+                        <div className="fiesti-form-group confirm-password-wrapper">
                             <label htmlFor="confirmPassword">Confirmar contraseña</label>
                             <input
-                                type="password"
+                                type={showConfirmPassword ? "text" : "password"}
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 value={confirmPassword}
-                                onChange={handleConfirmPasswordChange}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 className={getConfirmPasswordClassName()}
                                 required
                             />
+                            {confirmPassword && (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword((v) => !v)}
+                                    className="password-confirm-btn"
+                                    tabIndex={-1}
+                                    aria-label={showConfirmPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                >
+                                    <i className={`bi ${showConfirmPassword ? "bi-eye-slash" : "bi-eye-fill"}`}></i>
+                                </button>
+                            )}
                             {confirmError && <div className="fiesti-error-message">{confirmError}</div>}
                             {confirmSuccess && <div className="fiesti-success-message">{confirmSuccess}</div>}
                         </div>

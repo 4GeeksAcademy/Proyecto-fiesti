@@ -1,171 +1,211 @@
 /* FiestiStyles.css - Solo estilos para los formularios */
 
 .fiesti-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: var(--background-color);
-    
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--background-color);
 }
 
 .fiesti-logo {
-    text-align: center;
-    margin-bottom: 40px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-
-
 .fiesti-logo p {
-    color: var(--text-color);
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin: 10px 0 0 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 10px 0 0 0;
 }
 
 .fiesti-form-container {
-    display: flex;
-    justify-content: center;
-    max-width: 1000px;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  max-width: 1000px;
+  width: 100%;
 }
 
 .fiesti-form-card {
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    min-width: 350px;
-    max-width: 450px;
-    width: 100%;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  min-width: 350px;
+  max-width: 450px;
+  width: 100%;
 }
 
 .fiesti-form-title {
-    color: #78141e;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 30px;
-    text-align: center;
+  color: #78141e;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .fiesti-form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .fiesti-form-group label {
-    display: block;
-    color: var(--gray-color);
-    font-weight: 500;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
+  display: block;
+  color: var(--gray-color);
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
 }
 
 .fiesti-form-group input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e8ddd4;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #fffbe5;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e8ddd4;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fffbe5 !important;
+  box-sizing: border-box;
 }
 
 .fiesti-form-group input:focus {
-    outline: none;
-    border-color: #78141e;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
+  outline: none;
+  border-color: #78141e;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139, 38, 53, 0.1);
 }
 
 .fiesti-form-group input.error {
-    border-color: #78141e;
-    background: var(--background-color);
+  border-color: #78141e;
+  background: var(--background-color);
 }
 
 .fiesti-form-group input.success {
-    border-color: #2d435b;
-    background: var(--background-color);
+  border-color: #2d435b;
+  background: var(--background-color);
 }
 
 .fiesti-error-message {
-    color: #78141e;
-    font-size: 0.85rem;
-    margin-top: 5px;
+  color: #78141e;
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
 
 .fiesti-success-message {
-    color: #2d435b;
-    font-size: 0.85rem;
-    margin-top: 5px;
+  color: #2d435b;
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
 
 .fiesti-submit-btn {
-    width: 100%;
-    padding: 15px;
-    background: #78141e;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
+  width: 100%;
+  
+  background: #78141e;
+  color: white;
+  border:none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  outline: none;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .fiesti-submit-btn:hover:not(:disabled) {
-    background: #78141e;
-    color: #fac263;
-    text-decoration: none;
-    border: 1px solid #fac263;
+  background: #fac263;
+  color: #78141e;
+  border: 1px solid #78141e;
+  text-decoration: none;
 }
 
 .fiesti-submit-btn:active {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .fiesti-submit-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 768px) {
-    .fiesti-form-card {
-        min-width: 300px;
-        padding: 30px;
-    }
+  .fiesti-form-card {
+    min-width: 300px;
+    padding: 30px;
+  }
 
-    .fiesti-logo h1 {
-        font-size: 2.5rem;
-    }
+  .fiesti-logo h1 {
+    font-size: 2.5rem;
+  }
 }
 
 /* Estilos específicos para el formulario de contraseña */
 .fiesti-password-strength {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .fiesti-strength-bar {
-    height: 4px;
-    background: #e8ddd4;
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 5px;
+  height: 4px;
+  background: #e8ddd4;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 5px;
 }
 
 .fiesti-strength-fill {
-    height: 100%;
-    width: 0%;
-    background: #e74c3c;
-    transition: all 0.3s ease;
-    border-radius: 2px;
+  height: 100%;
+  width: 0%;
+  background: #e74c3c;
+  transition: all 0.3s ease;
+  border-radius: 2px;
 }
 
 .fiesti-strength-text {
-    font-size: 0.8rem;
-    color: var(--gray-color);
+  font-size: 0.8rem;
+  color: var(--gray-color);
+}
+
+.reset-password-wrapper {
+  position: relative;
+}
+
+.reset-password-wrapper input {
+  padding-right: 40px; 
+}
+
+.password-reset-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-90%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9d9ea1;
+  font-size: 1.5rem;
+}
+
+.confirm-password-wrapper {
+  position: relative;
+}
+
+.confirm-password-wrapper input {
+  padding-right: 40px; 
+}
+
+.password-confirm-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-40%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9d9ea1;
+  font-size: 1.5rem;
 }
