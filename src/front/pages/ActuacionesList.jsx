@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CrearActuacion from "./CrearActuacion";
 import "../styles/actuacioneslist.css"
 import { useTheme } from "../../ThemeContext";
+import { Link } from "react-router-dom";
 
 export default function ActuacionesList() {
     const [actuaciones, setActuaciones] = useState([]);
@@ -161,48 +162,47 @@ export default function ActuacionesList() {
         const { inicio, fin } = splitHorario(a.horario);
         const isAssigned = (x) => !!(x?.escenario || x?.horario);
 
-    const { darkMode } = useTheme();    
+        const { darkMode } = useTheme();
 
         return (
             <li className="list-group-item">
-                <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>{a.name}</strong>{" "}
+                <div className="d-flex justify-content-between align-items-start act-item-row">
+                    <div className="act-item-left flex-grow-1 pe-3">
+                        <strong className="d-block text-truncate">{a.name}</strong>
+                    </div>
+
+                    <div className="act-item-right d-flex align-items-start">
                         {isAssigned(a) ? (
-                            <span className="ms-2">
-                                <span className="badge badge-escenario me-2">
-                                    {a.escenario || "Sin escenario"}
-                                </span>
+                            <div className="right-info d-flex flex-column text-end me-3">
                                 <span className="badge badge-horario">
                                     {(inicio || "--:--")} – {(fin || "--:--")}
                                 </span>
-                            </span>
+                            </div>
                         ) : (
-                            <span className="text-muted">Sin asignación</span>
+                            <div className="text-muted me-3">Sin asignación</div>
                         )}
-                    </div>
 
-                    <div className="d-flex gap-2">
-                        {isAssigned(a) && (
+                        <div className="buttons d-flex gap-2">
+                            {isAssigned(a) && (
+                                <button
+                                    className="btn btn-borrar-rojo btn-sm"
+                                    onClick={() => limpiarAsignacion(a.id)}
+                                >
+                                    Quitar asignación
+                                </button>
+                            )}
+
+                            <Link to={`/actuaciones/${a.id}`}>
+                                <button className="btn btn-outline-rojo btn-sm">Ver más</button>
+                            </Link>
+
                             <button
-                                className="btn btn-borrar-rojo btn-sm"
-                                onClick={() => limpiarAsignacion(a.id)}
+                                className="btn btn-rojo btn-sm"
+                                onClick={() => toggleEditor(a.id)}
                             >
-                                Quitar asignación
+                                {abierta === a.id ? "Cerrar" : isAssigned(a) ? "Editar" : "Asignar"}
                             </button>
-                        )}
-                        <button
-                            className="btn btn-outline-rojo btn-sm"
-                            onClick={() => handleDelete(a.id)}
-                        >
-                            Eliminar
-                        </button>
-                        <button
-                            className="btn btn-rojo btn-sm"
-                            onClick={() => toggleEditor(a.id)}
-                        >
-                            {abierta === a.id ? "Cerrar" : "Asignar"}
-                        </button>
+                        </div>
                     </div>
                 </div>
 
@@ -281,8 +281,8 @@ export default function ActuacionesList() {
         <div className="container mt-4 actuaciones-container" style={{ maxWidth: 1200 }}>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Actuaciones</h2>
-                <button className="btn btn-rojo" onClick={() => setMostrarForm((v) => !v)}>
-                    {mostrarForm ? "Cancelar" : "➕ Nueva actuación"}
+                <button className="btn-nuevo" onClick={() => setMostrarForm((v) => !v)}>
+                    {mostrarForm ? "Cancelar" : "Nueva actuación"}
                 </button>
             </div>
 

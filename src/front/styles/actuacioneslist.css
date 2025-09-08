@@ -1,56 +1,65 @@
 .actuaciones-container .card-header {
-  background-color: darkred !important;
+  background-color: var(--primary-color) !important;
   color: white !important;
   font-weight: bold;
 }
 
 .actuaciones-container .list-group-item {
-  border-color: #ddd;
+  border-color: var(--gray-color);
 }
 
-
 .btn-rojo {
-  background-color: darkred;
+  background-color: #fac263;
   color: white;
   border: none;
 }
 .btn-rojo:hover {
-  background-color: #a10000;
+  background-color:#fac263;
   color: white;
+  border: 1px solid #78141e;
 }
 
 .btn-outline-rojo {
   background: transparent;
-  color: darkred;
-  border: 1px solid darkred;
+  color: #78141e;
+  border: 1px solid #78141e;
 }
 .btn-outline-rojo:hover {
-  background-color: #ffe6e6; 
-  color: darkred;
+  color: var(--primary-color);
 }
-
 
 .btn-borrar-rojo {
-  background: transparent;
-  border: 1px solid #900;
-  color: #900;
+  background: #78141e;
+  border: 1px solid #78141e;
+  color: white;
 }
 .btn-borrar-rojo:hover {
-  background: #fff0f0;
+  background: #fac263;
 }
-
 
 .badge-escenario {
-  background-color: darkred;
-  color: white;
-}
-.badge-horario {
-  background-color: #6c757d; 
+  background-color: var(--primary-color);
   color: white;
 }
 
+.badge-horario {
+  background-color: var(--gray-color);
+  color: white;
+}
 
 .actuaciones-container .editor {
-  background-color: #fffbe6;
-  border: 1px solid #ddd;
+  background-color: var(--background-color);
+  border: 1px solid var(--gray-color);
+}
+
+.btn-nuevo {
+  border-radius: 10%;
+  background: #78141e;
+  border: none;
+  color: white;
+}
+.btn-nuevo:hover {
+  border-radius: 10%;
+  background: #fac263;
+  border: none;
 }
