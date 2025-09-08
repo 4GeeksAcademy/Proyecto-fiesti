@@ -34,32 +34,49 @@ export const Navbar = () => {
 
 	const { darkMode, toggleModo } = useTheme();
 
+	//cerrar el navbar al hacer click
+	const closeCollapse = (id) => {
+		const el = document.getElementById(id);
+		if (el && el.classList.contains("show")) el.classList.remove("show");
+	};
 
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			<div className="container">
+		<nav className={`navbar navbar-expand-lg ${darkMode ? "navbar-dark nav-dark" : "navbar-light bg-light"}`}>
+			<div className="container-fluid px-3">
 				{!token ? (
 					//Navbar sin sesión
 					<>
-						<Link className="navbar-brand fw-bold" to="/">
+						<Link className="navbar-brand fw-bold d-flex align-items-center" to="/">
 							<img src={darkMode ? LetrasDark : Letras} alt="Letras Fiesti" className="letrasNav" />
 						</Link>
-						<div className="ms-auto d-flex gap-2">
-							<li className="modo" onClick={toggleModo} style={{ cursor: "pointer" }}>
-								{darkMode ? (
-									<i className="fa-solid fa-sun"></i>
-								) : (
-									<i className="fa-solid fa-moon"></i>
-								)}
-							</li>
 
-							<Link className="btn-loginNav" to="/login">
-								<b>Iniciar sesión</b>
-							</Link>
-							<Link className="btn-signupNav" to="/signup">
-								<b>Crear cuenta</b>
-							</Link>
+						<button
+							className="navbar-toggler"
+							type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#navbarNoAuth"
+							aria-controls="navbarNoAuth"
+							aria-expanded="false"
+							aria-label="Toggle navigation"
+						>
+							<span className="navbar-toggler-icon"></span>
+						</button>
+
+						<div className="collapse navbar-collapse" id="navbarNoAuth">
+							<ul className="navbar-nav ms-auto align-items-lg-center gap-2 mt-3 mt-lg-0">
+								<li className="nav-item">
+									<button className="modo btn-reset" onClick={() => { toggleModo(); closeCollapse("navbarNoAuth"); }} aria-label="Cambiar tema">
+										{darkMode ? <i className="fa-solid fa-sun"></i> : <i className="fa-solid fa-moon"></i>}
+									</button>
+								</li>
+								<li className="nav-item">
+									<Link className="btn-loginNav" to="/login"><b>Iniciar sesión</b></Link>
+								</li>
+								<li className="nav-item">
+									<Link className="btn-signupNav" to="/signup"><b>Crear cuenta</b></Link>
+								</li>
+							</ul>
 						</div>
 					</>
 				) : (
@@ -85,15 +102,13 @@ export const Navbar = () => {
 							<span className="navbar-toggler-icon"></span>
 						</button>
 
-						<div className="collapse navbar-collapse" id="navbarNav">
-							<ul className="navbar-nav ms-auto gap-2 align-items-center">
+						<div className="collapse navbar-collapse justify-content-lg-end" id="navbarNav">
+							<ul className="navbar-nav ms-auto flex-lg-row flex-column align-items-lg-center align-items-end text-end text-lg-start gap-2">
 								{/* Modo noche */}
-								<li className="modo" onClick={toggleModo} style={{ cursor: "pointer" }}>
-									{darkMode ? (
-										<i className="fa-solid fa-sun"></i>
-									) : (
-										<i className="fa-solid fa-moon"></i>
-									)}
+								<li className="nav-item">
+									<button className="modo btn-reset" onClick={() => { toggleModo(); closeCollapse("navbarNav"); }} aria-label="Cambiar tema">
+										{darkMode ? <i className="fa-solid fa-sun"></i> : <i className="fa-solid fa-moon"></i>}
+									</button>
 								</li>
 
 
@@ -101,12 +116,12 @@ export const Navbar = () => {
 								{role === "organizador" && (
 									<>
 										<li className="nav-item">
-											<Link className="btn-actuacionesNav" to="/actuaciones">
+											<Link className="btn-actuacionesNav" to="/actuaciones" onClick={() => closeCollapse("navbarNav")}>
 												Actuaciones
 											</Link>
 										</li>
 										<li className="nav-item">
-											<Link className="btn-personalNav" to="/personal">
+											<Link className="btn-personalNav" to="/personal" onClick={() => closeCollapse("navbarNav")}>
 												Personal
 											</Link>
 										</li>
@@ -115,12 +130,12 @@ export const Navbar = () => {
 
 								{/* siempre visible para usuarios logueados */}
 								<li className="nav-item">
-									<Link className="btn-perfilNav" to="/perfil">
+									<Link className="btn-perfilNav" to="/perfil" onClick={() => closeCollapse("navbarNav")}>
 										Perfil
 									</Link>
 								</li>
 
-								{/* Logout destacado y separado */}
+								{/* logout destacado y separado */}
 								<li className="nav-item ms-3">
 									<button className="btn-logoutNav px-4" onClick={handleLogout}>
 										Salir

@@ -17,7 +17,7 @@ var(--gray-color) gris
 }
 
 .logoNav {
-  height: 35px;             
+  height: 35px;
   width: auto;
   vertical-align: middle;
   margin-top: 20px;
@@ -38,7 +38,8 @@ var(--gray-color) gris
   text-decoration: none;
 }
 
-.btn-loginNav:hover, .btn-loginNav:focus {
+.btn-loginNav:hover,
+.btn-loginNav:focus {
   background: #fac263;
   color: #78141e;
   border: 1px solid #78141e;
@@ -60,7 +61,8 @@ var(--gray-color) gris
   text-decoration: none;
 }
 
-.btn-signupNav:hover, .btn-signupNav:focus {
+.btn-signupNav:hover,
+.btn-signupNav:focus {
   background: #78141e;
   color: #fac263;
   border: 1px solid #78141e;
@@ -78,7 +80,8 @@ var(--gray-color) gris
   text-decoration: none; /* Quitar subrayado del link */
 }
 
-.btn-actuacionesNav, .btn-personalNav {
+.btn-actuacionesNav,
+.btn-personalNav {
   background-color: var(--background-color);
   color: var(--primary-color);
   font-weight: bold;
@@ -107,4 +110,95 @@ var(--gray-color) gris
   align-items: center;
   justify-content: center;
   display: flex;
+}
+
+/* modo noche fondo oscuro en la barra */
+.navbar.nav-dark {
+  background-color: #232428 !important;
+}
+
+/* asegurar contraste del icono hamburger */
+.navbar-dark .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.navbar-dark .navbar-toggler-icon {
+  /* icono blanco */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-light .navbar-toggler {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.navbar-light .navbar-toggler-icon {
+  /* icono oscuro (por si tu fondo claro cambia con el tema) */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(30,30,30,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* reset botón “modo” cuando lo usamos como <button> */
+.btn-reset {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+/* contenedor general container-fluid, reducimos padding en móvil */
+@media (max-width: 576px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .letrasNav {
+    max-width: 60px;
+  }
+
+  .logoNav {
+    height: 28px;
+    margin-top: 0;
+  }
+
+  /* cuando menú colapsa que todo se vea ordenado en columna */
+  .navbar .navbar-nav {
+    gap: 0.5rem;
+  }
+
+  .btn-loginNav,
+  .btn-signupNav,
+  .btn-perfilNav,
+  .btn-logoutNav,
+  .btn-actuacionesNav,
+  .btn-personalNav {
+    width: 100%;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+
+  .modo {
+    font-size: 18px;
+    padding: 6px;
+  }
+}
+
+/* Botones en dark mode: que se lean bien */
+.navbar.nav-dark .btn-actuacionesNav,
+.navbar.nav-dark .btn-personalNav {
+  background-color: transparent;
+  color: #fffbe5; 
+  border-color: #fffbe5;
+}
+
+.navbar.nav-dark .btn-actuacionesNav:hover,
+.navbar.nav-dark .btn-personalNav:hover {
+  background-color: #fffbe5;
+  color: #232428; 
+}
+
+.navbar.nav-dark .btn-perfilNav {
+  background-color: #fac263;
+  color: #232428;
+}
+
+.navbar.nav-dark .btn-logoutNav {
+  background-color: #78141e;
+  color: #fffbe5;
 }
